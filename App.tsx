@@ -8,6 +8,7 @@ import Testimonials from './components/Testimonials';
 import About from './components/About';
 import Contact from './components/Contact';
 import BookingSection from './components/BookingSection';
+import ErrorBoundary from './components/ErrorBoundary';
 import { ThemeLanguageProvider, useThemeLanguage } from './contexts/ThemeLanguageContext';
 import { Menu, Moon, Sun, Globe } from 'lucide-react';
 import { TRANSLATIONS } from './constants';
@@ -106,7 +107,9 @@ function App() {
                 <Services />
                 <Projects />
                 <Testimonials />
-                <BookingSection />
+                <ErrorBoundary>
+                    <BookingSection />
+                </ErrorBoundary>
                 <About />
                 <Contact />
             </Layout>
