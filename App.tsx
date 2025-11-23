@@ -106,6 +106,7 @@ function App() {
                 <Services />
                 <Projects />
                 <Testimonials />
+                <BookingSection />
                 <About />
                 <Contact />
             </Layout>
