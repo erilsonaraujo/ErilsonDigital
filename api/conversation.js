@@ -1,6 +1,6 @@
 // /api/conversation.js
 // Vercel Serverless Function (Node.js) that receives a PDF via multipart/form-data,
-// forwards it to https://tmpfiles.org (temporary storage) and returns the short link.
+// forwards it to https://0x0.st (temporary storage) and returns the short link.
 
 import formidable from 'formidable';
 import fs from 'fs/promises';
@@ -62,30 +62,26 @@ export default async function handler(req, res) {
             console.warn('[API] Could not delete temp file:', unlinkError.message);
         }
 
-        // Upload to tmpfiles.org (more reliable than file.io)
+        // Upload to 0x0.st (simple and reliable temporary file hosting)
         const uploadForm = new FormData();
         uploadForm.append('file', fileBuffer, {
             filename: fileObj.originalFilename || 'conversation.pdf',
             contentType: 'application/pdf',
         });
 
-        console.log('[API] Uploading to tmpfiles.org...');
+        console.log('[API] Uploading to 0x0.st...');
 
-        const uploadResp = await fetch('https://tmpfiles.org/api/v1/upload', {
+        const uploadResp = await fetch('https://0x0.st', {
             method: 'POST',
             body: uploadForm,
             headers: uploadForm.getHeaders(),
         });
 
-        console.log('[API] tmpfiles.org response status:', uploadResp.status);
-
-        // Check content type before parsing
-        const contentType = uploadResp.headers.get('content-type');
-        console.log('[API] tmpfiles.org content-type:', contentType);
+        console.log('[API] 0x0.st response status:', uploadResp.status);
 
         if (!uploadResp.ok) {
             const txt = await uploadResp.text();
-            console.error('[API] tmpfiles.org error response:', txt);
+            console.error('[API] 0x0.st error response:', txt);
             return res.status(502).json({
                 error: 'Upstream upload failed',
                 details: txt,
@@ -93,30 +89,18 @@ export default async function handler(req, res) {
             });
         }
 
-        // Check if response is JSON
-        if (!contentType || !contentType.includes('application/json')) {
-            const txt = await uploadResp.text();
-            console.error('[API] tmpfiles.org returned non-JSON response:', txt.substring(0, 500));
+        // 0x0.st returns plain text URL
+        const shortUrl = (await uploadResp.text()).trim();
+        console.log('[API] 0x0.st returned URL:', shortUrl);
+
+        if (!shortUrl || !shortUrl.startsWith('http')) {
+            console.error('[API] 0x0.st returned invalid URL:', shortUrl);
             return res.status(502).json({
-                error: 'Upload service returned invalid response',
-                details: 'Expected JSON but got: ' + contentType,
-                preview: txt.substring(0, 200)
+                error: 'Upload service returned invalid URL',
+                details: shortUrl
             });
         }
 
-        const json = await uploadResp.json();
-        console.log('[API] tmpfiles.org response:', json);
-
-        // tmpfiles.org returns: { status: "success", data: { url: "https://tmpfiles.org/..." } }
-        if (json.status !== 'success' || !json.data || !json.data.url) {
-            console.error('[API] tmpfiles.org returned unsuccessful response:', json);
-            return res.status(502).json({
-                error: 'Upload service returned error',
-                details: json
-            });
-        }
-
-        const shortUrl = json.data.url;
         console.log('[API] Returning short URL:', shortUrl);
         return res.status(200).json({ shortUrl });
 
