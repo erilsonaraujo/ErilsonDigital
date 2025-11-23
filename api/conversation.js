@@ -2,13 +2,14 @@
 // Vercel Serverless Function (Node.js) that receives a PDF via multipart/form-data,
 // forwards it to https://file.io (temporary storage) and returns the short link.
 
-import { IncomingForm } from 'formidable';
-import fs from 'fs';
-import fetch from 'node-fetch';
+import formidable from 'formidable';
+import fs from 'fs/promises';
+import FormData from 'form-data';
 
 export const config = {
     api: {
         bodyParser: false,
+        maxDuration: 60, // Increase timeout for file upload
     },
 };
 
@@ -30,19 +31,17 @@ export default async function handler(req, res) {
     console.log('[API] Received POST request to /api/conversation');
 
     try {
-        const data = await new Promise((resolve, reject) => {
-            const form = new IncomingForm({ keepExtensions: true });
-            form.parse(req, (err, fields, files) => {
-                if (err) {
-                    console.error('[API] Formidable parse error:', err);
-                    return reject(err);
-                }
-                console.log('[API] Form parsed successfully');
-                resolve({ fields, files });
-            });
+        // Parse the multipart form data
+        const form = formidable({
+            maxFileSize: 10 * 1024 * 1024, // 10MB max
+            keepExtensions: true,
         });
 
-        const pdfFile = data.files.pdf;
+        const [fields, files] = await form.parse(req);
+        console.log('[API] Form parsed successfully');
+
+        // Get the PDF file
+        const pdfFile = files.pdf;
         const fileObj = Array.isArray(pdfFile) ? pdfFile[0] : pdfFile;
 
         if (!fileObj) {
@@ -52,23 +51,30 @@ export default async function handler(req, res) {
 
         console.log('[API] PDF file received:', fileObj.originalFilename, 'Size:', fileObj.size);
 
-        // Read file buffer
-        const fileBuffer = fs.readFileSync(fileObj.filepath);
+        // Read file buffer from the temporary path
+        const fileBuffer = await fs.readFile(fileObj.filepath);
         console.log('[API] File buffer read, size:', fileBuffer.length);
 
+        // Clean up the temporary file
+        try {
+            await fs.unlink(fileObj.filepath);
+        } catch (unlinkError) {
+            console.warn('[API] Could not delete temp file:', unlinkError.message);
+        }
+
         // Upload to file.io using form-data
-        const FormData = (await import('form-data')).default;
-        const form = new FormData();
-        form.append('file', fileBuffer, {
-            filename: 'conversation.pdf',
+        const uploadForm = new FormData();
+        uploadForm.append('file', fileBuffer, {
+            filename: fileObj.originalFilename || 'conversation.pdf',
             contentType: 'application/pdf',
         });
 
         console.log('[API] Uploading to file.io...');
+
         const uploadResp = await fetch('https://file.io', {
             method: 'POST',
-            body: form,
-            headers: form.getHeaders(),
+            body: uploadForm,
+            headers: uploadForm.getHeaders(),
         });
 
         console.log('[API] file.io response status:', uploadResp.status);
@@ -88,9 +94,13 @@ export default async function handler(req, res) {
 
         if (!json.success || !json.link) {
             console.error('[API] file.io returned unsuccessful response:', json);
-            return res.status(502).json({ error: 'Upload service returned error', details: json });
+            return res.status(502).json({
+                error: 'Upload service returned error',
+                details: json
+            });
         }
 
+        console.log('[API] Returning short URL:', json.link);
         return res.status(200).json({ shortUrl: json.link });
 
     } catch (error) {
@@ -99,6 +109,7 @@ export default async function handler(req, res) {
         return res.status(500).json({
             error: 'Internal Server Error',
             message: error.message,
+            type: error.name,
             stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
     }
