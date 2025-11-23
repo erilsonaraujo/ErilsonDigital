@@ -1,27 +1,14 @@
-import React, { useEffect } from 'react';
-import { getCalApi } from "@calcom/embed-react";
+import React from 'react';
 import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
 import { Calendar } from 'lucide-react';
 
 const BookingSection: React.FC = () => {
-    const { t, theme } = useThemeLanguage();
-
-    useEffect(() => {
-        (async function () {
-            const cal = await getCalApi({});
-            cal("ui", {
-                theme: theme,
-                styles: { branding: { brandColor: "#2563eb" } },
-                hideEventTypeDetails: false,
-                layout: "month_view"
-            });
-        })();
-    }, [theme]);
+    const { t } = useThemeLanguage();
 
     return (
         <section id="booking" className="py-20 bg-slate-50 dark:bg-dark-900 transition-colors duration-300">
             <div className="container mx-auto px-4">
-                <div className="text-center mb-16 animate-on-scroll">
+                <div className="text-center mb-16">
                     <div className="inline-flex items-center justify-center p-3 mb-4 rounded-2xl bg-primary-100 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400">
                         <Calendar className="w-6 h-6" />
                     </div>
@@ -34,11 +21,12 @@ const BookingSection: React.FC = () => {
                 </div>
 
                 <div className="max-w-4xl mx-auto glass-card p-4 md:p-8 rounded-3xl overflow-hidden">
-                    <iframe
-                        src="https://cal.com/erilson/20min"
-                        style={{ width: "100%", height: "100%", minHeight: "600px", border: "none" }}
-                        title="Agendar Consultoria"
-                    ></iframe>
+                    {/* Calendly inline widget */}
+                    <div
+                        className="calendly-inline-widget"
+                        data-url="https://calendly.com/joseerilsonaraujo/20min?hide_gdpr_banner=1&primary_color=2563eb"
+                        style={{ minHeight: '700px', width: '100%' }}
+                    ></div>
                 </div>
             </div>
         </section>
