@@ -128,15 +128,24 @@ Desenvolvedor Full-Stack especializado em **Java** e **Python**, com formação 
 
 ## 🏆 Metodologia de Trabalho
 
-```mermaid
-graph LR
-    A[Análise de Requisitos] --> B[Arquitetura & Design]
-    B --> C[Desenvolvimento Ágil]
-    C --> D[Testes Automatizados]
-    D --> E[Code Review]
-    E --> F[Deploy Contínuo]
-    F --> G[Monitoramento]
-    G --> H[Suporte & Manutenção]
+### 🔄 Fluxo de Desenvolvimento
+
+```
+📋 Análise de Requisitos
+    ↓
+🏗️ Arquitetura & Design
+    ↓
+⚡ Desenvolvimento Ágil
+    ↓
+🧪 Testes Automatizados
+    ↓
+👀 Code Review
+    ↓
+🚀 Deploy Contínuo
+    ↓
+📊 Monitoramento
+    ↓
+🛠️ Suporte & Manutenção
 ```
 
 ### 🎯 Princípios
