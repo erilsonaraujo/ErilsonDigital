@@ -31,6 +31,7 @@ const NavContent = () => {
                         <a href="#services" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.services}</a>
                         <a href="#portfolio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.portfolio}</a>
                         <a href="#about" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
+                        <a href="#booking" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.booking}</a>
 
                         <div className="h-6 w-px bg-slate-200 dark:bg-dark-700 mx-2"></div>
 
@@ -80,6 +81,7 @@ const NavContent = () => {
                     <a href="#services" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.services}</a>
                     <a href="#portfolio" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.portfolio}</a>
                     <a href="#about" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
+                    <a href="#booking" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.booking}</a>
                     <div className="flex gap-4 pt-2 border-t border-slate-100 dark:border-dark-800">
                         {(['pt', 'en', 'es'] as const).map(l => (
                             <button
