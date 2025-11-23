@@ -201,47 +201,65 @@ const AISection: React.FC = () => {
                                                 {(msg.actionType === 'whatsapp' || msg.actionType === 'both') && (
                                                     <button
                                                         onClick={async () => {
-                                                            // Generate PDF of the full conversation
-                                                            const doc = new jsPDF();
-                                                            let y = 10;
-                                                            messages.forEach((m) => {
-                                                                const prefix = m.role === 'user' ? 'Você: ' : 'Sofia: ';
-                                                                const lines = doc.splitTextToSize(prefix + m.text, 180);
-                                                                lines.forEach((line) => {
-                                                                    if (y > 280) { doc.addPage(); y = 10; }
-                                                                    doc.text(line, 10, y);
-                                                                    y += 7;
-                                                                });
-                                                            });
-                                                            // Prepare form data for upload
-                                                            const pdfBlob = doc.output('blob');
-                                                            const form = new FormData();
-                                                            form.append('pdf', pdfBlob, `conversation_${Date.now()}.pdf`);
+                                                            const cleanNumber = WHATSAPP_NUMBER.replace(/\D/g, '');
                                                             // Simple summary: first user message + first model reply
                                                             const summary = messages
                                                                 .filter((m) => m.role === 'user' || m.role === 'model')
                                                                 .slice(0, 2)
                                                                 .map((m) => (m.role === 'user' ? 'Você: ' : 'Sofia: ') + m.text)
                                                                 .join('\n');
-                                                            form.append('summary', summary);
-                                                            // Upload to server
-                                                            const uploadResp = await fetch('/api/conversation', {
-                                                                method: 'POST',
-                                                                body: form,
-                                                            });
-                                                            const { shortUrl } = await uploadResp.json();
-                                                            // Update the last AI message to include link (if not already)
-                                                            setMessages((prev) => {
-                                                                const lastIdx = prev.length - 1;
-                                                                const lastMsg = prev[lastIdx];
-                                                                const newText = `${lastMsg.text}\n\n📄 PDF da conversa: ${shortUrl}\nResumo: ${summary}`;
-                                                                const updated = { ...lastMsg, text: newText, pdfLink: shortUrl };
-                                                                return [...prev.slice(0, lastIdx), updated];
-                                                            });
-                                                            // Open WhatsApp with link
-                                                            const cleanNumber = WHATSAPP_NUMBER.replace(/\D/g, '');
-                                                            const waMsg = encodeURIComponent(`Segue a conversa em PDF: ${shortUrl}\nResumo: ${summary}`);
-                                                            window.open(`https://wa.me/${cleanNumber}?text=${waMsg}`, '_blank');
+
+                                                            try {
+                                                                // Generate PDF of the full conversation
+                                                                const doc = new jsPDF();
+                                                                let y = 10;
+                                                                messages.forEach((m) => {
+                                                                    const prefix = m.role === 'user' ? 'Você: ' : 'Sofia: ';
+                                                                    const lines = doc.splitTextToSize(prefix + m.text, 180);
+                                                                    lines.forEach((line) => {
+                                                                        if (y > 280) { doc.addPage(); y = 10; }
+                                                                        doc.text(line, 10, y);
+                                                                        y += 7;
+                                                                    });
+                                                                });
+
+                                                                // Prepare form data for upload
+                                                                const pdfBlob = doc.output('blob');
+                                                                const form = new FormData();
+                                                                form.append('pdf', pdfBlob, `conversation_${Date.now()}.pdf`);
+                                                                form.append('summary', summary);
+
+                                                                // Upload to server
+                                                                const uploadResp = await fetch('/api/conversation', {
+                                                                    method: 'POST',
+                                                                    body: form,
+                                                                });
+
+                                                                if (!uploadResp.ok) {
+                                                                    throw new Error(`Upload failed: ${uploadResp.statusText}`);
+                                                                }
+
+                                                                const { shortUrl } = await uploadResp.json();
+
+                                                                // Update the last AI message to include link (if not already)
+                                                                setMessages((prev) => {
+                                                                    const lastIdx = prev.length - 1;
+                                                                    const lastMsg = prev[lastIdx];
+                                                                    const newText = `${lastMsg.text}\n\n📄 PDF da conversa: ${shortUrl}\nResumo: ${summary}`;
+                                                                    const updated = { ...lastMsg, text: newText, pdfLink: shortUrl };
+                                                                    return [...prev.slice(0, lastIdx), updated];
+                                                                });
+
+                                                                // Open WhatsApp with link
+                                                                const waMsg = encodeURIComponent(`Segue a conversa em PDF: ${shortUrl}\nResumo: ${summary}`);
+                                                                window.open(`https://wa.me/${cleanNumber}?text=${waMsg}`, '_blank');
+
+                                                            } catch (error) {
+                                                                console.error('Error generating/uploading PDF:', error);
+                                                                // Fallback: Open WhatsApp with just the summary
+                                                                const waMsg = encodeURIComponent(`(Erro ao gerar PDF) Resumo da conversa:\n${summary}`);
+                                                                window.open(`https://wa.me/${cleanNumber}?text=${waMsg}`, '_blank');
+                                                            }
                                                         }}
                                                         className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
                                                     >
