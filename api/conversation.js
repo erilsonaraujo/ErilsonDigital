@@ -1,6 +1,6 @@
 // /api/conversation.js
 // Vercel Serverless Function (Node.js) that receives a PDF via multipart/form-data,
-// forwards it to https://file.io (temporary storage) and returns the short link.
+// forwards it to https://tmpfiles.org (temporary storage) and returns the short link.
 
 import formidable from 'formidable';
 import fs from 'fs/promises';
@@ -62,30 +62,30 @@ export default async function handler(req, res) {
             console.warn('[API] Could not delete temp file:', unlinkError.message);
         }
 
-        // Upload to file.io using form-data
+        // Upload to tmpfiles.org (more reliable than file.io)
         const uploadForm = new FormData();
         uploadForm.append('file', fileBuffer, {
             filename: fileObj.originalFilename || 'conversation.pdf',
             contentType: 'application/pdf',
         });
 
-        console.log('[API] Uploading to file.io...');
+        console.log('[API] Uploading to tmpfiles.org...');
 
-        const uploadResp = await fetch('https://file.io', {
+        const uploadResp = await fetch('https://tmpfiles.org/api/v1/upload', {
             method: 'POST',
             body: uploadForm,
             headers: uploadForm.getHeaders(),
         });
 
-        console.log('[API] file.io response status:', uploadResp.status);
+        console.log('[API] tmpfiles.org response status:', uploadResp.status);
 
         // Check content type before parsing
         const contentType = uploadResp.headers.get('content-type');
-        console.log('[API] file.io content-type:', contentType);
+        console.log('[API] tmpfiles.org content-type:', contentType);
 
         if (!uploadResp.ok) {
             const txt = await uploadResp.text();
-            console.error('[API] file.io error response:', txt);
+            console.error('[API] tmpfiles.org error response:', txt);
             return res.status(502).json({
                 error: 'Upstream upload failed',
                 details: txt,
@@ -96,7 +96,7 @@ export default async function handler(req, res) {
         // Check if response is JSON
         if (!contentType || !contentType.includes('application/json')) {
             const txt = await uploadResp.text();
-            console.error('[API] file.io returned non-JSON response:', txt.substring(0, 500));
+            console.error('[API] tmpfiles.org returned non-JSON response:', txt.substring(0, 500));
             return res.status(502).json({
                 error: 'Upload service returned invalid response',
                 details: 'Expected JSON but got: ' + contentType,
@@ -105,18 +105,20 @@ export default async function handler(req, res) {
         }
 
         const json = await uploadResp.json();
-        console.log('[API] file.io success:', json);
+        console.log('[API] tmpfiles.org response:', json);
 
-        if (!json.success || !json.link) {
-            console.error('[API] file.io returned unsuccessful response:', json);
+        // tmpfiles.org returns: { status: "success", data: { url: "https://tmpfiles.org/..." } }
+        if (json.status !== 'success' || !json.data || !json.data.url) {
+            console.error('[API] tmpfiles.org returned unsuccessful response:', json);
             return res.status(502).json({
                 error: 'Upload service returned error',
                 details: json
             });
         }
 
-        console.log('[API] Returning short URL:', json.link);
-        return res.status(200).json({ shortUrl: json.link });
+        const shortUrl = json.data.url;
+        console.log('[API] Returning short URL:', shortUrl);
+        return res.status(200).json({ shortUrl });
 
     } catch (error) {
         console.error('[API] Unhandled error:', error);
