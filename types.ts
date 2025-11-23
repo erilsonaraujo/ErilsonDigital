@@ -29,6 +29,7 @@ export interface ChatMessage {
   isActionable?: boolean;
   // actionType indicates which actionable button(s) to show: 'whatsapp', 'calendly', or 'both'
   actionType?: 'whatsapp' | 'calendly' | 'both';
+  pdfLink?: string; // URL to stored PDF on server
 }
 
 export interface Skill {

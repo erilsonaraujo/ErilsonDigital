@@ -197,10 +197,10 @@ const AISection: React.FC = () => {
                                                         Agendar Consultoria Gratuita
                                                     </a>
                                                 )}
-                                                {/* WhatsApp Button with PDF generation */}
+                                                {/* WhatsApp Button with PDF generation and upload */}
                                                 {(msg.actionType === 'whatsapp' || msg.actionType === 'both') && (
                                                     <button
-                                                        onClick={() => {
+                                                        onClick={async () => {
                                                             // Generate PDF of the full conversation
                                                             const doc = new jsPDF();
                                                             let y = 10;
@@ -213,14 +213,35 @@ const AISection: React.FC = () => {
                                                                     y += 7;
                                                                 });
                                                             });
-                                                            const pdfData = doc.output('dataurlstring');
-                                                            // Store PDF in localStorage (placeholder for server storage)
-                                                            localStorage.setItem('conversationPdf', pdfData);
-                                                            // Trigger download for user
-                                                            doc.save(`conversation_${Date.now()}.pdf`);
-                                                            // Open WhatsApp chat
+                                                            // Prepare form data for upload
+                                                            const pdfBlob = doc.output('blob');
+                                                            const form = new FormData();
+                                                            form.append('pdf', pdfBlob, `conversation_${Date.now()}.pdf`);
+                                                            // Simple summary: first user message + first model reply
+                                                            const summary = messages
+                                                                .filter((m) => m.role === 'user' || m.role === 'model')
+                                                                .slice(0, 2)
+                                                                .map((m) => (m.role === 'user' ? 'Você: ' : 'Sofia: ') + m.text)
+                                                                .join('\n');
+                                                            form.append('summary', summary);
+                                                            // Upload to server
+                                                            const uploadResp = await fetch('/api/conversation', {
+                                                                method: 'POST',
+                                                                body: form,
+                                                            });
+                                                            const { shortUrl } = await uploadResp.json();
+                                                            // Update the last AI message to include link (if not already)
+                                                            setMessages((prev) => {
+                                                                const lastIdx = prev.length - 1;
+                                                                const lastMsg = prev[lastIdx];
+                                                                const newText = `${lastMsg.text}\n\n📄 PDF da conversa: ${shortUrl}\nResumo: ${summary}`;
+                                                                const updated = { ...lastMsg, text: newText, pdfLink: shortUrl };
+                                                                return [...prev.slice(0, lastIdx), updated];
+                                                            });
+                                                            // Open WhatsApp with link
                                                             const cleanNumber = WHATSAPP_NUMBER.replace(/\D/g, '');
-                                                            window.open(`https://wa.me/${cleanNumber}?text=Segue%20a%20conversa%20em%20PDF`, '_blank');
+                                                            const waMsg = encodeURIComponent(`Segue a conversa em PDF: ${shortUrl}\nResumo: ${summary}`);
+                                                            window.open(`https://wa.me/${cleanNumber}?text=${waMsg}`, '_blank');
                                                         }}
                                                         className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
                                                     >
