@@ -25,12 +25,15 @@ const BookingSection: React.FC = () => {
                 </div>
 
                 <div className="max-w-4xl mx-auto glass-card p-4 md:p-8 rounded-3xl overflow-hidden">
-                    {/* Calendly inline widget */}
-                    <div
-                        className="calendly-inline-widget"
-                        data-url="https://calendly.com/joseerilsonaraujo/20min?hide_gdpr_banner=1&primary_color=2563eb"
-                        style={{ minHeight: '700px', width: '100%' }}
-                    ></div>
+                    {/* Calendly iframe embed */}
+                    <iframe
+                        src="https://calendly.com/joseerilsonaraujo/20min?embed_domain=localhost&embed_type=Inline&hide_gdpr_banner=1&primary_color=2563eb"
+                        width="100%"
+                        height="700"
+                        frameBorder="0"
+                        title="Agendar Consultoria"
+                        style={{ minHeight: '700px', border: 'none' }}
+                    ></iframe>
                 </div>
             </div>
         </section>
