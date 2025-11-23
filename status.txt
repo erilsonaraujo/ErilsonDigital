@@ -1,0 +1,20 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   App.tsx
+	modified:   components/AISection.tsx
+	modified:   constants.ts
+	modified:   package-lock.json
+	modified:   package.json
+	modified:   types.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	components/BookingSection.tsx
+	git_status.txt
+	status.txt
+
+no changes added to commit (use "git add" and/or "git commit -a")

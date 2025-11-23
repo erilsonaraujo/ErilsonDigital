@@ -100,5 +100,10 @@ export interface Translations {
     portfolio: string;
     about: string;
     contact: string;
+    booking: string;
+  };
+  booking: {
+    title: string;
+    subtitle: string;
   };
 }

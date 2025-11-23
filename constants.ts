@@ -8,7 +8,11 @@ export const EMAIL_ADDRESS = 'joseerilsonaraujo@gmail.com';
 
 export const TRANSLATIONS: Record<Language, Translations> = {
   pt: {
-    nav: { services: 'Serviços', portfolio: 'Portfólio', about: 'Sobre', contact: 'Fale Comigo' },
+    nav: { services: 'Serviços', portfolio: 'Portfólio', about: 'Sobre', contact: 'Fale Comigo', booking: 'Agendar' },
+    booking: {
+      title: 'Agende uma Consultoria',
+      subtitle: 'Sessões de 20 minutos para discutir seu projeto e viabilidade técnica.',
+    },
     hero: {
       badge: 'Disponível para novos projetos',
       title: 'Desenvolvedor Full-Stack Java & Python',
@@ -61,7 +65,11 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     }
   },
   en: {
-    nav: { services: 'Services', portfolio: 'Portfolio', about: 'About', contact: 'Contact' },
+    nav: { services: 'Services', portfolio: 'Portfolio', about: 'About', contact: 'Contact', booking: 'Book Now' },
+    booking: {
+      title: 'Book a Consultation',
+      subtitle: '20-minute sessions to discuss your project and technical feasibility.',
+    },
     hero: {
       badge: 'Available for hire',
       title: 'Full-Stack Developer Java & Python',
@@ -114,7 +122,11 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     }
   },
   es: {
-    nav: { services: 'Servicios', portfolio: 'Portafolio', about: 'Sobre Mí', contact: 'Contacto' },
+    nav: { services: 'Servicios', portfolio: 'Portafolio', about: 'Sobre Mí', contact: 'Contacto', booking: 'Agendar' },
+    booking: {
+      title: 'Agendar Consultoría',
+      subtitle: 'Sesiones de 20 minutos para discutir tu proyecto y viabilidad técnica.',
+    },
     hero: {
       badge: 'Disponible para trabajar',
       title: 'Desarrollador Full-Stack Java y Python',

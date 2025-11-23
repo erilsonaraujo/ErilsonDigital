@@ -40,24 +40,50 @@ const AISection: React.FC = () => {
         setInput('');
         setIsLoading(true);
 
-        const historyForService = messages.map(m => ({
-            role: m.role === 'model' ? 'model' : 'user',
-            parts: [{ text: m.text }]
-        }));
+        // Check for booking intent
+        const lowerInput = textToSend.toLowerCase();
+        if (lowerInput.includes('agendar') || lowerInput.includes('reunião') || lowerInput.includes('horário') || lowerInput.includes('book') || lowerInput.includes('meeting') || lowerInput.includes('schedule')) {
+            setTimeout(() => {
+                const bookingSection = document.getElementById('booking');
+                if (bookingSection) {
+                    bookingSection.scrollIntoView({ behavior: 'smooth' });
+                }
+                setMessages(prev => [...prev, {
+                    role: 'model',
+                    text: language === 'pt' ? 'Claro! Vou te levar para a agenda do Erilson. Lá você pode escolher o melhor horário.' :
+                        language === 'es' ? '¡Claro! Te llevaré a la agenda de Erilson. Allí puedes elegir el mejor horario.' :
+                            'Sure! I\'ll take you to Erilson\'s calendar. You can choose the best time there.',
+                    isActionable: true
+                }]);
+                setIsLoading(false);
+            }, 1000);
+            return;
+        }
 
-        const responseText = await sendMessageToGemini(historyForService, textToSend);
+        try {
+            const historyForService = messages.map(m => ({
+                role: m.role === 'model' ? 'model' : 'user',
+                parts: [{ text: m.text }]
+            }));
 
-        const hasAction = responseText.includes('[OFFER_WHATSAPP]');
-        const cleanText = responseText.replace('[OFFER_WHATSAPP]', '');
+            const responseText = await sendMessageToGemini(historyForService, textToSend);
 
-        const aiMessage: ChatMessage = {
-            role: 'model',
-            text: cleanText,
-            isActionable: hasAction
-        };
+            const hasAction = responseText.includes('[OFFER_WHATSAPP]');
+            const cleanText = responseText.replace('[OFFER_WHATSAPP]', '');
 
-        setMessages(prev => [...prev, aiMessage]);
-        setIsLoading(false);
+            const aiMessage: ChatMessage = {
+                role: 'model',
+                text: cleanText,
+                isActionable: hasAction
+            };
+
+            setMessages(prev => [...prev, aiMessage]);
+        } catch (error) {
+            console.error(error);
+            setMessages(prev => [...prev, { role: 'model', text: 'Desculpe, tive um erro técnico. Tente novamente.' }]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const openWhatsApp = () => {
