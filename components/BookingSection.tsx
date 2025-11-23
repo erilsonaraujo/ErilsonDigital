@@ -7,7 +7,7 @@ const BookingSection: React.FC = () => {
 
     // Safe fallback in case translations aren't loaded
     const bookingTitle = t?.booking?.title || 'Agende uma Consultoria';
-    const bookingSubtitle = t?.booking?.subtitle || 'Sessões de 20 minutos para discutir seu projeto e viabilidade técnica.';
+    const bookingSubtitle = t?.booking?.subtitle || 'Sessões de 30 minutos para discutir seu projeto e viabilidade técnica.';
 
     return (
         <section id="booking" className="py-20 bg-slate-50 dark:bg-dark-900 transition-colors duration-300">
@@ -27,7 +27,7 @@ const BookingSection: React.FC = () => {
                 <div className="max-w-4xl mx-auto glass-card p-4 md:p-8 rounded-3xl overflow-hidden">
                     {/* Calendly iframe embed */}
                     <iframe
-                        src="https://calendly.com/joseerilsonaraujo/20min?embed_domain=localhost&embed_type=Inline&hide_gdpr_banner=1&primary_color=2563eb"
+                        src="https://calendly.com/joseerilsonaraujo/30min?embed_domain=localhost&embed_type=Inline&hide_gdpr_banner=1&primary_color=2563eb"
                         width="100%"
                         height="700"
                         frameBorder="0"

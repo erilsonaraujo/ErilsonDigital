@@ -11,7 +11,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     nav: { services: 'Serviços', portfolio: 'Portfólio', about: 'Sobre', contact: 'Fale Comigo', booking: 'Agendar' },
     booking: {
       title: 'Agende uma Consultoria',
-      subtitle: 'Sessões de 20 minutos para discutir seu projeto e viabilidade técnica.',
+      subtitle: 'Sessões de 30 minutos para discutir seu projeto e viabilidade técnica.',
     },
     hero: {
       badge: 'Disponível para novos projetos',
@@ -68,7 +68,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     nav: { services: 'Services', portfolio: 'Portfolio', about: 'About', contact: 'Contact', booking: 'Book Now' },
     booking: {
       title: 'Book a Consultation',
-      subtitle: '20-minute sessions to discuss your project and technical feasibility.',
+      subtitle: '30-minute sessions to discuss your project and technical feasibility.',
     },
     hero: {
       badge: 'Available for hire',
@@ -125,7 +125,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     nav: { services: 'Servicios', portfolio: 'Portafolio', about: 'Sobre Mí', contact: 'Contacto', booking: 'Agendar' },
     booking: {
       title: 'Agendar Consultoría',
-      subtitle: 'Sesiones de 20 minutos para discutir tu proyecto y viabilidad técnica.',
+      subtitle: 'Sesiones de 30 minutos para discutir tu proyecto y viabilidad técnica.',
     },
     hero: {
       badge: 'Disponible para trabajar',
