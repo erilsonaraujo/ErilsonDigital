@@ -3,8 +3,10 @@ import { Server, Database, Globe, Code2, Terminal, Cpu, Smartphone, Cloud, Layou
 
 export const WHATSAPP_NUMBER = '5584991502101';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/jose-erilson-araujo-3265a52b1/';
-export const GITHUB_URL = 'https://github.com/erilsonaraujo';
+export const GITHUB_URL = 'https://github.com/erilsonaraujo/ErilsonDigital';
 export const EMAIL_ADDRESS = 'joseerilsonaraujo@gmail.com';
+export const DISCORD_USERNAME = 'erilsonaraujo';
+export const INSTAGRAM_URL = 'https://instagram.com/josearaujo1986';
 
 export const TRANSLATIONS: Record<Language, Translations> = {
   pt: {
