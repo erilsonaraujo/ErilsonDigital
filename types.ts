@@ -27,7 +27,8 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   isActionable?: boolean;
-  actionType?: 'whatsapp' | 'calendly';
+  // actionType indicates which actionable button(s) to show: 'whatsapp', 'calendly', or 'both'
+  actionType?: 'whatsapp' | 'calendly' | 'both';
 }
 
 export interface Skill {

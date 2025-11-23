@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, User, MessageCircle, UserCheck } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import { jsPDF } from 'jspdf';
 import { sendMessageToGemini } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '../constants';
@@ -81,7 +82,7 @@ const AISection: React.FC = () => {
                 role: 'model',
                 text: cleanText,
                 isActionable: hasAction,
-                actionType: hasWhatsApp ? 'whatsapp' : hasCalendly ? 'calendly' : undefined
+                actionType: hasWhatsApp && hasCalendly ? 'both' : hasWhatsApp ? 'whatsapp' : hasCalendly ? 'calendly' : undefined
             };
 
             setMessages(prev => [...prev, aiMessage]);
@@ -181,25 +182,53 @@ const AISection: React.FC = () => {
                                                 </ReactMarkdown>
                                             )}
                                         </div>
-                                        {msg.isActionable && msg.actionType === 'whatsapp' && (
-                                            <button
-                                                onClick={openWhatsApp}
-                                                className="mt-3 flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
-                                            >
-                                                <MessageCircle className="w-4 h-4" />
-                                                Falar com Erilson agora
-                                            </button>
-                                        )}
-                                        {msg.isActionable && msg.actionType === 'calendly' && (
-                                            <a
-                                                href="https://calendly.com/joseerilsonaraujo/30min"
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="mt-3 flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
-                                            >
-                                                <UserCheck className="w-4 h-4" />
-                                                Agendar Consultoria Gratuita
-                                            </a>
+                                        {/* Action Buttons */}
+                                        {msg.isActionable && (
+                                            <div className="flex flex-col space-y-2 mt-3">
+                                                {/* Calendly Button */}
+                                                {(msg.actionType === 'calendly' || msg.actionType === 'both') && (
+                                                    <a
+                                                        href="https://calendly.com/joseerilsonaraujo/30min"
+                                                        target="_blank"
+                                                        rel="noopener noreferrer"
+                                                        className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
+                                                    >
+                                                        <UserCheck className="w-4 h-4" />
+                                                        Agendar Consultoria Gratuita
+                                                    </a>
+                                                )}
+                                                {/* WhatsApp Button with PDF generation */}
+                                                {(msg.actionType === 'whatsapp' || msg.actionType === 'both') && (
+                                                    <button
+                                                        onClick={() => {
+                                                            // Generate PDF of the full conversation
+                                                            const doc = new jsPDF();
+                                                            let y = 10;
+                                                            messages.forEach((m) => {
+                                                                const prefix = m.role === 'user' ? 'Você: ' : 'Sofia: ';
+                                                                const lines = doc.splitTextToSize(prefix + m.text, 180);
+                                                                lines.forEach((line) => {
+                                                                    if (y > 280) { doc.addPage(); y = 10; }
+                                                                    doc.text(line, 10, y);
+                                                                    y += 7;
+                                                                });
+                                                            });
+                                                            const pdfData = doc.output('dataurlstring');
+                                                            // Store PDF in localStorage (placeholder for server storage)
+                                                            localStorage.setItem('conversationPdf', pdfData);
+                                                            // Trigger download for user
+                                                            doc.save(`conversation_${Date.now()}.pdf`);
+                                                            // Open WhatsApp chat
+                                                            const cleanNumber = WHATSAPP_NUMBER.replace(/\D/g, '');
+                                                            window.open(`https://wa.me/${cleanNumber}?text=Segue%20a%20conversa%20em%20PDF`, '_blank');
+                                                        }}
+                                                        className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
+                                                    >
+                                                        <MessageCircle className="w-4 h-4" />
+                                                        Falar com Erilson agora
+                                                    </button>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
                                 </div>
@@ -238,7 +267,7 @@ const AISection: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </section>
+        </section >
     );
 };
 
