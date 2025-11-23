@@ -1,8 +1,12 @@
+import { fileURLToPath } from 'url';
 import express from 'express';
 import multer from 'multer';
 import { nanoid } from 'nanoid';
 import fs from 'fs';
 import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const upload = multer({ dest: 'public/uploads/', limits: { fileSize: 5 * 1024 * 1024 } });
@@ -38,6 +42,17 @@ app.get('/c/:id', (req, res) => {
 
 // Serve static files (including uploaded PDFs)
 app.use(express.static('public'));
+// Serve built front‑end (Vite output)
+app.use(express.static('dist'));
+// Fallback for client‑side routing – serve index.html for any unknown route
+app.get('*', (req, res) => {
+    const indexPath = path.resolve(__dirname, 'dist', 'index.html');
+    if (fs.existsSync(indexPath)) {
+        res.sendFile(indexPath);
+    } else {
+        res.status(404).send('Not found');
+    }
+});
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Server listening on http://localhost:${PORT}`));
