@@ -2,15 +2,20 @@
 // Vercel Serverless Function (Node.js) that receives a PDF via multipart/form-data,
 // forwards it to https://file.io (temporary storage) and returns the short link.
 
+export const config = {
+    api: {
+        bodyParser: false, // We need raw body for forwarding, but Vercel parsing can be tricky.
+        // Actually, let's try letting Vercel parse the body if we can, 
+        // but for file uploads, standard practice is often to use a library.
+        // HOWEVER, to debug the 500 error, let's switch to a simpler approach:
+        // We will use 'formidable' but with better error handling and logging.
+    },
+};
+
 import { IncomingForm } from 'formidable';
 import FormData from 'form-data';
 import fs from 'fs';
-
-export const config = {
-    api: {
-        bodyParser: false, // let formidable handle parsing
-    },
-};
+import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -18,41 +23,54 @@ export default async function handler(req, res) {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
-    const form = new IncomingForm({ keepExtensions: true, maxFileSize: 5 * 1024 * 1024 });
-    form.parse(req, async (err, fields, files) => {
-        if (err) {
-            console.error('Form parse error:', err);
-            return res.status(400).json({ error: 'Invalid form data' });
-        }
-        const pdfFile = files.pdf;
-        if (!pdfFile) {
+    try {
+        const data = await new Promise((resolve, reject) => {
+            const form = new IncomingForm({ keepExtensions: true });
+            form.parse(req, (err, fields, files) => {
+                if (err) return reject(err);
+                resolve({ fields, files });
+            });
+        });
+
+        const pdfFile = data.files.pdf;
+        // Formidable v3 might return an array for files
+        const fileObj = Array.isArray(pdfFile) ? pdfFile[0] : pdfFile;
+
+        if (!fileObj) {
+            console.error('No PDF file found in request');
             return res.status(400).json({ error: 'PDF file missing' });
         }
 
-        try {
-            // Prepare multipart/form-data for file.io
-            const formData = new FormData();
-            formData.append('file', fs.createReadStream(pdfFile.filepath), {
-                filename: pdfFile.originalFilename,
-                contentType: pdfFile.mimetype,
-            });
-            // Optional: you can set an expiration (default 2 weeks). Here we keep default.
+        // Prepare multipart/form-data for file.io
+        const formData = new FormData();
+        formData.append('file', fs.createReadStream(fileObj.filepath), {
+            filename: fileObj.originalFilename || 'conversation.pdf',
+            contentType: fileObj.mimetype || 'application/pdf',
+        });
 
-            const uploadResp = await fetch('https://file.io', {
-                method: 'POST',
-                body: formData,
-            });
-            const uploadJson = await uploadResp.json();
-            if (!uploadResp.ok || uploadJson.success === false) {
-                console.error('file.io error:', uploadJson);
-                return res.status(500).json({ error: 'Failed to upload PDF to storage' });
-            }
-            // file.io returns a short link in the field "link"
-            const shortUrl = uploadJson.link;
-            return res.status(200).json({ shortUrl });
-        } catch (e) {
-            console.error('Upload error:', e);
-            return res.status(500).json({ error: 'Upload failed' });
+        // Upload to file.io
+        const uploadResp = await fetch('https://file.io', {
+            method: 'POST',
+            body: formData,
+            headers: formData.getHeaders(), // Important: add multipart headers
+        });
+
+        if (!uploadResp.ok) {
+            const errorText = await uploadResp.text();
+            console.error('file.io upstream error:', uploadResp.status, errorText);
+            return res.status(502).json({ error: 'Failed to upload to storage provider' });
         }
-    });
+
+        const uploadJson = await uploadResp.json();
+        if (!uploadJson.success) {
+            console.error('file.io success=false:', uploadJson);
+            return res.status(502).json({ error: 'Storage provider rejected upload' });
+        }
+
+        return res.status(200).json({ shortUrl: uploadJson.link });
+
+    } catch (error) {
+        console.error('Server error in /api/conversation:', error);
+        return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+    }
 }
