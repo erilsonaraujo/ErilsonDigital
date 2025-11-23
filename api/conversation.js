@@ -79,6 +79,10 @@ export default async function handler(req, res) {
 
         console.log('[API] file.io response status:', uploadResp.status);
 
+        // Check content type before parsing
+        const contentType = uploadResp.headers.get('content-type');
+        console.log('[API] file.io content-type:', contentType);
+
         if (!uploadResp.ok) {
             const txt = await uploadResp.text();
             console.error('[API] file.io error response:', txt);
@@ -86,6 +90,17 @@ export default async function handler(req, res) {
                 error: 'Upstream upload failed',
                 details: txt,
                 status: uploadResp.status
+            });
+        }
+
+        // Check if response is JSON
+        if (!contentType || !contentType.includes('application/json')) {
+            const txt = await uploadResp.text();
+            console.error('[API] file.io returned non-JSON response:', txt.substring(0, 500));
+            return res.status(502).json({
+                error: 'Upload service returned invalid response',
+                details: 'Expected JSON but got: ' + contentType,
+                preview: txt.substring(0, 200)
             });
         }
 
