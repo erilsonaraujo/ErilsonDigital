@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, User, MessageCircle, UserCheck } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import { sendMessageToGemini } from '../services/geminiService';
 import { ChatMessage } from '../types';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '../constants';
@@ -164,7 +165,21 @@ const AISection: React.FC = () => {
                                             ? 'bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-tr-none border border-slate-100 dark:border-slate-700'
                                             : 'bg-white dark:bg-primary-900/20 text-slate-800 dark:text-slate-100 rounded-tl-none border border-slate-100 dark:border-primary-900/30'
                                             }`}>
-                                            {msg.text}
+                                            {msg.role === 'user' ? (
+                                                msg.text
+                                            ) : (
+                                                <ReactMarkdown
+                                                    className="prose prose-sm max-w-none dark:prose-invert"
+                                                    components={{
+                                                        p: ({ node, ...props }) => <p className="mb-3 last:mb-0" {...props} />,
+                                                        strong: ({ node, ...props }) => <strong className="font-bold text-primary-600 dark:text-primary-400" {...props} />,
+                                                        ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-3 space-y-1" {...props} />,
+                                                        li: ({ node, ...props }) => <li className="ml-2" {...props} />
+                                                    }}
+                                                >
+                                                    {msg.text}
+                                                </ReactMarkdown>
+                                            )}
                                         </div>
                                         {msg.isActionable && msg.actionType === 'whatsapp' && (
                                             <button
