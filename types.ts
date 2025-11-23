@@ -60,6 +60,7 @@ export interface Translations {
     suggestion1: string;
     suggestion2: string;
     suggestion3: string;
+    help_label: string;
   };
   services: {
     title: string;
