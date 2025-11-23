@@ -1,6 +1,6 @@
 import React from 'react';
-import { Github, Linkedin, Mail, Phone, Instagram } from 'lucide-react';
-import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER, DISCORD_USERNAME, INSTAGRAM_URL } from '../constants';
+import { Github, Linkedin, Mail, Phone, Instagram, MessageCircle } from 'lucide-react';
+import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER, DISCORD_URL, INSTAGRAM_URL } from '../constants';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -48,11 +48,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                 <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-pink-600 hover:text-white transition-all transform hover:-translate-y-1">
                                     <Instagram className="h-5 w-5" />
                                 </a>
+                                <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all transform hover:-translate-y-1">
+                                    <MessageCircle className="h-5 w-5" />
+                                </a>
                                 <a href={`mailto:${EMAIL_ADDRESS}`} className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-primary-600 hover:text-white transition-all transform hover:-translate-y-1">
                                     <Mail className="h-5 w-5" />
                                 </a>
                             </div>
-                            <p className="text-xs text-white">Discord: {DISCORD_USERNAME}</p>
                         </div>
                     </div>
 

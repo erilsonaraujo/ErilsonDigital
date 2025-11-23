@@ -6,6 +6,8 @@
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-Live-2563eb?style=for-the-badge&logo=react)](https://erilsondigital.com)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077b5?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/jose-erilson-araujo-3265a52b1/)
+[![Discord](https://img.shields.io/badge/Discord-Join-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/3VDFU2wy)
+[![Instagram](https://img.shields.io/badge/Instagram-Follow-e4405f?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/josearaujo1986)
 [![Email](https://img.shields.io/badge/Email-Contact-ea4335?style=for-the-badge&logo=gmail)](mailto:joseerilsonaraujo@gmail.com)
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-Chat-25d366?style=for-the-badge&logo=whatsapp)](https://wa.me/5584991502101)
 
@@ -187,6 +189,10 @@ Estou sempre aberto a novos desafios e oportunidades de colaboração. Se você 
 [![WhatsApp](https://img.shields.io/badge/WhatsApp-+55_(84)_99150--2101-25d366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5584991502101)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Jose_Erilson_Araujo-0077b5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jose-erilson-araujo-3265a52b1/)
+
+[![Discord](https://img.shields.io/badge/Discord-Join_Server-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/3VDFU2wy)
+
+[![Instagram](https://img.shields.io/badge/Instagram-@josearaujo1986-e4405f?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/josearaujo1986)
 
 [![Portfolio](https://img.shields.io/badge/Portfolio-erilsondigital.com-2563eb?style=for-the-badge&logo=react&logoColor=white)](https://erilsondigital.com)
 
