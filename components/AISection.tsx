@@ -68,13 +68,19 @@ const AISection: React.FC = () => {
 
             const responseText = await sendMessageToGemini(historyForService, textToSend);
 
-            const hasAction = responseText.includes('[OFFER_WHATSAPP]');
-            const cleanText = responseText.replace('[OFFER_WHATSAPP]', '');
+            const hasWhatsApp = responseText.includes('[OFFER_WHATSAPP]');
+            const hasCalendly = responseText.includes('[OFFER_CALENDLY]');
+            const hasAction = hasWhatsApp || hasCalendly;
+
+            let cleanText = responseText
+                .replace('[OFFER_WHATSAPP]', '')
+                .replace('[OFFER_CALENDLY]', '');
 
             const aiMessage: ChatMessage = {
                 role: 'model',
                 text: cleanText,
-                isActionable: hasAction
+                isActionable: hasAction,
+                actionType: hasWhatsApp ? 'whatsapp' : hasCalendly ? 'calendly' : undefined
             };
 
             setMessages(prev => [...prev, aiMessage]);
@@ -160,7 +166,7 @@ const AISection: React.FC = () => {
                                             }`}>
                                             {msg.text}
                                         </div>
-                                        {msg.isActionable && (
+                                        {msg.isActionable && msg.actionType === 'whatsapp' && (
                                             <button
                                                 onClick={openWhatsApp}
                                                 className="mt-3 flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
@@ -168,6 +174,17 @@ const AISection: React.FC = () => {
                                                 <MessageCircle className="w-4 h-4" />
                                                 Falar com Erilson agora
                                             </button>
+                                        )}
+                                        {msg.isActionable && msg.actionType === 'calendly' && (
+                                            <a
+                                                href="https://calendly.com/joseerilsonaraujo/30min"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="mt-3 flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
+                                            >
+                                                <UserCheck className="w-4 h-4" />
+                                                Agendar Consultoria Gratuita
+                                            </a>
                                         )}
                                     </div>
                                 </div>

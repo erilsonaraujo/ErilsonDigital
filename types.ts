@@ -24,9 +24,10 @@ export interface Service {
 }
 
 export interface ChatMessage {
-  role: 'user' | 'model' | 'system';
+  role: 'user' | 'model';
   text: string;
   isActionable?: boolean;
+  actionType?: 'whatsapp' | 'calendly';
 }
 
 export interface Skill {
