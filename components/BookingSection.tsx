@@ -5,6 +5,10 @@ import { Calendar } from 'lucide-react';
 const BookingSection: React.FC = () => {
     const { t } = useThemeLanguage();
 
+    // Safe fallback in case translations aren't loaded
+    const bookingTitle = t?.booking?.title || 'Agende uma Consultoria';
+    const bookingSubtitle = t?.booking?.subtitle || 'Sessões de 20 minutos para discutir seu projeto e viabilidade técnica.';
+
     return (
         <section id="booking" className="py-20 bg-slate-50 dark:bg-dark-900 transition-colors duration-300">
             <div className="container mx-auto px-4">
@@ -13,10 +17,10 @@ const BookingSection: React.FC = () => {
                         <Calendar className="w-6 h-6" />
                     </div>
                     <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
-                        {t.booking.title}
+                        {bookingTitle}
                     </h2>
                     <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                        {t.booking.subtitle}
+                        {bookingSubtitle}
                     </p>
                 </div>
 
