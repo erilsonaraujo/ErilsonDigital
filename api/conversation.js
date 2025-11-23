@@ -2,20 +2,15 @@
 // Vercel Serverless Function (Node.js) that receives a PDF via multipart/form-data,
 // forwards it to https://file.io (temporary storage) and returns the short link.
 
-export const config = {
-    api: {
-        bodyParser: false, // We need raw body for forwarding, but Vercel parsing can be tricky.
-        // Actually, let's try letting Vercel parse the body if we can, 
-        // but for file uploads, standard practice is often to use a library.
-        // HOWEVER, to debug the 500 error, let's switch to a simpler approach:
-        // We will use 'formidable' but with better error handling and logging.
-    },
-};
-
 import { IncomingForm } from 'formidable';
-import FormData from 'form-data';
 import fs from 'fs';
 import fetch from 'node-fetch';
+
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
@@ -33,44 +28,45 @@ export default async function handler(req, res) {
         });
 
         const pdfFile = data.files.pdf;
-        // Formidable v3 might return an array for files
         const fileObj = Array.isArray(pdfFile) ? pdfFile[0] : pdfFile;
 
         if (!fileObj) {
-            console.error('No PDF file found in request');
             return res.status(400).json({ error: 'PDF file missing' });
         }
 
-        // Prepare multipart/form-data for file.io
-        const formData = new FormData();
-        formData.append('file', fs.createReadStream(fileObj.filepath), {
-            filename: fileObj.originalFilename || 'conversation.pdf',
-            contentType: fileObj.mimetype || 'application/pdf',
+        // Read file buffer
+        const fileBuffer = fs.readFileSync(fileObj.filepath);
+
+        // Upload to file.io using simple POST (not multipart) if possible, 
+        // OR construct multipart manually with boundary if node-fetch/form-data is flaky.
+        // file.io supports raw body upload if you just want to store text, but for PDF we need multipart.
+        // Let's try a different approach: use 'FormData' from 'node-fetch' (if available) or 'form-data' package.
+        // We will use the 'form-data' package which is robust.
+
+        const FormData = (await import('form-data')).default;
+        const form = new FormData();
+        form.append('file', fileBuffer, {
+            filename: 'conversation.pdf',
+            contentType: 'application/pdf',
         });
 
-        // Upload to file.io
         const uploadResp = await fetch('https://file.io', {
             method: 'POST',
-            body: formData,
-            headers: formData.getHeaders(), // Important: add multipart headers
+            body: form,
+            headers: form.getHeaders(),
         });
 
         if (!uploadResp.ok) {
-            const errorText = await uploadResp.text();
-            console.error('file.io upstream error:', uploadResp.status, errorText);
-            return res.status(502).json({ error: 'Failed to upload to storage provider' });
+            const txt = await uploadResp.text();
+            console.error('file.io error:', txt);
+            return res.status(502).json({ error: 'Upstream upload failed' });
         }
 
-        const uploadJson = await uploadResp.json();
-        if (!uploadJson.success) {
-            console.error('file.io success=false:', uploadJson);
-            return res.status(502).json({ error: 'Storage provider rejected upload' });
-        }
-
-        return res.status(200).json({ shortUrl: uploadJson.link });
+        const json = await uploadResp.json();
+        return res.status(200).json({ shortUrl: json.link });
 
     } catch (error) {
-        console.error('Server error in /api/conversation:', error);
-        return res.status(500).json({ error: 'Internal Server Error', details: error.message });
+        console.error('API Error:', error);
+        return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
