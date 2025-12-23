@@ -51,6 +51,7 @@ export interface Translations {
   hero: {
     badge: string;
     title: string;
+    titleHighlight: string;
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;

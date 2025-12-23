@@ -16,9 +16,10 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       subtitle: 'Sessões de 30 minutos para discutir seu projeto e viabilidade técnica.',
     },
     hero: {
-      badge: 'Disponível para novos projetos',
-      title: 'Desenvolvedor Full-Stack Java & Python',
-      subtitle: 'Transformo necessidades de negócio em software seguro. Especialista em Spring Boot, automações e plataformas web.',
+      badge: 'Especialista em Automação com IA',
+      title: 'Escale seu negócio com',
+      titleHighlight: 'Automação & IA',
+      subtitle: 'Desenvolvedor de Agentes Inteligentes e Atendimento Automatizado. Soluções robustas em Java & Python para transformar sua operação.',
       ctaPrimary: 'Ver Portfólio',
       ctaSecondary: 'Falar com Sofia (IA)',
     },
@@ -33,8 +34,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       help_label: 'Perguntas frequentes:',
     },
     services: {
-      title: 'Soluções Tecnológicas Modernas',
-      subtitle: 'Expertise técnica que vai do Mobile ao Backend Enterprise, focada em escalabilidade.',
+      title: 'Soluções de IA para Negócios',
+      subtitle: 'Transformando processos manuais em fluxos de trabalho inteligentes e escaláveis.',
     },
     projects: {
       title: 'Portfólio de Alto Impacto',
@@ -73,9 +74,10 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       subtitle: '30-minute sessions to discuss your project and technical feasibility.',
     },
     hero: {
-      badge: 'Available for hire',
-      title: 'Full-Stack Developer Java & Python',
-      subtitle: 'I transform business needs into secure software. Specialist in Spring Boot, automation, and web platforms.',
+      badge: 'AI Automation Specialist',
+      title: 'Scale your business with',
+      titleHighlight: 'Automation & AI',
+      subtitle: 'Developer of Intelligent Agents and Automated Support. Robust Java & Python solutions to transform your operation.',
       ctaPrimary: 'View Portfolio',
       ctaSecondary: 'Chat with Sofia (AI)',
     },
@@ -90,8 +92,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       help_label: 'Frequently asked questions:',
     },
     services: {
-      title: 'Modern Tech Solutions',
-      subtitle: 'Technical expertise ranging from Mobile to Enterprise Backend, focused on scalability.',
+      title: 'AI Solutions for Business',
+      subtitle: 'Transforming manual processes into intelligent and scalable workflows.',
     },
     projects: {
       title: 'High Impact Portfolio',
@@ -130,9 +132,10 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       subtitle: 'Sesiones de 30 minutos para discutir tu proyecto y viabilidad técnica.',
     },
     hero: {
-      badge: 'Disponible para trabajar',
-      title: 'Desarrollador Full-Stack Java y Python',
-      subtitle: 'Transformo necesidades de negocio en software seguro. Especialista en Spring Boot, automatización y plataformas web.',
+      badge: 'Especialista en Automatización con IA',
+      title: 'Scale su negocio con',
+      titleHighlight: 'Automatización e IA',
+      subtitle: 'Desarrollador de Agentes Inteligentes y Atención Automatizada. Soluciones robustas en Java y Python para transformar su operación.',
       ctaPrimary: 'Ver Portafolio',
       ctaSecondary: 'Hablar con Sofia (IA)',
     },
@@ -147,8 +150,8 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       help_label: 'Preguntas frecuentes:',
     },
     services: {
-      title: 'Soluciones Tecnológicas Modernas',
-      subtitle: 'Experiencia técnica desde Móvil hasta Backend Enterprise, enfocada en escalabilidad.',
+      title: 'Soluciones de IA para Negocios',
+      subtitle: 'Transformando procesos manuales en flujos de trabalho inteligentes y escalables.',
     },
     projects: {
       title: 'Portafolio de Alto Impacto',
@@ -331,52 +334,52 @@ export const PROJECTS: Project[] = [
 
 export const SERVICES: Service[] = [
   {
+    id: 'ai-automation',
+    title: 'Automação com IA',
+    description: 'Bots inteligentes, análise de dados automática e automação de processos complexos para aumentar sua eficiência.',
+    icon: Cpu,
+  },
+  {
+    id: 'ai-agents',
+    title: 'Agentes Inteligentes',
+    description: 'Desenvolvimento de sistemas autônomos que tomam decisões e executam tarefas especializadas para sua empresa.',
+    icon: Terminal,
+  },
+  {
+    id: 'automated-support',
+    title: 'Atendimento Automatizado',
+    description: 'Pague menos e atenda melhor com assistentes virtuais inteligentes que resolvem problemas reais 24/7.',
+    icon: Globe,
+  },
+  {
     id: 'backend',
-    title: 'Backend Java & Python Enterprise',
-    description: 'Arquitetura de microsserviços robusta. APIs que aguentam alta carga, processamento de pagamentos e segurança bancária.',
+    title: 'Full Stack Java & Python',
+    description: 'Arquitetura robusta de backend para sustentar integrações complexas e processamento de dados em larga escala.',
     icon: Server,
   },
   {
     id: 'mobile',
     title: 'Mobile & App Backend',
-    description: 'Crio toda a inteligência por trás do seu App Android/iOS. APIs rápidas, Geolocalização, Notificações Push e Real-time.',
+    description: 'Inteligência e APIs para Apps Android/iOS. Geolocalização, notificações e tempo real com alta performance.',
     icon: Smartphone,
   },
   {
     id: 'web',
-    title: 'Sistemas Web & Dashboards',
-    description: 'Painéis administrativos complexos, CRMs e plataformas SaaS. Interfaces modernas com React/Next.js focadas em UX.',
+    title: 'Sistemas Web Premium',
+    description: 'Interfaces modernas e Dashboards analíticos em React para gestão visual e intuitiva do seu negócio.',
     icon: Layout,
-  },
-  {
-    id: 'automation',
-    title: 'Automação com IA & Python',
-    description: 'Bots que leem documentos, crawlers de dados, integração com WhatsApp e automação de tarefas repetitivas.',
-    icon: Code2,
   },
   {
     id: 'cloud',
     title: 'Cloud & DevOps',
-    description: 'Deploy na AWS/Google Cloud. Configuração de Docker, CI/CD e banco de dados escalável. Seu projeto sempre online.',
+    description: 'Infraestrutura escalável em AWS/Google Cloud. Docker, CI/CD e segurança para manter tudo sempre online.',
     icon: Cloud,
   },
   {
     id: 'security',
-    title: 'Segurança & Consultoria',
-    description: 'Adequação à LGPD, implementação de OAuth2/JWT e auditoria de código para garantir que seus dados estejam seguros.',
+    title: 'Segurança & LGPD',
+    description: 'Proteção de dados, auditoria de código e conformidade técnica para garantir a integridade da sua operação.',
     icon: ShieldCheck,
-  },
-  {
-    id: 'api',
-    title: 'Integração de APIs',
-    description: 'Conecto seu sistema com meios de pagamento (Stripe, PayPal), CRMs e ferramentas de terceiros via Webhooks.',
-    icon: Globe,
-  },
-  {
-    id: 'performance',
-    title: 'Otimização de Performance',
-    description: 'Seu site está lento? Eu otimizo bancos de dados, queries e frontend para carregar em milissegundos.',
-    icon: Terminal,
   }
 ];
 
