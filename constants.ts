@@ -194,7 +194,7 @@ export const PROJECTS: Project[] = [
     problem: 'Escritório lidava com milhares de documentos físicos e perda de prazos por falta de centralização.',
     solution: 'Sistema Enterprise em Java Spring Boot com segurança JWT. Módulo de automação em Python que lê PDFs judicial e cadastra prazos automaticamente no banco PostgreSQL.',
     technologies: ['Java 17', 'Spring Boot', 'Python Automation', 'PostgreSQL', 'Docker'],
-    image: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&q=80&w=1200',
     liveLink: 'https://eribertorocha.com.br',
   },
   {
@@ -205,7 +205,7 @@ export const PROJECTS: Project[] = [
     problem: 'Síndicos precisavam de transparência financeira em tempo real e comunicação direta com condôminos.',
     solution: 'Plataforma SaaS escalável. Backend Node.js/Express para alta concorrência, Frontend React com Dashboard analítico. Integração com API de boletos bancários.',
     technologies: ['React', 'Node.js', 'PostgreSQL', 'Chart.js', 'AWS S3'],
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200',
     liveLink: 'https://eadministracao.com.br',
   },
   {
@@ -216,7 +216,7 @@ export const PROJECTS: Project[] = [
     problem: 'Necessidade de processar 500+ transações por segundo com consistência ACID absoluta.',
     solution: 'Microsserviços em Java Spring Boot, comunicação via Kafka para assincronismo e Redis para cache de saldo. Implementação de segurança OAuth2 e criptografia ponta-a-ponta.',
     technologies: ['Java', 'Spring Cloud', 'Kafka', 'Redis', 'Docker'],
-    image: 'https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1624555130581-1d9cca783bc0?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -227,7 +227,7 @@ export const PROJECTS: Project[] = [
     problem: 'Cálculo de rotas em tempo real e matching de entregadores próximos.',
     solution: 'API de alta performance em Python FastAPI. Uso de PostGIS para queries espaciais (raio de entrega) e WebSockets para tracking do motoboy em tempo real no mapa.',
     technologies: ['Python', 'FastAPI', 'PostGIS', 'WebSockets', 'Google Maps API'],
-    image: 'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1619641472305-64906f2f9f8f?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -249,7 +249,7 @@ export const PROJECTS: Project[] = [
     problem: 'Fazendeiros perdiam colheitas por falta de dados climáticos precisos em tempo real.',
     solution: 'Coletor de dados MQTT em Python rodando em Raspberry Pi, enviando para backend em Java. Dashboard em React exibe gráficos históricos e alertas via SMS/WhatsApp.',
     technologies: ['Python', 'MQTT', 'Java Spring', 'React', 'Twilio API'],
-    image: 'https://images.unsplash.com/photo-1625246333195-58197bd47d26?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1560732488-6b0df2401543?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -260,7 +260,7 @@ export const PROJECTS: Project[] = [
     problem: 'Sistema monolítico travava em Black Fridays devido ao alto tráfego.',
     solution: 'Refatoração para Microsserviços: Serviço de Catálogo (Go), Serviço de Pedidos (Java) e Serviço de Recomendação (Python AI). Deploy em Kubernetes (EKS).',
     technologies: ['Microservices', 'Kubernetes', 'Java', 'Python', 'RabbitMQ'],
-    image: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1556742111-a301076d9d18?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -271,7 +271,7 @@ export const PROJECTS: Project[] = [
     problem: 'Processos de avaliação de desempenho eram feitos em Excel e se perdiam.',
     solution: 'Aplicação Web segura com hierarquia de acessos (RBAC). Geração automática de relatórios de performance em PDF e dashboards para diretores.',
     technologies: ['Java Spring Security', 'Thymeleaf', 'MySQL', 'JasperReports'],
-    image: 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -282,7 +282,7 @@ export const PROJECTS: Project[] = [
     problem: 'Corretores demoravam para cruzar perfil do cliente com imóveis disponíveis.',
     solution: 'Backend Django (Python) robusto. Algoritmo de recomendação simples (Cosine Similarity) que sugere imóveis baseados no histórico do lead.',
     technologies: ['Python Django', 'React', 'Scikit-learn', 'PostgreSQL'],
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1582408921715-18e7806365bb?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -293,7 +293,7 @@ export const PROJECTS: Project[] = [
     problem: 'Empresa precisava treinar 200 funcionários sem depender de plataformas externas caras.',
     solution: 'Sistema de streaming de vídeo com AWS CloudFront. Acompanhamento de progresso, emissão de certificados automáticos e quizzes interativos.',
     technologies: ['Next.js', 'AWS S3/CloudFront', 'Node.js', 'MongoDB'],
-    image: 'https://images.unsplash.com/photo-1501504905252-473c47e087f8?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -304,7 +304,7 @@ export const PROJECTS: Project[] = [
     problem: 'Gestores não sabiam onde a carga estava e gastavam muito com combustível.',
     solution: 'App Android (React Native) que envia GPS a cada 30s. Backend Java calcula desvios de rota e consumo médio, gerando alertas de anomalia.',
     technologies: ['Java', 'React Native', 'Google Maps API', 'Firebase'],
-    image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1580674285054-bed31e145f59?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -315,7 +315,7 @@ export const PROJECTS: Project[] = [
     problem: 'Alto índice de "no-show" (clientes que faltam) gerando prejuízo.',
     solution: 'API de agendamento que conflita horários automaticamente. Worker em Python que envia lembretes automáticos via WhatsApp API 24h antes.',
     technologies: ['Python Flask', 'Celery', 'Redis', 'WhatsApp API'],
-    image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1506784422154-7f5c97ef004a?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -326,7 +326,7 @@ export const PROJECTS: Project[] = [
     problem: 'Diferenciar-se no mercado de trabalho competitivo e mostrar habilidades técnicas na prática.',
     solution: 'Atenção Cliente: Este site que você está vendo foi construído com as mesmas tecnologias que eu uso nos seus projetos. React para performance, Tailwind para design premium e IA para interatividade. Se você gostou da experiência, imagine o que posso fazer pelo seu negócio.',
     technologies: ['React', 'Google Gemini API', 'Tailwind', 'Vercel'],
-    image: 'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200',
     liveLink: 'https://erilsondigital.com',
     repoLink: 'https://github.com/erilsonaraujo/portfolio',
   }
