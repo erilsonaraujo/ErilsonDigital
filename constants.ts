@@ -227,7 +227,7 @@ export const PROJECTS: Project[] = [
     problem: 'Cálculo de rotas em tempo real e matching de entregadores próximos.',
     solution: 'API de alta performance em Python FastAPI. Uso de PostGIS para queries espaciais (raio de entrega) e WebSockets para tracking do motoboy em tempo real no mapa.',
     technologies: ['Python', 'FastAPI', 'PostGIS', 'WebSockets', 'Google Maps API'],
-    image: 'https://images.unsplash.com/photo-1619641472305-64906f2f9f8f?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1526367790999-015078484022?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -249,7 +249,7 @@ export const PROJECTS: Project[] = [
     problem: 'Fazendeiros perdiam colheitas por falta de dados climáticos precisos em tempo real.',
     solution: 'Coletor de dados MQTT em Python rodando em Raspberry Pi, enviando para backend em Java. Dashboard em React exibe gráficos históricos e alertas via SMS/WhatsApp.',
     technologies: ['Python', 'MQTT', 'Java Spring', 'React', 'Twilio API'],
-    image: 'https://images.unsplash.com/photo-1560732488-6b0df2401543?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1560493676-04071c5f467b?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -282,7 +282,7 @@ export const PROJECTS: Project[] = [
     problem: 'Corretores demoravam para cruzar perfil do cliente com imóveis disponíveis.',
     solution: 'Backend Django (Python) robusto. Algoritmo de recomendação simples (Cosine Similarity) que sugere imóveis baseados no histórico do lead.',
     technologies: ['Python Django', 'React', 'Scikit-learn', 'PostgreSQL'],
-    image: 'https://images.unsplash.com/photo-1582408921715-18e7806365bb?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
@@ -315,7 +315,7 @@ export const PROJECTS: Project[] = [
     problem: 'Alto índice de "no-show" (clientes que faltam) gerando prejuízo.',
     solution: 'API de agendamento que conflita horários automaticamente. Worker em Python que envia lembretes automáticos via WhatsApp API 24h antes.',
     technologies: ['Python Flask', 'Celery', 'Redis', 'WhatsApp API'],
-    image: 'https://images.unsplash.com/photo-1506784422154-7f5c97ef004a?auto=format&fit=crop&q=80&w=1200',
+    image: 'https://images.unsplash.com/photo-1506784365847-bbad939e9335?auto=format&fit=crop&q=80&w=1200',
     repoLink: GITHUB_URL,
   },
   {
