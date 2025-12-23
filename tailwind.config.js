@@ -40,6 +40,10 @@ export default {
             },
             animation: {
                 'blob': 'blob 7s infinite',
+                'spin-slow': 'spin 15s linear infinite',
+                'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'drift': 'drift 20s ease-in-out infinite',
+                'reverse-spin': 'reverse-spin 20s linear infinite',
             },
             keyframes: {
                 blob: {
@@ -47,6 +51,15 @@ export default {
                     '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
                     '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                     '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                },
+                drift: {
+                    '0%, 100%': { transform: 'translate(0px, 0px) rotate(0deg)' },
+                    '33%': { transform: 'translate(50px, -30px) rotate(5deg)' },
+                    '66%': { transform: 'translate(-30px, 40px) rotate(-5deg)' },
+                },
+                'reverse-spin': {
+                    from: { transform: 'rotate(360deg)' },
+                    to: { transform: 'rotate(0deg)' },
                 }
             }
         },
