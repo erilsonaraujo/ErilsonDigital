@@ -15,42 +15,71 @@ const Hero: React.FC = () => {
         <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-200 dark:bg-secondary-600/10 rounded-full blur-3xl opacity-50 animate-blob" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-dark-800 border border-slate-200 dark:border-dark-700 text-slate-600 dark:text-primary-400 text-sm font-medium mb-8 shadow-sm">
-          <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-          {t.badge}
-        </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
+          <div className="flex-1 text-center lg:text-left">
+            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-dark-800 border border-slate-200 dark:border-dark-700 text-slate-600 dark:text-primary-400 text-sm font-medium mb-8 shadow-sm">
+              <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+              {t.badge}
+            </div>
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-slate-900 dark:text-white tracking-tight mb-6 px-2">
-          {t.title} <br className="hidden sm:block" />
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 block sm:inline mt-2 sm:mt-0">
-            {t.titleHighlight}
-          </span>
-        </h1>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-slate-900 dark:text-white tracking-tight mb-6">
+              {t.title} <br className="hidden sm:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 block sm:inline mt-2 sm:mt-0">
+                {t.titleHighlight}
+              </span>
+            </h1>
 
-        <p className="mt-4 max-w-2xl mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed px-4">
-          {t.subtitle}
-        </p>
+            <p className="mt-4 max-w-2xl lg:mx-0 mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+              {t.subtitle}
+            </p>
 
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-          <a
-            href="#portfolio"
-            className="px-8 py-4 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/30 flex items-center justify-center group"
-          >
-            {t.ctaPrimary}
-            <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </a>
-          <button
-            onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
-            className="px-8 py-4 rounded-lg bg-white dark:bg-dark-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-dark-700 hover:bg-slate-50 dark:hover:bg-dark-700 transition-all flex items-center justify-center shadow-sm"
-          >
-            {t.ctaSecondary}
-          </button>
-        </div>
+            <div className="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+              <a
+                href="#portfolio"
+                className="px-8 py-4 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/30 flex items-center justify-center group"
+              >
+                {t.ctaPrimary}
+                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+              <button
+                onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
+                className="px-8 py-4 rounded-lg bg-white dark:bg-dark-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-dark-700 hover:bg-slate-50 dark:hover:bg-dark-700 transition-all flex items-center justify-center shadow-sm"
+              >
+                {t.ctaSecondary}
+              </button>
+            </div>
 
-        <div className="mt-12 flex justify-center space-x-6 text-slate-400">
-          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"><Github className="h-6 w-6 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors" /></a>
-          <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors" /></a>
+            <div className="mt-12 flex justify-center lg:justify-start space-x-6 text-slate-400 border-t border-slate-100 dark:border-dark-800/50 pt-8">
+              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"><Github className="h-6 w-6 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors" /></a>
+              <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors" /></a>
+            </div>
+          </div>
+
+          <div className="flex-1 relative lg:block">
+            <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[450px] lg:h-[450px] mx-auto">
+              {/* Decorative elements */}
+              <div className="absolute inset-0 bg-primary-500/10 dark:bg-primary-500/20 rounded-full blur-2xl animate-pulse"></div>
+              <div className="absolute -inset-4 border border-dashed border-primary-500/30 rounded-full animate-spin-slow"></div>
+
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border-4 border-white dark:border-dark-800 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 group">
+                <img
+                  src="/assets/erilson.jpg"
+                  alt="Erilson Araujo"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/40 to-transparent opacity-60"></div>
+              </div>
+
+              {/* Float labels */}
+              <div className="absolute -right-4 top-10 bg-white dark:bg-dark-800 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow hidden sm:block">
+                <p className="text-primary-600 font-bold text-sm">AI Agent Expert 🤖</p>
+              </div>
+              <div className="absolute -left-8 bottom-20 bg-white dark:bg-dark-800 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow delay-700 hidden sm:block">
+                <p className="text-secondary-500 font-bold text-sm">Fullstack Dev 💻</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
