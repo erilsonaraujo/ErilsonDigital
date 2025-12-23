@@ -2,54 +2,25 @@ import React from 'react';
 import { ArrowRight, Github, Linkedin } from 'lucide-react';
 import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
 import { TRANSLATIONS, GITHUB_URL, LINKEDIN_URL } from '../constants';
+import TechNetworkBackground from './TechNetworkBackground';
 
 const Hero: React.FC = () => {
   const { language } = useThemeLanguage();
   const t = TRANSLATIONS[language].hero;
 
   return (
-    <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden bg-slate-50 dark:bg-dark-950 transition-colors duration-300">
-      {/* background: Animated Tech Grid & Flow */}
+    <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden bg-white dark:bg-dark-950 transition-colors duration-300">
+      {/* background: Animated Tech Grid & Interactive Network */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         {/* Base Grid */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
 
-        {/* Glowing Blobs (Mobile Optimized) */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary-500/10 dark:bg-primary-600/5 rounded-full blur-[120px] animate-blob"></div>
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/10 dark:bg-secondary-600/5 rounded-full blur-[120px] animate-blob" style={{ animationDelay: '2s' }}></div>
+        {/* Interactive Particle Network */}
+        <TechNetworkBackground />
 
-        {/* Floating Tech Polygons */}
-        <svg className="absolute inset-0 w-full h-full opacity-[0.15] dark:opacity-[0.2]" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="grid-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="currentColor" stopOpacity="0" />
-              <stop offset="50%" stopColor="currentColor" stopOpacity="1" />
-              <stop offset="100%" stopColor="currentColor" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-          {/* Horizontal scanning line */}
-          <rect width="100" height="0.1" fill="url(#grid-grad)" className="text-primary-500 animate-[drift_10s_ease-in-out_infinite]" />
-        </svg>
-
-        {/* Circuit-like paths */}
-        <div className="absolute inset-0 opacity-20 dark:opacity-40">
-          <div className="absolute top-[15%] left-[10%] w-32 h-32 border-l border-t border-primary-500/30 rounded-tl-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-[20%] right-[15%] w-48 h-48 border-r border-b border-primary-400/20 rounded-br-[4rem] animate-pulse-slow-reverse" style={{ animationDelay: '1s' }}></div>
-
-          {/* Random floating technical nodes */}
-          <div className="absolute top-1/4 right-[25%] w-2 h-2 bg-primary-500 rounded-full animate-ping"></div>
-          <div className="absolute bottom-1/3 left-[20%] w-1.5 h-1.5 bg-primary-400 rounded-full animate-ping" style={{ animationDelay: '1.5s' }}></div>
-        </div>
-
-        {/* Geometric Polygons in motion */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 border border-primary-500/5 dark:border-primary-500/10 rounded-full animate-spin-slow opacity-50"></div>
-          <div className="absolute top-1/3 left-1/3 w-96 h-96 border border-dashed border-primary-400/5 dark:border-primary-400/10 rounded-full animate-reverse-spin opacity-30"></div>
-
-          {/* Floating Tech Crystals/Hexagons */}
-          <div className="absolute top-20 right-[15%] w-24 h-24 bg-primary-500/5 dark:bg-primary-500/10 backdrop-blur-sm rotate-45 animate-drift hidden lg:block"></div>
-          <div className="absolute bottom-40 left-[10%] w-32 h-32 bg-purple-500/5 dark:bg-purple-600/5 backdrop-blur-sm -rotate-12 animate-drift-reverse hidden lg:block"></div>
-        </div>
+        {/* Glowing Blobs (Optimized) */}
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary-500/5 dark:bg-primary-600/5 rounded-full blur-[120px] animate-blob"></div>
+        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/5 dark:bg-secondary-600/5 rounded-full blur-[120px] animate-blob" style={{ animationDelay: '2s' }}></div>
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
