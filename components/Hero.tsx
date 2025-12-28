@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import { ArrowRight, Github, Linkedin } from 'lucide-react';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';

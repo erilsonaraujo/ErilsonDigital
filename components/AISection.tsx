@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, User, MessageCircle, UserCheck } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';

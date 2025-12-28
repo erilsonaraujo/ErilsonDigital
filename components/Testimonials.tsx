@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { TESTIMONIALS } from '@/constants';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';

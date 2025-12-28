@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState, useEffect } from 'react';
 import { PROJECTS, TRANSLATIONS } from '@/constants';
 import { Code, ExternalLink, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
