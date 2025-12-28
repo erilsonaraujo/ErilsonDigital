@@ -4,8 +4,11 @@ import React from 'react';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { Calendar } from 'lucide-react';
 
+import { TRANSLATIONS } from '@/constants';
+
 const BookingSection: React.FC = () => {
-    const { t } = useThemeLanguage();
+    const { language } = useThemeLanguage();
+    const t = TRANSLATIONS[language];
 
     // Safe fallback in case translations aren't loaded
     const bookingTitle = t?.booking?.title || 'Agende uma Consultoria';
