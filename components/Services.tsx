@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
-import { SERVICES, TRANSLATIONS } from '../constants';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
+import { SERVICES, TRANSLATIONS } from '@/constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const Services: React.FC = () => {
   const { language } = useThemeLanguage();

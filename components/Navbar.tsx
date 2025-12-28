@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { Menu, Moon, Sun, Globe } from 'lucide-react';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
-import { TRANSLATIONS } from '../constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { TRANSLATIONS } from '@/constants';
 
 const Navbar = () => {
     const { theme, toggleTheme, language, setLanguage } = useThemeLanguage();

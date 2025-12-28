@@ -1,6 +1,6 @@
 import React from 'react';
 import { Github, Linkedin, Mail, Phone, Instagram, MessageCircle } from 'lucide-react';
-import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER, DISCORD_URL, INSTAGRAM_URL } from '../constants';
+import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER, DISCORD_URL, INSTAGRAM_URL } from '@/constants';
 
 const Footer = () => {
     return (

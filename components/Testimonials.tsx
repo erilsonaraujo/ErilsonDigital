@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { TESTIMONIALS } from '../constants';
+import { TESTIMONIALS } from '@/constants';
 import { Quote, Star, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const Testimonials: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);

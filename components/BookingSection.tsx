@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { Calendar } from 'lucide-react';
 
 const BookingSection: React.FC = () => {

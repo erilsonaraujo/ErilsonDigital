@@ -1,7 +1,7 @@
 import React from 'react';
 import { ArrowRight, Github, Linkedin } from 'lucide-react';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
-import { TRANSLATIONS, GITHUB_URL, LINKEDIN_URL } from '../constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { TRANSLATIONS, GITHUB_URL, LINKEDIN_URL } from '@/constants';
 import TechNetworkBackground from './TechNetworkBackground';
 
 const Hero: React.FC = () => {

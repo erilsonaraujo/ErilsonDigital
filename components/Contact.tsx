@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
-import { WHATSAPP_NUMBER, TRANSLATIONS } from '../constants';
-import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
+import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const Contact: React.FC = () => {
   const { language } = useThemeLanguage();

@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, Theme } from '../types';
+import { Language, Theme } from '@/types';
 
 interface ThemeLanguageContextType {
   theme: Theme;
@@ -22,7 +22,7 @@ export const ThemeLanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
       setTheme('dark');
     }
-    
+
     // 2. Language Detection
     const savedLang = localStorage.getItem('language') as Language;
     if (savedLang) {
