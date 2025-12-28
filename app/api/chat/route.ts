@@ -6,12 +6,13 @@ export async function POST(req: Request) {
     try {
         const { messages } = await req.json();
 
-        const apiKey = process.env.OPENAI_API_KEY;
+        const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
 
         if (!apiKey) {
-            console.error("DEBUG: OPENAI_API_KEY is missing in process.env");
+            console.error("DEBUG: OPENAI_API_KEY and NEXT_PUBLIC_OPENAI_API_KEY are BOTH missing in process.env");
+            console.log("DEBUG: Available env keys:", Object.keys(process.env).filter(k => k.includes('API') || k.includes('OPENAI')));
             return NextResponse.json(
-                { error: "API Key não configurada no servidor (.env missing or not loaded)." },
+                { error: "A chave de API não foi detectada pelo servidor. Certifique-se de que o arquivo .env.local está correto e o servidor foi reiniciado." },
                 { status: 500 }
             );
         }
