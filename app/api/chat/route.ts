@@ -9,15 +9,18 @@ export async function POST(req: Request) {
         const apiKey = process.env.OPENAI_API_KEY;
 
         if (!apiKey) {
-            console.error("OpenAI API Key is missing in environment variables.");
+            console.error("DEBUG: OPENAI_API_KEY is missing in process.env");
             return NextResponse.json(
-                { error: "Sofia está em manutenção técnica (API Key missing no servidor)." },
+                { error: "API Key não configurada no servidor (.env missing or not loaded)." },
                 { status: 500 }
             );
         }
 
+        console.log("DEBUG: Received messages:", JSON.stringify(messages));
+
         const openai = new OpenAI({ apiKey });
 
+        console.log("DEBUG: Calling OpenAI with model gpt-4o-mini");
         const response = await openai.chat.completions.create({
             model: "gpt-4o-mini",
             messages: [
@@ -27,6 +30,7 @@ export async function POST(req: Request) {
             temperature: 0.7,
             max_tokens: 500,
         });
+        console.log("DEBUG: OpenAI response received successfully");
 
         const aiMessage = response.choices[0]?.message?.content || "Recebi sua mensagem, mas meu cérebro falhou em gerar uma resposta.";
 

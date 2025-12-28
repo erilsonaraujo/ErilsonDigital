@@ -19,6 +19,6 @@ export const sendMessageToOpenAI = async (messages: { role: 'user' | 'assistant'
         return data.text;
     } catch (error: any) {
         console.error("OpenAI Service Error:", error);
-        return "Tive um pequeno lapso de memória agora... Pode repetir sua pergunta, por favor?";
+        return `❌ Erro: ${error.message || "Tive um pequeno lapso de memória... Pode repetir sua pergunta?"}`;
     }
 };
