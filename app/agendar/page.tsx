@@ -1,11 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, Clock, MessageCircle, User, Mail, Phone, FileText } from 'lucide-react';
-import { WHATSAPP_NUMBER } from '@/constants';
+import { Calendar, Clock, CheckCircle2, User, Mail, Phone, FileText, ArrowLeft } from 'lucide-react';
+import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function BookingPage() {
+    const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -26,10 +27,10 @@ export default function BookingPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setStatus('loading');
 
-        // 1. Save to database
         try {
-            await fetch('/api/appointments', {
+            const response = await fetch('/api/appointments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -42,23 +43,50 @@ export default function BookingPage() {
                     message: formData.message,
                 }),
             });
+
+            if (response.ok) {
+                setStatus('success');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                setStatus('error');
+            }
         } catch (err) {
             console.error('Failed to save appointment', err);
+            setStatus('error');
         }
-
-        // 2. Format message for WhatsApp
-        const whatsappMessage = `*🗓️ SOLICITAÇÃO DE AGENDAMENTO*%0A%0A` +
-            `*Nome:* ${formData.name}%0A` +
-            `*Email:* ${formData.email}%0A` +
-            `*Telefone:* ${formData.phone}%0A` +
-            `*Serviço:* ${formData.service}%0A` +
-            `*Data Preferida:* ${new Date(formData.preferredDate).toLocaleDateString('pt-BR')}%0A` +
-            `*Horário Preferido:* ${formData.preferredTime}%0A%0A` +
-            `*Mensagem:*%0A${formData.message || 'Não informada'}`;
-
-        // Open WhatsApp with pre-filled message
-        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
     };
+
+    if (status === 'success') {
+        return (
+            <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-32 pb-20">
+                <div className="max-w-2xl mx-auto px-4 text-center">
+                    <div className="inline-flex p-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-8 animate-bounce">
+                        <CheckCircle2 className="w-16 h-16 text-emerald-600 dark:text-emerald-400" />
+                    </div>
+                    <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Solicitação Recebida!</h1>
+                    <p className="text-xl text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
+                        Muito obrigado pelo interesse, <span className="font-bold text-primary-600">{formData.name.split(' ')[0]}</span>.
+                        Já registrei seu pedido de agendamento para o dia <span className="font-bold">{new Date(formData.preferredDate).toLocaleDateString('pt-BR')}</span> às <span className="font-bold">{formData.preferredTime}</span>.
+                        Entrarei em contato via e-mail ou WhatsApp em breve para confirmarmos!
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Link
+                            href="/"
+                            className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-primary-500/25"
+                        >
+                            Voltar para o Início
+                        </Link>
+                        <button
+                            onClick={() => setStatus('idle')}
+                            className="px-8 py-4 bg-white dark:bg-dark-900 text-slate-700 dark:text-slate-300 font-bold rounded-xl border border-slate-200 dark:border-dark-800 hover:bg-slate-50 transition-all"
+                        >
+                            Agendar outro horário
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-24 pb-20">
@@ -69,42 +97,32 @@ export default function BookingPage() {
                     <div className="inline-flex p-4 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-4">
                         <Calendar className="w-8 h-8 text-primary-600 dark:text-primary-400" />
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
+                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
                         Agende sua Consultoria
                     </h1>
                     <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                        Preencha o formulário abaixo e envie sua solicitação diretamente pelo WhatsApp.
-                        Responderei em breve para confirmar o melhor horário!
+                        Preencha os detalhes abaixo para reservar seu horário.
+                        Sua solicitação será processada internamente e respondida rapidamente.
                     </p>
                 </div>
 
-                {/* Info Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                    <div className="bg-white dark:bg-dark-900 p-6 rounded-xl border border-slate-200 dark:border-dark-800 text-center">
-                        <Clock className="w-8 h-8 text-primary-600 dark:text-primary-400 mx-auto mb-3" />
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-1">Duração</h3>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">30-60 minutos</p>
-                    </div>
-                    <div className="bg-white dark:bg-dark-900 p-6 rounded-xl border border-slate-200 dark:border-dark-800 text-center">
-                        <MessageCircle className="w-8 h-8 text-[#25D366] mx-auto mb-3" />
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-1">Via WhatsApp</h3>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Resposta rápida</p>
-                    </div>
-                    <div className="bg-white dark:bg-dark-900 p-6 rounded-xl border border-slate-200 dark:border-dark-800 text-center">
-                        <Calendar className="w-8 h-8 text-primary-600 dark:text-primary-400 mx-auto mb-3" />
-                        <h3 className="font-bold text-slate-900 dark:text-white mb-1">Flexível</h3>
-                        <p className="text-sm text-slate-600 dark:text-slate-400">Horário comercial</p>
-                    </div>
-                </div>
-
                 {/* Form */}
-                <div className="bg-white dark:bg-dark-900 p-8 md:p-12 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-xl">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <User className="w-4 h-4 inline mr-2" />
-                                    Nome Completo *
+                <div className="bg-white dark:bg-dark-900 p-8 md:p-12 rounded-3xl border border-slate-200 dark:border-dark-800 shadow-2xl relative overflow-hidden">
+                    {/* Decorative element */}
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+
+                    <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+                        {status === 'error' && (
+                            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm font-medium">
+                                Ops! Ocorreu um erro ao processar seu agendamento. Por favor, tente novamente ou entre em contato diretamente.
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label htmlFor="name" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <User className="w-4 h-4 text-primary-500" />
+                                    Nome Completo
                                 </label>
                                 <input
                                     type="text"
@@ -112,15 +130,15 @@ export default function BookingPage() {
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                                    placeholder="Seu nome"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
+                                    placeholder="Como prefere ser chamado?"
                                 />
                             </div>
 
-                            <div>
-                                <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <Mail className="w-4 h-4 inline mr-2" />
-                                    Email *
+                            <div className="space-y-2">
+                                <label htmlFor="email" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <Mail className="w-4 h-4 text-primary-500" />
+                                    Seu melhor E-mail
                                 </label>
                                 <input
                                     type="email"
@@ -128,17 +146,17 @@ export default function BookingPage() {
                                     required
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                                    placeholder="seu@email.com"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
+                                    placeholder="seu@exemplo.com"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label htmlFor="phone" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <Phone className="w-4 h-4 inline mr-2" />
-                                    Telefone/WhatsApp *
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label htmlFor="phone" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <Phone className="w-4 h-4 text-primary-500" />
+                                    WhatsApp
                                 </label>
                                 <input
                                     type="tel"
@@ -146,24 +164,24 @@ export default function BookingPage() {
                                     required
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
                                     placeholder="(00) 00000-0000"
                                 />
                             </div>
 
-                            <div>
-                                <label htmlFor="service" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <FileText className="w-4 h-4 inline mr-2" />
-                                    Serviço de Interesse *
+                            <div className="space-y-2">
+                                <label htmlFor="service" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <FileText className="w-4 h-4 text-primary-500" />
+                                    Serviço de Interesse
                                 </label>
                                 <select
                                     id="service"
                                     required
                                     value={formData.service}
                                     onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none appearance-none"
                                 >
-                                    <option value="">Selecione...</option>
+                                    <option value="">Selecione um serviço...</option>
                                     {services.map((service) => (
                                         <option key={service} value={service}>{service}</option>
                                     ))}
@@ -171,11 +189,11 @@ export default function BookingPage() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label htmlFor="preferredDate" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <Calendar className="w-4 h-4 inline mr-2" />
-                                    Data Preferida *
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-2">
+                                <label htmlFor="preferredDate" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <Calendar className="w-4 h-4 text-primary-500" />
+                                    Data Preferida
                                 </label>
                                 <input
                                     type="date"
@@ -184,36 +202,32 @@ export default function BookingPage() {
                                     min={new Date().toISOString().split('T')[0]}
                                     value={formData.preferredDate}
                                     onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
                                 />
                             </div>
 
-                            <div>
-                                <label htmlFor="preferredTime" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                                    <Clock className="w-4 h-4 inline mr-2" />
-                                    Horário Preferido *
+                            <div className="space-y-2">
+                                <label htmlFor="preferredTime" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                                    <Clock className="w-4 h-4 text-primary-500" />
+                                    Melhor Período
                                 </label>
                                 <select
                                     id="preferredTime"
                                     required
                                     value={formData.preferredTime}
                                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                                    className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none appearance-none"
                                 >
-                                    <option value="">Selecione...</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
+                                    <option value="">Selecione o turno...</option>
+                                    <option value="Manhã (09h - 12h)">Manhã (09h - 12h)</option>
+                                    <option value="Tarde (14h - 18h)">Tarde (14h - 18h)</option>
+                                    <option value="Noite (19h - 21h)">Noite (19h - 21h)</option>
                                 </select>
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="message" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        <div className="space-y-2">
+                            <label htmlFor="message" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                                 Mensagem Adicional (opcional)
                             </label>
                             <textarea
@@ -221,43 +235,27 @@ export default function BookingPage() {
                                 rows={4}
                                 value={formData.message}
                                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                className="w-full px-4 py-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all resize-none"
-                                placeholder="Conte-me um pouco sobre seu projeto ou necessidade..."
+                                className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none resize-none"
+                                placeholder="Fale um pouco sobre sua necessidade..."
                             ></textarea>
-                        </div>
-
-                        <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
-                            <p className="text-sm text-primary-800 dark:text-primary-200">
-                                <MessageCircle className="w-4 h-4 inline mr-2" />
-                                Ao clicar em "Enviar Solicitação", você será redirecionado para o WhatsApp com sua mensagem pré-formatada.
-                                Confirmarei o agendamento assim que possível!
-                            </p>
                         </div>
 
                         <button
                             type="submit"
-                            className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white font-bold py-4 rounded-lg transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                            disabled={status === 'loading'}
+                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-5 rounded-2xl transition-all shadow-xl hover:shadow-primary-500/25 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
                         >
-                            <MessageCircle className="w-5 h-5" />
-                            Enviar Solicitação via WhatsApp
+                            {status === 'loading' ? (
+                                <>Aguarde...</>
+                            ) : (
+                                <>Confirmar Minha Solicitação</>
+                            )}
                         </button>
                     </form>
                 </div>
 
-                {/* Alternative Contact */}
-                <div className="mt-8 text-center">
-                    <p className="text-slate-600 dark:text-slate-400 mb-4">
-                        Prefere falar diretamente?
-                    </p>
-                    <a
-                        href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá! Gostaria de agendar uma consultoria.')}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium"
-                    >
-                        <MessageCircle className="w-5 h-5" />
-                        Iniciar conversa no WhatsApp
-                    </a>
+                <div className="mt-12 text-center text-slate-500 dark:text-slate-400 text-sm">
+                    <p>Ao solicitar, você concorda com nossos Termos de Uso e Política de Privacidade.</p>
                 </div>
             </div>
         </div>
