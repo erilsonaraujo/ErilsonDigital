@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react';
-import { WHATSAPP_NUMBER, EMAIL_ADDRESS, SOCIAL_LINKS } from '@/constants';
+import { WHATSAPP_NUMBER, EMAIL_ADDRESS } from '@/constants';
 
 export const metadata: Metadata = {
     title: 'Contato | Erilson Digital',
