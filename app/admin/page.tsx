@@ -1,187 +1,306 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { LayoutDashboard, Users, Calendar, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, LogOut, AlertCircle } from 'lucide-react';
+
+interface Lead {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    message?: string;
+    source?: string;
+    created_at: string;
+}
+
+interface Appointment {
+    id: number;
+    name: string;
+    email: string;
+    phone?: string;
+    service?: string;
+    preferred_date?: string;
+    preferred_time?: string;
+    message?: string;
+    status: string;
+    created_at: string;
+}
 
 export default function AdminPage() {
-    const [session, setSession] = useState<any>(null);
+    const [authenticated, setAuthenticated] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [loginLoading, setLoginLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('leads');
     const [error, setError] = useState<string | null>(null);
+    const [leads, setLeads] = useState<Lead[]>([]);
+    const [appointments, setAppointments] = useState<Appointment[]>([]);
 
     useEffect(() => {
-        try {
-            supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
-                setSession(session);
-            }).catch((err) => {
-                console.error('Supabase error:', err);
-                setError('Erro ao conectar com o banco de dados. Verifique as configurações do Supabase.');
-            });
-
-            const {
-                data: { subscription },
-            } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-                setSession(session);
-            });
-
-            return () => subscription.unsubscribe();
-        } catch (err) {
-            console.error('Supabase initialization error:', err);
-            setError('Erro ao inicializar o sistema de autenticação.');
-        }
+        checkSession();
     }, []);
+
+    useEffect(() => {
+        if (authenticated) {
+            if (activeTab === 'leads') {
+                fetchLeads();
+            } else if (activeTab === 'appointments') {
+                fetchAppointments();
+            }
+        }
+    }, [authenticated, activeTab]);
+
+    const checkSession = async () => {
+        try {
+            const response = await fetch('/api/auth/session');
+            const data = await response.json();
+            setAuthenticated(data.authenticated);
+        } catch (err) {
+            console.error('Session check error:', err);
+            setAuthenticated(false);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setLoading(true);
-        const { error } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
+        setLoginLoading(true);
+        setError(null);
 
-        if (error) {
-            alert(error.message);
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                setAuthenticated(true);
+            } else {
+                setError(data.error || 'Erro ao fazer login');
+            }
+        } catch (err) {
+            setError('Erro ao conectar com o servidor');
+        } finally {
+            setLoginLoading(false);
         }
-        setLoading(false);
     };
 
     const handleLogout = async () => {
-        await supabase.auth.signOut();
+        try {
+            await fetch('/api/auth/logout', { method: 'POST' });
+            setAuthenticated(false);
+            setEmail('');
+            setPassword('');
+        } catch (err) {
+            console.error('Logout error:', err);
+        }
     };
 
-    if (!session) {
+    const fetchLeads = async () => {
+        try {
+            const response = await fetch('/api/leads');
+            const data = await response.json();
+            if (response.ok) {
+                setLeads(data.leads || []);
+            }
+        } catch (err) {
+            console.error('Fetch leads error:', err);
+        }
+    };
+
+    const fetchAppointments = async () => {
+        try {
+            const response = await fetch('/api/appointments');
+            const data = await response.json();
+            if (response.ok) {
+                setAppointments(data.appointments || []);
+            }
+        } catch (err) {
+            console.error('Fetch appointments error:', err);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-dark-950">
+                <div className="text-slate-600 dark:text-slate-400">Carregando...</div>
+            </div>
+        );
+    }
+
+    if (!authenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-dark-950">
                 <div className="bg-white dark:bg-dark-900 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-dark-800">
                     <h1 className="text-2xl font-bold text-center mb-6 text-slate-900 dark:text-white">Admin Login</h1>
 
                     {error && (
-                        <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                        <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg flex items-start gap-2">
+                            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
                             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-                            <p className="text-xs text-red-500 dark:text-red-500 mt-2">
-                                Configure as variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY no Vercel.
-                            </p>
                         </div>
                     )}
 
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
-                            <label className="block text-sm font-medium mb-1 dark:text-slate-300">Email</label>
+                            <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Email</label>
                             <input
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 dark:text-white"
+                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white"
                                 required
                             />
                         </div>
                         <div>
-                            <label className="block text-sm font-medium mb-1 dark:text-slate-300">Password</label>
+                            <label className="block text-sm font-medium mb-1 text-slate-700 dark:text-slate-300">Password</label>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 dark:text-white"
+                                className="w-full p-3 rounded-lg border border-slate-300 dark:border-dark-700 bg-white dark:bg-dark-800 text-slate-900 dark:text-white"
                                 required
                             />
                         </div>
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loginLoading}
                             className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
                         >
-                            {loading ? 'Entrando...' : 'Entrar'}
+                            {loginLoading ? 'Entrando...' : 'Entrar'}
                         </button>
                     </form>
-                </div >
-            </div >
+                </div>
+            </div>
         );
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 flex pt-16">
-            {/* Sidebar */}
-            <aside className="w-64 bg-white dark:bg-dark-900 border-r border-slate-200 dark:border-dark-800 h-[calc(100vh-4rem)] sticky top-16 hidden md:block">
-                <div className="p-6">
-                    <h2 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4">Gerenciamento</h2>
-                    <nav className="space-y-2">
-                        <button
-                            onClick={() => setActiveTab('leads')}
-                            className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'leads' ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800'}`}
-                        >
-                            <Users className="w-5 h-5" /> Leads
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('appointments')}
-                            className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'appointments' ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800'}`}
-                        >
-                            <Calendar className="w-5 h-5" /> Agendamentos
-                        </button>
-                        <button
-                            onClick={() => setActiveTab('settings')}
-                            className={`flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg transition-colors ${activeTab === 'settings' ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 font-medium' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-800'}`}
-                        >
-                            <Settings className="w-5 h-5" /> Configurações
-                        </button>
-                    </nav>
-                </div>
-
-                <div className="absolute bottom-0 w-full p-6 border-t border-slate-200 dark:border-dark-800">
-                    <button onClick={handleLogout} className="flex items-center gap-3 text-red-500 hover:text-red-600 transition-colors w-full">
-                        <LogOut className="w-5 h-5" /> Sair
+        <div className="min-h-screen bg-slate-100 dark:bg-dark-950 pt-20 pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Painel Admin</h1>
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all"
+                    >
+                        <LogOut className="w-4 h-4" />
+                        Sair
                     </button>
                 </div>
-            </aside>
 
-            {/* Main Content */}
-            <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-4rem)]">
-                <header className="flex justify-between items-center mb-8">
-                    <h1 className="text-2xl font-bold text-slate-900 dark:text-white capitalized">{activeTab}</h1>
-                </header>
+                {/* Tabs */}
+                <div className="flex gap-2 mb-6 border-b border-slate-200 dark:border-dark-800">
+                    <button
+                        onClick={() => setActiveTab('leads')}
+                        className={`flex items-center gap-2 px-4 py-3 font-medium transition-all ${activeTab === 'leads'
+                                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600'
+                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                            }`}
+                    >
+                        <Users className="w-5 h-5" />
+                        Leads ({leads.length})
+                    </button>
+                    <button
+                        onClick={() => setActiveTab('appointments')}
+                        className={`flex items-center gap-2 px-4 py-3 font-medium transition-all ${activeTab === 'appointments'
+                                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600'
+                                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                            }`}
+                    >
+                        <Calendar className="w-5 h-5" />
+                        Agendamentos ({appointments.length})
+                    </button>
+                </div>
 
-                {activeTab === 'leads' && (
-                    <div className="bg-white dark:bg-dark-900 rounded-xl shadow-sm border border-slate-200 dark:border-dark-800 p-8 text-center text-slate-500">
-                        <p>Nenhum lead encontrado ainda (Integrar com Supabase `leads` table).</p>
-                        {/* Here we would map through generated leads fetched via supabase.from('leads').select('*') */}
-                        <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-lg text-left">
-                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                <strong>Nota:</strong> Para ver dados reais, execute o script SQL de migração no painel do Supabase e conecte o formulário de contato.
-                            </p>
+                {/* Content */}
+                <div className="bg-white dark:bg-dark-900 rounded-2xl shadow-lg border border-slate-200 dark:border-dark-800 overflow-hidden">
+                    {activeTab === 'leads' && (
+                        <div className="p-6">
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Leads Recebidos</h2>
+                            {leads.length === 0 ? (
+                                <p className="text-slate-600 dark:text-slate-400">Nenhum lead ainda.</p>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b border-slate-200 dark:border-dark-800">
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Nome</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Email</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Telefone</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Mensagem</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Data</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {leads.map((lead) => (
+                                                <tr key={lead.id} className="border-b border-slate-100 dark:border-dark-800 hover:bg-slate-50 dark:hover:bg-dark-800">
+                                                    <td className="py-3 px-4 text-sm text-slate-900 dark:text-white">{lead.name}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{lead.email}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{lead.phone || '-'}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{lead.message || '-'}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">
+                                                        {new Date(lead.created_at).toLocaleDateString('pt-BR')}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
-                    </div>
-                )}
+                    )}
 
-                {activeTab === 'appointments' && (
-                    <div className="bg-white dark:bg-dark-900 rounded-xl shadow-sm border border-slate-200 dark:border-dark-800 p-8 text-center text-slate-500">
-                        <p>Agenda vazia.</p>
-                        <div className="mt-8 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700/50 rounded-lg text-left">
-                            <p className="text-sm text-yellow-800 dark:text-yellow-200">
-                                <strong>Nota:</strong> Os agendamentos feitos na página /agendar aparecerão aqui após conectar com o banco.
-                            </p>
+                    {activeTab === 'appointments' && (
+                        <div className="p-6">
+                            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">Agendamentos</h2>
+                            {appointments.length === 0 ? (
+                                <p className="text-slate-600 dark:text-slate-400">Nenhum agendamento ainda.</p>
+                            ) : (
+                                <div className="overflow-x-auto">
+                                    <table className="w-full">
+                                        <thead>
+                                            <tr className="border-b border-slate-200 dark:border-dark-800">
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Nome</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Email</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Serviço</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Data/Hora</th>
+                                                <th className="text-left py-3 px-4 text-sm font-semibold text-slate-700 dark:text-slate-300">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {appointments.map((apt) => (
+                                                <tr key={apt.id} className="border-b border-slate-100 dark:border-dark-800 hover:bg-slate-50 dark:hover:bg-dark-800">
+                                                    <td className="py-3 px-4 text-sm text-slate-900 dark:text-white">{apt.name}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{apt.email}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">{apt.service || '-'}</td>
+                                                    <td className="py-3 px-4 text-sm text-slate-600 dark:text-slate-400">
+                                                        {apt.preferred_date ? new Date(apt.preferred_date).toLocaleDateString('pt-BR') : '-'} {apt.preferred_time || ''}
+                                                    </td>
+                                                    <td className="py-3 px-4">
+                                                        <span className={`inline-block px-2 py-1 text-xs font-semibold rounded-full ${apt.status === 'pending' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                                                                apt.status === 'confirmed' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' :
+                                                                    'bg-slate-100 text-slate-800 dark:bg-slate-800 dark:text-slate-400'
+                                                            }`}>
+                                                            {apt.status}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
                         </div>
-                    </div>
-                )}
-
-                {activeTab === 'settings' && (
-                    <div className="bg-white dark:bg-dark-900 rounded-xl shadow-sm border border-slate-200 dark:border-dark-800 p-8">
-                        <h3 className="font-bold text-lg mb-4 dark:text-white">Analytics & Pixels</h3>
-                        <div className="space-y-4 max-w-lg">
-                            <div>
-                                <label className="block text-sm font-medium mb-1 dark:text-slate-300">Google Tag Manager ID</label>
-                                <input type="text" placeholder="GTM-XXXXXX" className="w-full p-2 border rounded dark:bg-dark-800 dark:border-dark-700" />
-                            </div>
-                            <div>
-                                <label className="block text-sm font-medium mb-1 dark:text-slate-300">Meta Pixel ID</label>
-                                <input type="text" placeholder="1234567890" className="w-full p-2 border rounded dark:bg-dark-800 dark:border-dark-700" />
-                            </div>
-                            <button className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2 rounded-lg font-bold">Salvar</button>
-                        </div>
-                    </div>
-                )}
-            </main>
+                    )}
+                </div>
+            </div>
         </div>
     );
 }
