@@ -19,10 +19,11 @@ const Navbar = () => {
                     </div>
 
                     {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="hidden md:flex items-center space-x-6">
                         <a href="/#services" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.services}</a>
                         <a href="/#portfolio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.portfolio}</a>
-                        <a href="/#about" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
+                        <a href="/sobre" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
+                        <a href="/contato" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.contact}</a>
                         <a href="/agendar" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.booking}</a>
 
                         <div className="h-6 w-px bg-slate-200 dark:bg-dark-700 mx-2"></div>
@@ -50,8 +51,8 @@ const Navbar = () => {
                             </div>
                         </div>
 
-                        <a href="#contact" className="px-4 py-2 rounded-md bg-slate-900 dark:bg-primary-600 text-white text-sm font-medium hover:opacity-90 transition-all shadow-md">
-                            {t.contact}
+                        <a href="/admin" className="px-4 py-2 rounded-md bg-slate-900 dark:bg-primary-600 text-white text-sm font-medium hover:opacity-90 transition-all shadow-md">
+                            Admin
                         </a>
                     </div>
 
@@ -72,8 +73,10 @@ const Navbar = () => {
                 <div className="md:hidden bg-white dark:bg-dark-900 border-t border-slate-200 dark:border-dark-800 px-4 pt-2 pb-6 space-y-4 shadow-xl">
                     <a href="/#services" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.services}</a>
                     <a href="/#portfolio" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.portfolio}</a>
-                    <a href="/#about" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
+                    <a href="/sobre" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
+                    <a href="/contato" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.contact}</a>
                     <a href="/agendar" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.booking}</a>
+                    <a href="/admin" className="block text-primary-600 dark:text-primary-400 font-medium py-2" onClick={() => setIsMenuOpen(false)}>Admin</a>
                     <div className="flex gap-4 pt-2 border-t border-slate-100 dark:border-dark-800">
                         {(['pt', 'en', 'es'] as const).map(l => (
                             <button

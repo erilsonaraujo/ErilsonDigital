@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles, User, MessageCircle, UserCheck } from 'lucide-react';
+import { Send, Sparkles, User, MessageCircle, UserCheck, Calendar } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
 import { sendMessageToGemini } from '@/services/geminiService';
@@ -73,9 +73,10 @@ const AISection: React.FC = () => {
             const responseText = await sendMessageToGemini(historyForService, textToSend);
 
             const hasWhatsApp = responseText.includes('[OFFER_WHATSAPP]');
-            const hasCalendly = responseText.includes('[OFFER_CALENDLY]');
-            const hasAction = hasWhatsApp || hasCalendly;
+            const hasBooking = responseText.includes('[OFFER_CALENDLY]');
+            const hasAction = hasWhatsApp || hasBooking;
 
+            // Clean up markers from text
             let cleanText = responseText
                 .replace('[OFFER_WHATSAPP]', '')
                 .replace('[OFFER_CALENDLY]', '');
@@ -84,7 +85,7 @@ const AISection: React.FC = () => {
                 role: 'model',
                 text: cleanText,
                 isActionable: hasAction,
-                actionType: hasWhatsApp && hasCalendly ? 'both' : hasWhatsApp ? 'whatsapp' : hasCalendly ? 'calendly' : undefined
+                actionType: hasWhatsApp && hasBooking ? 'both' : hasWhatsApp ? 'whatsapp' : hasBooking ? 'booking' : undefined
             };
 
             setMessages(prev => [...prev, aiMessage]);
@@ -189,16 +190,14 @@ const AISection: React.FC = () => {
                                         {/* Action Buttons */}
                                         {msg.isActionable && (
                                             <div className="flex flex-col space-y-2 mt-3">
-                                                {/* Calendly Button */}
-                                                {(msg.actionType === 'calendly' || msg.actionType === 'both') && (
+                                                {/* Agendar Button */}
+                                                {(msg.actionType === 'booking' || msg.actionType === 'both') && (
                                                     <a
-                                                        href="https://calendly.com/joseerilsonaraujo/30min"
-                                                        target="_blank"
-                                                        rel="noopener noreferrer"
-                                                        className="flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
+                                                        href="/agendar"
+                                                        className="inline-flex items-center gap-2 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-md hover:shadow-lg"
                                                     >
-                                                        <UserCheck className="w-4 h-4" />
-                                                        Agendar Consultoria Gratuita
+                                                        <Calendar className="w-4 h-4" />
+                                                        Agendar Reunião
                                                     </a>
                                                 )}
                                                 {/* WhatsApp Button - Send conversation summary directly */}

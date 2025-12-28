@@ -71,10 +71,10 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             {/* Content */}
             <section className="py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
 
                         {/* Main Content */}
-                        <div className="lg:col-span-2 space-y-16">
+                        <div className="lg:col-span-8 space-y-16">
                             {/* Problem / Solution */}
                             <div>
                                 <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
@@ -124,8 +124,8 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                         </div>
 
                         {/* Sidebar */}
-                        <div className="lg:col-span-1">
-                            <div className="bg-white dark:bg-dark-900 p-8 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-xl sticky top-24">
+                        <div className="lg:col-span-4">
+                            <div className="bg-white dark:bg-dark-900 p-8 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-xl lg:sticky lg:top-24">
                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Por que escolher?</h3>
                                 <ul className="space-y-4 mb-8">
                                     {benefits.map((benefit, i) => (

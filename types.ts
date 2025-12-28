@@ -27,8 +27,8 @@ export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
   isActionable?: boolean;
-  // actionType indicates which actionable button(s) to show: 'whatsapp', 'calendly', or 'both'
-  actionType?: 'whatsapp' | 'calendly' | 'both';
+  // actionType indicates which actionable button(s) to show: 'whatsapp', 'booking', or 'both'
+  actionType?: 'whatsapp' | 'booking' | 'both';
   pdfLink?: string; // URL to stored PDF on server
 }
 
