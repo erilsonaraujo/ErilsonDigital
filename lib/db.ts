@@ -63,6 +63,38 @@ export async function initDatabase() {
       )
     `);
 
+    // Create conversations table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS conversations (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        visitor_name VARCHAR(255),
+        visitor_email VARCHAR(255),
+        visitor_phone VARCHAR(50),
+        transcript JSONB NOT NULL,
+        summary TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Create analytics table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        path VARCHAR(255) NOT NULL,
+        referrer TEXT,
+        ip VARCHAR(50),
+        user_agent TEXT,
+        country VARCHAR(100),
+        city VARCHAR(100),
+        device VARCHAR(50),
+        browser VARCHAR(50),
+        os VARCHAR(50),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
     console.log('Database tables initialized successfully');
     return true;
   } catch (error) {

@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Code2, Award, Target, Heart, Zap, Shield, TrendingUp, Mail, Calendar } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
     title: 'Sobre Mim | Erilson Digital',
@@ -39,6 +40,7 @@ export default function AboutPage() {
                 <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <Breadcrumbs />
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         <div>
                             <div className="inline-block mb-4">
@@ -78,16 +80,22 @@ export default function AboutPage() {
                         {/* Profile Image */}
                         <div className="flex justify-center lg:justify-end">
                             <div className="relative">
-                                <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
-                                <div className="relative w-80 h-80 bg-gradient-to-br from-primary-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl transform hover:scale-105 transition-transform duration-300">
-                                    <Code2 className="w-40 h-40 text-white" />
+                                <div className="absolute inset-0 bg-gradient-to-r from-primary-600 to-purple-600 rounded-3xl blur-2xl opacity-20 animate-pulse"></div>
+                                <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[400px] lg:h-[400px] rounded-2xl overflow-hidden border-4 border-white dark:border-dark-800 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 group">
+                                    <Image
+                                        src="/erilson.jpg"
+                                        alt="Erilson Araujo"
+                                        fill
+                                        className="object-cover grayscale hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-primary-900/40 to-transparent opacity-60"></div>
                                 </div>
                                 {/* Floating badges */}
-                                <div className="absolute -top-4 -right-4 bg-white dark:bg-dark-800 px-4 py-2 rounded-xl shadow-lg border border-slate-200 dark:border-dark-700">
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">⚡ Full Stack</p>
+                                <div className="absolute -right-4 top-10 bg-white dark:bg-dark-800 p-3 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow">
+                                    <p className="text-primary-600 font-bold text-xs sm:text-sm">AI Agent Expert 🤖</p>
                                 </div>
-                                <div className="absolute -bottom-4 -left-4 bg-white dark:bg-dark-800 px-4 py-2 rounded-xl shadow-lg border border-slate-200 dark:border-dark-700">
-                                    <p className="text-sm font-bold text-slate-900 dark:text-white">🤖 IA Expert</p>
+                                <div className="absolute -left-8 bottom-20 bg-white dark:bg-dark-800 p-3 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow delay-700">
+                                    <p className="text-secondary-500 font-bold text-xs sm:text-sm">Fullstack Dev 💻</p>
                                 </div>
                             </div>
                         </div>

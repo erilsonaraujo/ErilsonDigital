@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Calendar, Clock, MessageCircle, User, Mail, Phone, FileText } from 'lucide-react';
 import { WHATSAPP_NUMBER } from '@/constants';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function BookingPage() {
     const [formData, setFormData] = useState({
@@ -23,10 +24,29 @@ export default function BookingPage() {
         'Outro'
     ];
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Format message for WhatsApp
+        // 1. Save to database
+        try {
+            await fetch('/api/appointments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    service: formData.service,
+                    preferred_date: formData.preferredDate,
+                    preferred_time: formData.preferredTime,
+                    message: formData.message,
+                }),
+            });
+        } catch (err) {
+            console.error('Failed to save appointment', err);
+        }
+
+        // 2. Format message for WhatsApp
         const whatsappMessage = `*🗓️ SOLICITAÇÃO DE AGENDAMENTO*%0A%0A` +
             `*Nome:* ${formData.name}%0A` +
             `*Email:* ${formData.email}%0A` +
@@ -43,6 +63,7 @@ export default function BookingPage() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-24 pb-20">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <Breadcrumbs />
                 {/* Header */}
                 <div className="text-center mb-12">
                     <div className="inline-flex p-4 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-4">

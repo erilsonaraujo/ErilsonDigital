@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 import { Providers } from './providers';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import { AnalyticsTracker } from '../components/AnalyticsTracker';
 import './globals.css';
 import { Inter, Outfit } from 'next/font/google';
 
@@ -22,6 +23,7 @@ export default function RootLayout({
         <html lang="pt-BR" className={`${inter.variable} ${outfit.variable} scroll-smooth`}>
             <body className="bg-dark-950 text-slate-300 font-sans selection:bg-primary-600 selection:text-white">
                 <Providers>
+                    <AnalyticsTracker />
                     <Navbar />
                     <main className="flex-grow flex flex-col pt-16">
                         {children}

@@ -1,9 +1,10 @@
 import React from 'react';
-import { SERVICES, WHATSAPP_NUMBER } from '@/constants'; // Adjusted import path
+import { SERVICES, WHATSAPP_NUMBER } from '@/constants';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, CheckCircle, Code2, Cpu, Zap, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Generate static params for all services
 export async function generateStaticParams() {
@@ -31,8 +32,6 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
         notFound();
     }
 
-    // Expanded content (mock data for now based on service type)
-    // Ideally this should come from a richer data source
     const benefits = [
         "Aumento de produtividade imediato",
         "Redução de custos operacionais",
@@ -53,6 +52,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
             <section className="bg-dark-900 border-b border-white/5 py-20 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-96 h-96 bg-primary-600/20 blur-3xl -mr-20 -mt-20 rounded-full"></div>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <Breadcrumbs />
                     <Link href="/servicos" className="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors">
                         <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Serviços
                     </Link>
@@ -114,7 +114,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                                     <Cpu className="w-6 h-6 text-primary-500" /> Tecnologias
                                 </h2>
                                 <div className="flex flex-wrap gap-3">
-                                    {['React', 'Next.js', 'Node.js', 'Python', 'AI / LLMs', 'Supabase', 'AWS'].map(tech => (
+                                    {['React', 'Next.js', 'Node.js', 'Python', 'AI / LLMs', 'Vercel Postgres', 'AWS'].map(tech => (
                                         <span key={tech} className="px-4 py-2 bg-slate-100 dark:bg-dark-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium">
                                             {tech}
                                         </span>
@@ -167,7 +167,7 @@ export default async function ServicePage({ params }: { params: Promise<{ slug: 
                     <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
                         Não deixe para depois. A tecnologia avança rápido e sua empresa precisa acompanhar.
                     </p>
-                    <Link href="/contact" className="inline-block bg-white text-primary-600 font-bold py-4 px-10 rounded-full hover:bg-slate-100 transition-all shadow-xl">
+                    <Link href="/contato" className="inline-block bg-white text-primary-600 font-bold py-4 px-10 rounded-full hover:bg-slate-100 transition-all shadow-xl">
                         Solicitar Orçamento
                     </Link>
                 </div>

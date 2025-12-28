@@ -40,60 +40,74 @@ const AISection: React.FC = () => {
         if (!textToSend.trim()) return;
 
         const userMessage: ChatMessage = { role: 'user', text: textToSend };
-        setMessages(prev => [...prev, userMessage]);
+        const updatedMessages = [...messages, userMessage];
+        setMessages(updatedMessages);
         setInput('');
         setIsLoading(true);
 
-        // Check for booking intent
-        const lowerInput = textToSend.toLowerCase();
-        if (lowerInput.includes('agendar') || lowerInput.includes('reunião') || lowerInput.includes('horário') || lowerInput.includes('book') || lowerInput.includes('meeting') || lowerInput.includes('schedule')) {
-            setTimeout(() => {
-                const bookingSection = document.getElementById('booking');
-                if (bookingSection) {
-                    bookingSection.scrollIntoView({ behavior: 'smooth' });
-                }
-                setMessages(prev => [...prev, {
-                    role: 'model',
-                    text: language === 'pt' ? 'Claro! Vou te levar para a agenda do Erilson. Lá você pode escolher o melhor horário.' :
-                        language === 'es' ? '¡Claro! Te llevaré a la agenda de Erilson. Allí puedes elegir el mejor horario.' :
-                            'Sure! I\'ll take you to Erilson\'s calendar. You can choose the best time there.',
-                    isActionable: true
-                }]);
-                setIsLoading(false);
-            }, 1000);
-            return;
-        }
-
         try {
-            const historyForService = messages.map(m => ({
+            const historyForService = updatedMessages.map(m => ({
                 role: m.role === 'model' ? 'model' : 'user',
                 parts: [{ text: m.text }]
             }));
 
             const responseText = await sendMessageToGemini(historyForService, textToSend);
 
-            const hasWhatsApp = responseText.includes('[OFFER_WHATSAPP]');
-            const hasBooking = responseText.includes('[OFFER_CALENDLY]');
-            const hasAction = hasWhatsApp || hasBooking;
-
-            // Clean up markers from text
-            let cleanText = responseText
-                .replace('[OFFER_WHATSAPP]', '')
-                .replace('[OFFER_CALENDLY]', '');
-
             const aiMessage: ChatMessage = {
                 role: 'model',
-                text: cleanText,
-                isActionable: hasAction,
-                actionType: hasWhatsApp && hasBooking ? 'both' : hasWhatsApp ? 'whatsapp' : hasBooking ? 'booking' : undefined
+                text: responseText,
             };
 
-            setMessages(prev => [...prev, aiMessage]);
+            const finalMessages = [...updatedMessages, aiMessage];
+            setMessages(finalMessages);
+
+            // Sync with backend
+            syncConversation(finalMessages);
+
         } catch (error) {
             console.error(error);
             setMessages(prev => [...prev, { role: 'model', text: 'Desculpe, tive um erro técnico. Tente novamente.' }]);
         } finally {
             setIsLoading(false);
+        }
+    };
+
+    const syncConversation = async (currentMessages: ChatMessage[]) => {
+        try {
+            let visitorId = localStorage.getItem('visitor_id') || 'unknown';
+
+            // Simple heuristic to find name/email/phone in messages
+            // In a real app, you might want more robust extraction
+            const fullText = currentMessages.map(m => m.text).join(' ');
+            const emailMatch = fullText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
+            const phoneMatch = fullText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{2,3}\)?[-.\s]?\d{4,5}[-.\s]?\d{4}/);
+
+            const isBookingComplete = currentMessages.some(m =>
+                m.role === 'model' && m.text.includes('Já registrei sua solicitação')
+            );
+
+            await fetch('/api/conversations', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    visitorId,
+                    transcript: currentMessages,
+                    visitorEmail: emailMatch?.[0],
+                    visitorPhone: phoneMatch?.[0],
+                    isBooking: isBookingComplete,
+                    bookingData: isBookingComplete ? {
+                        name: 'Interessado (IA)', // AI could extract this better
+                        email: emailMatch?.[0],
+                        phone: phoneMatch?.[0],
+                        service: 'Consultoria via IA',
+                        date: new Date().toISOString().split('T')[0],
+                        time: 'A confirmar',
+                        message: 'Agendamento automático via conversa com Sofia.'
+                    } : null
+                })
+            });
+        } catch (err) {
+            console.debug('Sync failed', err);
         }
     };
 

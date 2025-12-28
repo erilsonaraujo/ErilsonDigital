@@ -2,6 +2,7 @@
 
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react';
 import { WHATSAPP_NUMBER, EMAIL_ADDRESS } from '@/constants';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function ContactPage() {
     const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá! Gostaria de conversar sobre um projeto.')}`;
@@ -9,6 +10,7 @@ export default function ContactPage() {
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-24 pb-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <Breadcrumbs />
                 {/* Header */}
                 <div className="text-center mb-16">
                     <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">
@@ -95,13 +97,24 @@ export default function ContactPage() {
                             Envie uma Mensagem
                         </h2>
 
-                        <form className="space-y-6" onSubmit={(e) => {
+                        <form className="space-y-6" onSubmit={async (e) => {
                             e.preventDefault();
                             const formData = new FormData(e.currentTarget);
-                            const name = formData.get('name');
-                            const email = formData.get('email');
-                            const phone = formData.get('phone');
-                            const message = formData.get('message');
+                            const name = formData.get('name') as string;
+                            const email = formData.get('email') as string;
+                            const phone = formData.get('phone') as string;
+                            const message = formData.get('message') as string;
+
+                            // 1. Save to database
+                            try {
+                                await fetch('/api/leads', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ name, email, phone, message, source: 'Contact Page' }),
+                                });
+                            } catch (err) {
+                                console.error('Failed to save lead', err);
+                            }
 
                             const whatsappMessage = `*Nova mensagem do site*%0A%0A*Nome:* ${name}%0A*Email:* ${email}%0A*Telefone:* ${phone}%0A%0A*Mensagem:*%0A${message}`;
                             window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${whatsappMessage}`, '_blank');
