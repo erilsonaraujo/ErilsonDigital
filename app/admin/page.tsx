@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LogOut, AlertCircle, CheckCircle, Clock, Menu, X } from 'lucide-react';
-import Sidebar from '@/components/admin/Sidebar';
+import { AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import AdminTopNav from '@/components/admin/AdminTopNav';
 import DashboardHome from '@/components/admin/DashboardHome';
 import AnalyticsView from '@/components/admin/AnalyticsView';
 import ConversationsView from '@/components/admin/ConversationsView';
@@ -37,7 +37,6 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const [loginLoading, setLoginLoading] = useState(false);
     const [activeView, setActiveView] = useState('dashboard');
-    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [leads, setLeads] = useState<Lead[]>([]);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -120,7 +119,7 @@ export default function AdminPage() {
     if (!authenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6 selection:bg-primary-500/30">
-                <div className="bg-dark-900 border border-dark-800 p-10 rounded-[2rem] shadow-2xl w-full max-w-md relative overflow-hidden">
+                <div className="bg-dark-900 border border-dark-800 p-10 rounded-[2rem] shadow-2xl w-full max-md:max-w-md relative overflow-hidden">
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary-600/10 blur-[5rem] rounded-full pointer-events-none"></div>
 
                     <div className="text-center mb-10 relative z-10">
@@ -180,12 +179,12 @@ export default function AdminPage() {
             case 'analytics': return <AnalyticsView />;
             case 'conversations': return <ConversationsView />;
             case 'leads': return (
-                <div className="p-8 lg:p-12">
+                <div className="max-w-[1600px] mx-auto p-4 md:p-8 lg:p-12">
                     <header className="mb-10">
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Leads</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Capturados via formulários do site.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-slate-300">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-white">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -221,12 +220,12 @@ export default function AdminPage() {
                 </div>
             );
             case 'appointments': return (
-                <div className="p-8 lg:p-12">
+                <div className="max-w-[1600px] mx-auto p-4 md:p-8 lg:p-12">
                     <header className="mb-10">
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Agendamentos</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Solicitações de consultoria e serviços.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-slate-300">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-white">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -274,64 +273,15 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="flex h-screen w-full bg-slate-50 dark:bg-dark-950 font-sans overflow-hidden isolate">
-            {/* 1. Desktop Sidebar (Strict Sibling Flex) */}
-            <aside className="hidden lg:flex w-64 h-full flex-shrink-0 bg-slate-900 border-r border-white/5 flex-col z-20 overflow-y-auto">
-                <Sidebar
-                    activeView={activeView}
-                    onViewChange={setActiveView}
-                    onLogout={handleLogout}
-                />
-            </aside>
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex flex-col">
+            <AdminTopNav
+                activeView={activeView}
+                onViewChange={setActiveView}
+                onLogout={handleLogout}
+            />
 
-            {/* 2. Mobile Sidebar Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="lg:hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm"
-                    onClick={() => setSidebarOpen(false)}
-                >
-                    <div
-                        className="w-72 h-full bg-slate-900 shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        <div className="p-4 flex justify-end">
-                            <button onClick={() => setSidebarOpen(false)} className="p-2 text-slate-400 hover:text-white">
-                                <X size={28} />
-                            </button>
-                        </div>
-                        <div className="flex-1 overflow-y-auto">
-                            <Sidebar
-                                activeView={activeView}
-                                onViewChange={(view) => {
-                                    setActiveView(view);
-                                    setSidebarOpen(false);
-                                }}
-                                onLogout={handleLogout}
-                            />
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 3. Main content area (Safe Flex Cell) */}
-            <main className="flex-1 min-w-0 h-full flex flex-col relative bg-slate-50 dark:bg-dark-950 overflow-hidden">
-                {/* Mobile Header Toggle */}
-                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-40 flex-shrink-0">
-                    <div className="font-black text-slate-900 dark:text-white tracking-widest text-xs uppercase">Erilson Digital</div>
-                    <button
-                        onClick={() => setSidebarOpen(true)}
-                        className="p-2 bg-slate-900 text-white rounded-xl shadow-lg active:scale-95 transition-transform"
-                    >
-                        <Menu size={20} />
-                    </button>
-                </div>
-
-                {/* Dashboard Inner Scrollable Area */}
-                <div className="flex-1 overflow-y-auto overflow-x-hidden">
-                    <div className="max-w-[1600px] mx-auto w-full min-h-full">
-                        {renderContent()}
-                    </div>
-                </div>
+            <main className="flex-1 overflow-y-auto">
+                {renderContent()}
             </main>
         </div>
     );
