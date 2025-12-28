@@ -185,7 +185,7 @@ export default function AdminPage() {
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Leads</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Capturados via formulários do site.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-slate-300">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -226,7 +226,7 @@ export default function AdminPage() {
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Agendamentos</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Solicitações de consultoria e serviços.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto text-slate-900 dark:text-slate-300">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -274,9 +274,9 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex isolate">
-            {/* 1. Desktop Sidebar (Fixed) */}
-            <aside className="hidden lg:flex w-64 h-screen fixed left-0 top-0 z-50 bg-slate-900 border-r border-white/5 flex-col shadow-2xl">
+        <div className="flex h-screen w-full bg-slate-50 dark:bg-dark-950 font-sans overflow-hidden isolate">
+            {/* 1. Desktop Sidebar (Strict Sibling Flex) */}
+            <aside className="hidden lg:flex w-64 h-full flex-shrink-0 bg-slate-900 border-r border-white/5 flex-col z-20 overflow-y-auto">
                 <Sidebar
                     activeView={activeView}
                     onViewChange={setActiveView}
@@ -284,14 +284,14 @@ export default function AdminPage() {
                 />
             </aside>
 
-            {/* 2. Mobile Sidebar (Overlay) */}
+            {/* 2. Mobile Sidebar Overlay */}
             {sidebarOpen && (
                 <div
                     className="lg:hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm"
                     onClick={() => setSidebarOpen(false)}
                 >
                     <div
-                        className="w-72 h-full bg-slate-900 shadow-2xl animate-in slide-in-from-left duration-300"
+                        className="w-72 h-full bg-slate-900 shadow-2xl animate-in slide-in-from-left duration-300 flex flex-col"
                         onClick={e => e.stopPropagation()}
                     >
                         <div className="p-4 flex justify-end">
@@ -299,22 +299,24 @@ export default function AdminPage() {
                                 <X size={28} />
                             </button>
                         </div>
-                        <Sidebar
-                            activeView={activeView}
-                            onViewChange={(view) => {
-                                setActiveView(view);
-                                setSidebarOpen(false);
-                            }}
-                            onLogout={handleLogout}
-                        />
+                        <div className="flex-1 overflow-y-auto">
+                            <Sidebar
+                                activeView={activeView}
+                                onViewChange={(view) => {
+                                    setActiveView(view);
+                                    setSidebarOpen(false);
+                                }}
+                                onLogout={handleLogout}
+                            />
+                        </div>
                     </div>
                 </div>
             )}
 
-            {/* 3. Main content area (Padded on Desktop to avoid Fixed Sidebar) */}
-            <div className="flex-1 w-full min-w-0 lg:ml-64 relative bg-slate-50 dark:bg-dark-950 flex flex-col min-h-screen">
+            {/* 3. Main content area (Safe Flex Cell) */}
+            <main className="flex-1 min-w-0 h-full flex flex-col relative bg-slate-50 dark:bg-dark-950 overflow-hidden">
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-40">
+                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-40 flex-shrink-0">
                     <div className="font-black text-slate-900 dark:text-white tracking-widest text-xs uppercase">Erilson Digital</div>
                     <button
                         onClick={() => setSidebarOpen(true)}
@@ -324,13 +326,13 @@ export default function AdminPage() {
                     </button>
                 </div>
 
-                {/* Dashboard Wrapper */}
-                <main className="flex-1 h-full overflow-y-auto">
-                    <div className="max-w-[1600px] mx-auto w-full">
+                {/* Dashboard Inner Scrollable Area */}
+                <div className="flex-1 overflow-y-auto overflow-x-hidden">
+                    <div className="max-w-[1600px] mx-auto w-full min-h-full">
                         {renderContent()}
                     </div>
-                </main>
-            </div>
+                </div>
+            </main>
         </div>
     );
 }

@@ -28,7 +28,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onLogout })
     ];
 
     return (
-        <aside className="h-full w-64 bg-slate-900 text-slate-300 flex flex-col border-r border-white/5 shadow-2xl">
+        <aside className="flex-1 flex flex-col text-slate-300">
             {/* Logo area */}
             <div className="p-6 border-b border-white/10 flex items-center justify-between">
                 <div>
