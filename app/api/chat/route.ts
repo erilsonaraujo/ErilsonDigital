@@ -41,8 +41,12 @@ export async function POST(req: Request) {
     } catch (error: any) {
         console.error("OpenAI API Error:", error);
         return NextResponse.json(
-            { error: "Erro ao processar sua mensagem. Tente novamente." },
-            { status: 500 }
+            {
+                error: `Erro na OpenAI: ${error.message || "Erro desconhecido"}`,
+                type: error.type || "unknown_error",
+                status: error.status || 500
+            },
+            { status: error.status || 500 }
         );
     }
 }
