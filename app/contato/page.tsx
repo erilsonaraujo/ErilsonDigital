@@ -1,3 +1,5 @@
+'use client';
+
 import { Metadata } from 'next';
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react';
 import { WHATSAPP_NUMBER, EMAIL_ADDRESS } from '@/constants';
