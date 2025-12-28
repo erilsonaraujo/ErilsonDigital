@@ -1,114 +1,73 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Globe, MapPin, Monitor, Clock, Link as LinkIcon } from 'lucide-react';
-
-interface AnalyticsItem {
-    id: number;
-    visitor_id: string;
-    path: string;
-    referrer?: string;
-    ip: string;
-    country: string;
-    city: string;
-    device: string;
-    created_at: string;
-}
+import React, { useState } from 'react';
+import { Globe, BarChart3, ExternalLink, Settings, ShieldCheck, RefreshCcw } from 'lucide-react';
 
 const AnalyticsView: React.FC = () => {
-    const [analytics, setAnalytics] = useState<AnalyticsItem[]>([]);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        fetchAnalytics();
-    }, []);
-
-    const fetchAnalytics = async () => {
-        try {
-            const response = await fetch('/api/admin/analytics');
-            const data = await response.json();
-            if (response.ok) {
-                setAnalytics(data.analytics || []);
-            }
-        } catch (err) {
-            console.error('Fetch analytics error:', err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    if (loading) return <div className="p-8 text-slate-500">Carregando dados de tráfego...</div>;
+    // Ideally the user provides a share URL like https://cloud.umami.is/share/ID/Website
+    const [umamiShareUrl, setUmamiShareUrl] = useState('https://cloud.umami.is/share/458b37ce-b9e9-4105-aa3b-0f15f0f54d1f/erilsondigital.com');
 
     return (
-        <div className="p-8">
-            <header className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Traffic Analytics</h1>
-                <p className="text-slate-500 dark:text-slate-400">Rastreamento em tempo real de visitantes e interações.</p>
+        <div className="p-4 md:p-8 lg:p-12 h-screen flex flex-col overflow-hidden">
+            <header className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4 flex-shrink-0">
+                <div>
+                    <div className="flex items-center gap-2 mb-2">
+                        <div className="w-8 h-8 bg-primary-500 rounded-lg flex items-center justify-center shadow-lg shadow-primary-500/20">
+                            <BarChart3 className="w-5 h-5 text-white" />
+                        </div>
+                        <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Umami Analytics</h1>
+                    </div>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium italic">Gestão de tráfego e métricas de privacidade.</p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://cloud.umami.is"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-5 py-2.5 bg-white dark:bg-dark-900 border border-slate-200 dark:border-dark-800 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 hover:shadow-lg transition-all"
+                    >
+                        <ExternalLink className="w-4 h-4" />
+                        Painel Umami Cloud
+                    </a>
+                </div>
             </header>
 
-            <div className="bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="bg-slate-50 dark:bg-dark-800/50 border-b border-slate-200 dark:border-dark-800">
-                                <th className="text-left py-4 px-6 text-xs uppercase font-bold text-slate-500 tracking-wider">Visitante</th>
-                                <th className="text-left py-4 px-6 text-xs uppercase font-bold text-slate-500 tracking-wider">Página</th>
-                                <th className="text-left py-4 px-6 text-xs uppercase font-bold text-slate-500 tracking-wider">Localização</th>
-                                <th className="text-left py-4 px-6 text-xs uppercase font-bold text-slate-500 tracking-wider">Dispositivo</th>
-                                <th className="text-left py-4 px-6 text-xs uppercase font-bold text-slate-500 tracking-wider text-right">Horário</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-slate-100 dark:divide-dark-800">
-                            {analytics.map((item) => (
-                                <tr key={item.id} className="hover:bg-slate-50 dark:hover:bg-dark-800/50 transition-colors">
-                                    <td className="py-4 px-6">
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-bold text-slate-900 dark:text-white uppercase truncate max-w-[120px]">
-                                                {item.visitor_id.substring(0, 8)}
-                                            </span>
-                                            <span className="text-[10px] text-slate-500 font-mono">{item.ip}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <div className="flex items-center gap-2">
-                                            <div className="p-1.5 bg-slate-100 dark:bg-dark-800 rounded text-slate-500">
-                                                <LinkIcon className="w-3 h-3" />
-                                            </div>
-                                            <span className="text-sm text-slate-700 dark:text-slate-300 font-medium">/{item.path.replace(/^\//, '')}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <div className="flex items-center gap-2">
-                                            <Globe className="w-4 h-4 text-primary-500" />
-                                            <span className="text-sm text-slate-600 dark:text-slate-400">{item.city || 'Desconhecida'}, {item.country}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6">
-                                        <div className="flex items-center gap-2">
-                                            <Monitor className="w-4 h-4 text-slate-400" />
-                                            <span className="text-xs text-slate-600 dark:text-slate-400 capitalize">{item.device}</span>
-                                        </div>
-                                    </td>
-                                    <td className="py-4 px-6 text-right">
-                                        <div className="flex flex-col items-end">
-                                            <span className="text-sm text-slate-900 dark:text-white font-medium">
-                                                {new Date(item.created_at).toLocaleDateString('pt-BR')}
-                                            </span>
-                                            <span className="text-xs text-slate-500 flex items-center gap-1">
-                                                <Clock className="w-3 h-3" />
-                                                {new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-                {analytics.length === 0 && (
-                    <div className="p-12 text-center text-slate-500">Nenhum dado de tráfego registrado ainda.</div>
+            {/* Dashboard Container */}
+            <div className="flex-1 bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-2xl overflow-hidden relative group">
+                {/* Overlay for setup if URL is missing or incorrect */}
+                {!umamiShareUrl && (
+                    <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-50/90 dark:bg-dark-950/90 backdrop-blur-sm">
+                        <div className="max-w-md text-center p-8">
+                            <Settings className="w-16 h-16 text-primary-500 mx-auto mb-6 opacity-30" />
+                            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Configuração Necessária</h2>
+                            <p className="text-slate-500 mb-8">
+                                Para visualizar os dados aqui, ative o <b>Share URL</b> no seu painel da Umami Cloud e insira o link abaixo:
+                            </p>
+                            <input
+                                type="text"
+                                placeholder="https://cloud.umami.is/share/..."
+                                className="w-full p-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-white dark:bg-dark-900 mb-4 outline-none focus:ring-2 focus:ring-primary-500"
+                                onBlur={(e) => setUmamiShareUrl(e.target.value)}
+                            />
+                        </div>
+                    </div>
                 )}
+
+                {/* The Iframe */}
+                <iframe
+                    src={umamiShareUrl}
+                    className="w-full h-full border-0"
+                    title="Umami Analytics Dashboard"
+                    allowFullScreen
+                ></iframe>
             </div>
+
+            {/* Privacy Note */}
+            <footer className="mt-6 flex items-center gap-2 text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] flex-shrink-0">
+                <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                <span>Analíticos com foco em privacidade • Sem cookies invasivos • Dados 100% protegidos</span>
+            </footer>
         </div>
     );
 };

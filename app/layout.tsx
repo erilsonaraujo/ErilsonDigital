@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     description: 'Softwares premium, IA e automação para escalar seu negócio.',
 };
 
+import RootLayoutWrapper from './layout-wrapper';
+import Script from 'next/script';
+
 export default function RootLayout({
     children,
 }: {
@@ -21,14 +24,18 @@ export default function RootLayout({
 }) {
     return (
         <html lang="pt-BR" className={`${inter.variable} ${outfit.variable} scroll-smooth`}>
+            <head>
+                <Script
+                    src="https://cloud.umami.is/script.js"
+                    data-website-id="458b37ce-b9e9-4105-aa3b-0f15f0f54d1f"
+                    strategy="afterInteractive"
+                />
+            </head>
             <body className="bg-dark-950 text-slate-300 font-sans selection:bg-primary-600 selection:text-white">
                 <Providers>
-                    <AnalyticsTracker />
-                    <Navbar />
-                    <main className="flex-grow flex flex-col pt-16">
+                    <RootLayoutWrapper>
                         {children}
-                    </main>
-                    <Footer />
+                    </RootLayoutWrapper>
                 </Providers>
             </body>
         </html>

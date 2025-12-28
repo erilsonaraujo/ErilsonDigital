@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { LogOut, AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { LogOut, AlertCircle, CheckCircle, Clock, Menu, X } from 'lucide-react';
 import Sidebar from '@/components/admin/Sidebar';
 import DashboardHome from '@/components/admin/DashboardHome';
 import AnalyticsView from '@/components/admin/AnalyticsView';
@@ -121,7 +121,6 @@ export default function AdminPage() {
         return (
             <div className="min-h-screen flex items-center justify-center bg-slate-950 p-6 selection:bg-primary-500/30">
                 <div className="bg-dark-900 border border-dark-800 p-10 rounded-[2rem] shadow-2xl w-full max-w-md relative overflow-hidden">
-                    {/* Background glow */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-primary-600/10 blur-[5rem] rounded-full pointer-events-none"></div>
 
                     <div className="text-center mb-10 relative z-10">
@@ -186,7 +185,7 @@ export default function AdminPage() {
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Leads</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Capturados via formulários do site.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -227,7 +226,7 @@ export default function AdminPage() {
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-2">Agendamentos</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-medium italic">Solicitações de consultoria e serviços.</p>
                     </header>
-                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden">
+                    <div className="bg-white dark:bg-dark-900 rounded-[2rem] border border-slate-200 dark:border-dark-800 shadow-sm overflow-hidden overflow-x-auto">
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
@@ -275,17 +274,20 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex overflow-hidden">
-            {/* Sidebar toggle for mobile */}
-            <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-primary-600 text-white rounded-full shadow-2xl active:scale-90 transition-transform"
-            >
-                <Clock className="w-6 h-6" /> {/* Using Clock as a temporary icon or I should use Menu */}
-            </button>
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans grid grid-cols-1 lg:grid-cols-[256px,1fr]">
+            {/* Mobile Nav Toggle */}
+            <div className="lg:hidden fixed top-4 right-4 z-[70]">
+                <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="p-3 bg-slate-900 text-white rounded-2xl shadow-2xl"
+                >
+                    {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                </button>
+            </div>
 
+            {/* Sidebar Container */}
             <div className={`
-                fixed inset-y-0 left-0 z-50 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out
+                fixed inset-y-0 left-0 z-50 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out bg-slate-900 border-r border-white/5
                 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
             `}>
                 <Sidebar
@@ -298,8 +300,9 @@ export default function AdminPage() {
                 />
             </div>
 
-            <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative">
-                <div className="max-w-[1600px] mx-auto min-h-full">
+            {/* Main Content Container */}
+            <main className="h-screen overflow-y-auto overflow-x-hidden relative bg-slate-50 dark:bg-dark-950">
+                <div className="max-w-7xl mx-auto w-full">
                     {renderContent()}
                 </div>
             </main>
