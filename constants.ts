@@ -1,7 +1,7 @@
 import { Project, Service, Skill, Testimonial, Translations, Language } from './types';
 import { Server, Database, Globe, Code2, Terminal, Cpu, Smartphone, Cloud, Layout, ShieldCheck } from 'lucide-react';
 
-export const WHATSAPP_NUMBER = '5584991502101';
+export const WHATSAPP_NUMBER = '5584994349355';
 export const LINKEDIN_URL = 'https://www.linkedin.com/in/jose-erilson-araujo-3265a52b1/';
 export const GITHUB_URL = 'https://github.com/erilsonaraujo/ErilsonDigital';
 export const EMAIL_ADDRESS = 'joseerilsonaraujo@gmail.com';

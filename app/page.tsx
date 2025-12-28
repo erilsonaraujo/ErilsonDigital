@@ -1,0 +1,26 @@
+import Hero from '../components/Hero';
+import AISection from '../components/AISection';
+import Services from '../components/Services';
+import Projects from '../components/Projects';
+import Testimonials from '../components/Testimonials';
+import About from '../components/About';
+import Contact from '../components/Contact';
+import BookingSection from '../components/BookingSection';
+import ErrorBoundary from '../components/ErrorBoundary';
+
+export default function Home() {
+    return (
+        <div className="flex flex-col min-h-screen">
+            <Hero />
+            <AISection />
+            <Services />
+            <Projects />
+            <Testimonials />
+            <ErrorBoundary>
+                <BookingSection />
+            </ErrorBoundary>
+            <About />
+            <Contact />
+        </div>
+    );
+}

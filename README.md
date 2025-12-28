@@ -9,7 +9,7 @@
 [![Discord](https://img.shields.io/badge/Discord-Join-5865f2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/3VDFU2wy)
 [![Instagram](https://img.shields.io/badge/Instagram-Follow-e4405f?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/josearaujo1986)
 [![Email](https://img.shields.io/badge/Email-Contact-ea4335?style=for-the-badge&logo=gmail)](mailto:joseerilsonaraujo@gmail.com)
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-Chat-25d366?style=for-the-badge&logo=whatsapp)](https://wa.me/5584991502101)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-Chat-25d366?style=for-the-badge&logo=whatsapp)](https://wa.me/5584994349355)
 
 **Transformando ideias em software seguro e escalável**
 
@@ -91,7 +91,7 @@ Desenvolvedor Full-Stack especializado em **Java** e **Python**, com formação 
 - ✅ Interface intuitiva e responsiva
 
 ### 🌐 ErilsonDigital Portfolio
-**Tecnologias**: React, TypeScript, Vite, Tailwind CSS, Calendly API  
+**Tecnologias**: React, TypeScript, Next.js, Tailwind CSS  
 **Descrição**: Portfólio profissional moderno com sistema de agendamento integrado.  
 **Destaques**:
 - ✅ Design glassmorphism premium
@@ -186,7 +186,7 @@ Estou sempre aberto a novos desafios e oportunidades de colaboração. Se você 
 
 [![Email](https://img.shields.io/badge/Email-joseerilsonaraujo@gmail.com-ea4335?style=for-the-badge&logo=gmail&logoColor=white)](mailto:joseerilsonaraujo@gmail.com)
 
-[![WhatsApp](https://img.shields.io/badge/WhatsApp-+55_(84)_99150--2101-25d366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5584991502101)
+[![WhatsApp](https://img.shields.io/badge/WhatsApp-+55_(84)_99434--9355-25d366?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/5584994349355)
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Jose_Erilson_Araujo-0077b5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jose-erilson-araujo-3265a52b1/)
 
@@ -205,10 +205,10 @@ Estou sempre aberto a novos desafios e oportunidades de colaboração. Se você 
 Este portfólio foi desenvolvido com as seguintes tecnologias:
 
 - ⚛️ **React 19** com TypeScript
-- ⚡ **Vite** para build otimizado
+- ⚡ **Next.js 14** (App Router)
 - 🎨 **Tailwind CSS** para estilização
 - 🤖 **Google Gemini AI** para assistente virtual
-- 📅 **Calendly API** para agendamentos
+- 📅 **Sistema de Agendamento Próprio** (Google Calendar Style)
 - 🌐 **Multilíngue** (Português, Inglês, Espanhol)
 
 ### 🚀 Como Rodar Localmente

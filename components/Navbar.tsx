@@ -1,19 +1,11 @@
-import React, { useState } from 'react';
-import Layout from './components/Layout';
-import Hero from './components/Hero';
-import AISection from './components/AISection';
-import Services from './components/Services';
-import Projects from './components/Projects';
-import Testimonials from './components/Testimonials';
-import About from './components/About';
-import Contact from './components/Contact';
-import BookingSection from './components/BookingSection';
-import ErrorBoundary from './components/ErrorBoundary';
-import { ThemeLanguageProvider, useThemeLanguage } from './contexts/ThemeLanguageContext';
-import { Menu, Moon, Sun, Globe } from 'lucide-react';
-import { TRANSLATIONS } from './constants';
+'use client';
 
-const NavContent = () => {
+import React, { useState } from 'react';
+import { Menu, Moon, Sun, Globe } from 'lucide-react';
+import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
+import { TRANSLATIONS } from '../constants';
+
+const Navbar = () => {
     const { theme, toggleTheme, language, setLanguage } = useThemeLanguage();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const t = TRANSLATIONS[language].nav;
@@ -28,10 +20,10 @@ const NavContent = () => {
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center space-x-8">
-                        <a href="#services" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.services}</a>
-                        <a href="#portfolio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.portfolio}</a>
-                        <a href="#about" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
-                        <a href="#booking" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.booking}</a>
+                        <a href="/#services" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.services}</a>
+                        <a href="/#portfolio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.portfolio}</a>
+                        <a href="/#about" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
+                        <a href="/agendar" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.booking}</a>
 
                         <div className="h-6 w-px bg-slate-200 dark:bg-dark-700 mx-2"></div>
 
@@ -78,10 +70,10 @@ const NavContent = () => {
             {/* Mobile Menu */}
             {isMenuOpen && (
                 <div className="md:hidden bg-white dark:bg-dark-900 border-t border-slate-200 dark:border-dark-800 px-4 pt-2 pb-6 space-y-4 shadow-xl">
-                    <a href="#services" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.services}</a>
-                    <a href="#portfolio" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.portfolio}</a>
-                    <a href="#about" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
-                    <a href="#booking" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.booking}</a>
+                    <a href="/#services" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.services}</a>
+                    <a href="/#portfolio" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.portfolio}</a>
+                    <a href="/#about" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
+                    <a href="/agendar" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.booking}</a>
                     <div className="flex gap-4 pt-2 border-t border-slate-100 dark:border-dark-800">
                         {(['pt', 'en', 'es'] as const).map(l => (
                             <button
@@ -99,24 +91,4 @@ const NavContent = () => {
     );
 };
 
-function App() {
-    return (
-        <ThemeLanguageProvider>
-            <Layout>
-                <NavContent />
-                <Hero />
-                <AISection />
-                <Services />
-                <Projects />
-                <Testimonials />
-                <ErrorBoundary>
-                    <BookingSection />
-                </ErrorBoundary>
-                <About />
-                <Contact />
-            </Layout>
-        </ThemeLanguageProvider>
-    );
-}
-
-export default App;
+export default Navbar;

@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { SERVICES, TRANSLATIONS } from '../constants';
 import { useThemeLanguage } from '../contexts/ThemeLanguageContext';
 
@@ -20,9 +21,9 @@ const Services: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {SERVICES.map((service) => (
-            <div 
-              key={service.id} 
-              className="bg-white dark:bg-dark-800 p-6 rounded-xl border border-slate-200 dark:border-dark-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-300 hover:-translate-y-1 group shadow-sm hover:shadow-xl"
+            <Link href={`/servicos/${service.id}`}
+              key={service.id}
+              className="bg-white dark:bg-dark-800 p-6 rounded-xl border border-slate-200 dark:border-dark-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-300 hover:-translate-y-1 group shadow-sm hover:shadow-xl block"
             >
               <div className="w-12 h-12 bg-primary-50 dark:bg-dark-950 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-600 group-hover:text-white transition-all text-primary-600">
                 <service.icon className="w-6 h-6" />
@@ -31,7 +32,7 @@ const Services: React.FC = () => {
               <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
                 {service.description}
               </p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
