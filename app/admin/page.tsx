@@ -12,7 +12,7 @@ export default function AdminPage() {
     const [activeTab, setActiveTab] = useState('leads');
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
+        supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
             setSession(session);
         });
 
