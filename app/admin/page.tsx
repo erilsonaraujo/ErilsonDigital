@@ -274,35 +274,58 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans grid grid-cols-1 lg:grid-cols-[256px,1fr]">
-            {/* Sidebar Container */}
-            <div className={`
-                fixed inset-y-0 left-0 z-50 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out bg-slate-900 border-r border-white/5
-                ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-            `}>
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex overscroll-none">
+            {/* Desktop Sidebar (Permanent) */}
+            <div className="hidden lg:block w-64 h-screen sticky top-0 flex-shrink-0 z-40 bg-slate-900 border-r border-white/5">
                 <Sidebar
                     activeView={activeView}
-                    onViewChange={(view) => {
-                        setActiveView(view);
-                        setSidebarOpen(false);
-                    }}
+                    onViewChange={setActiveView}
                     onLogout={handleLogout}
                 />
             </div>
 
-            {/* Main Content Container - Wrap everything here to avoid grid cell conflicts */}
-            <main className="min-h-screen relative bg-slate-50 dark:bg-dark-950 min-w-0">
-                {/* Mobile Nav Toggle - Inner absolute to not break external grid */}
-                <div className="lg:hidden fixed top-4 right-4 z-[70]">
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="p-3 bg-slate-900 text-white rounded-2xl shadow-2xl active:scale-95 transition-all"
+            {/* Mobile Sidebar (Fixed Overlay) */}
+            {sidebarOpen && (
+                <div
+                    className="lg:hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm"
+                    onClick={() => setSidebarOpen(false)}
+                >
+                    <div
+                        className="w-72 h-full bg-slate-900 shadow-2xl animate-in slide-in-from-left duration-300"
+                        onClick={e => e.stopPropagation()}
                     >
-                        {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+                        <div className="p-4 flex justify-end">
+                            <button onClick={() => setSidebarOpen(false)} className="p-2 text-slate-400 hover:text-white">
+                                <X size={24} />
+                            </button>
+                        </div>
+                        <Sidebar
+                            activeView={activeView}
+                            onViewChange={(view) => {
+                                setActiveView(view);
+                                setSidebarOpen(false);
+                            }}
+                            onLogout={handleLogout}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* Main Content Area */}
+            <main className="flex-1 min-w-0 bg-slate-50 dark:bg-dark-950 relative">
+                {/* Mobile Header Toggle */}
+                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-30">
+                    <span className="font-bold text-slate-900 dark:text-white">Admin Erilson</span>
+                    <button
+                        onClick={() => setSidebarOpen(true)}
+                        className="p-2 bg-slate-900 text-white rounded-xl"
+                    >
+                        <Menu size={20} />
                     </button>
                 </div>
 
-                <div className="h-screen overflow-y-auto overflow-x-hidden">
+                {/* Dashboard Inner Scroll */}
+                <div className="h-full lg:h-screen lg:overflow-y-auto overflow-x-hidden">
                     <div className="max-w-[1600px] mx-auto w-full">
                         {renderContent()}
                     </div>
