@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react';
-import { WHATSAPP_NUMBER, EMAIL, SOCIAL_LINKS } from '@/constants';
+import { WHATSAPP_NUMBER, EMAIL_ADDRESS, SOCIAL_LINKS } from '@/constants';
 
 export const metadata: Metadata = {
     title: 'Contato | Erilson Digital',
@@ -49,7 +49,7 @@ export default function ContactPage() {
                                 </a>
 
                                 <a
-                                    href={`mailto:${EMAIL}`}
+                                    href={`mailto:${EMAIL_ADDRESS}`}
                                     className="flex items-start gap-4 p-4 rounded-xl hover:bg-slate-50 dark:hover:bg-dark-800 transition-colors group"
                                 >
                                     <div className="p-3 bg-primary-100 dark:bg-primary-900/30 rounded-lg group-hover:bg-primary-200 dark:group-hover:bg-primary-900/50 transition-colors">
@@ -57,7 +57,7 @@ export default function ContactPage() {
                                     </div>
                                     <div>
                                         <h3 className="font-semibold text-slate-900 dark:text-white mb-1">Email</h3>
-                                        <p className="text-slate-600 dark:text-slate-400">{EMAIL}</p>
+                                        <p className="text-slate-600 dark:text-slate-400">{EMAIL_ADDRESS}</p>
                                         <p className="text-sm text-slate-500 dark:text-slate-500 mt-1">Resposta em até 24h</p>
                                     </div>
                                 </a>
