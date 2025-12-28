@@ -1,25 +1,32 @@
 // Script to initialize database and create first admin user
 // Run this once after deploying to Vercel
 
-import { sql } from '@vercel/postgres';
+import { Pool } from 'pg';
 import bcrypt from 'bcryptjs';
 
-async function initializeDatabase() {
-    try {
-        console.log('Initializing database...');
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
-        // Create tables
-        await sql`
+async function initializeDatabase() {
+  try {
+    console.log('Initializing database...');
+
+    // Create tables
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS admins (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
-        console.log('✓ Table admins created');
+    `);
+    console.log('✓ Table admins created');
 
-        await sql`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS leads (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -29,10 +36,10 @@ async function initializeDatabase() {
         source VARCHAR(100),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
-        console.log('✓ Table leads created');
+    `);
+    console.log('✓ Table leads created');
 
-        await sql`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -45,28 +52,30 @@ async function initializeDatabase() {
         status VARCHAR(50) DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
-        console.log('✓ Table appointments created');
+    `);
+    console.log('✓ Table appointments created');
 
-        // Create first admin user
-        const adminEmail = process.env.ADMIN_EMAIL || 'joseerilsonaraujo@gmail.com';
-        const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'; // CHANGE THIS!
+    // Create first admin user
+    const adminEmail = process.env.ADMIN_EMAIL || 'joseerilsonaraujo@gmail.com';
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'; // CHANGE THIS!
 
-        const passwordHash = await bcrypt.hash(adminPassword, 10);
+    const passwordHash = await bcrypt.hash(adminPassword, 10);
 
-        await sql`
-      INSERT INTO admins (email, password_hash)
-      VALUES (${adminEmail}, ${passwordHash})
-      ON CONFLICT (email) DO NOTHING
-    `;
-        console.log(`✓ Admin user created: ${adminEmail}`);
-        console.log('⚠️  IMPORTANT: Change the default password!');
+    await pool.query(
+      'INSERT INTO admins (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
+      [adminEmail, passwordHash]
+    );
+    console.log(`✓ Admin user created: ${adminEmail}`);
+    console.log('⚠️  IMPORTANT: Change the default password!');
 
-        console.log('\n✅ Database initialized successfully!');
-    } catch (error) {
-        console.error('❌ Error initializing database:', error);
-        throw error;
-    }
+    console.log('\n✅ Database initialized successfully!');
+
+    await pool.end();
+  } catch (error) {
+    console.error('❌ Error initializing database:', error);
+    await pool.end();
+    throw error;
+  }
 }
 
 initializeDatabase();
