@@ -10,9 +10,11 @@ export async function POST(req: Request) {
 
         if (!apiKey) {
             console.error("DEBUG: OPENAI_API_KEY and NEXT_PUBLIC_OPENAI_API_KEY are BOTH missing in process.env");
-            console.log("DEBUG: Available env keys:", Object.keys(process.env).filter(k => k.includes('API') || k.includes('OPENAI')));
             return NextResponse.json(
-                { error: "A chave de API não foi detectada pelo servidor. Certifique-se de que o arquivo .env.local está correto e o servidor foi reiniciado." },
+                {
+                    error: "Erro de Configuração: A chave de API não foi encontrada no servidor.",
+                    details: "Se você estiver no local, reinicie o 'npm run dev'. Se estiver online, adicione a variável OPENAI_API_KEY no painel de controle da sua hospedagem (Vercel/Netlify/etc)."
+                },
                 { status: 500 }
             );
         }
