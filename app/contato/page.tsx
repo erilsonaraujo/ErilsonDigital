@@ -1,13 +1,7 @@
 'use client';
 
-import { Metadata } from 'next';
 import { Mail, Phone, MapPin, MessageCircle, Send } from 'lucide-react';
 import { WHATSAPP_NUMBER, EMAIL_ADDRESS } from '@/constants';
-
-export const metadata: Metadata = {
-    title: 'Contato | Erilson Digital',
-    description: 'Entre em contato para discutir seu projeto. Atendimento via WhatsApp, Email ou formulário de contato.',
-};
 
 export default function ContactPage() {
     const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá! Gostaria de conversar sobre um projeto.')}`;
