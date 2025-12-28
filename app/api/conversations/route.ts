@@ -1,5 +1,22 @@
 import { NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { cookies } from 'next/headers';
+
+export async function GET() {
+    try {
+        const cookieStore = await cookies();
+        const session = cookieStore.get('admin_session');
+        if (!session) {
+            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+        }
+
+        const result = await query('SELECT * FROM conversations ORDER BY created_at DESC');
+        return NextResponse.json({ conversations: result.rows });
+    } catch (error) {
+        console.error('Conversations fetch error:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    }
+}
 
 export async function POST(req: Request) {
     try {
