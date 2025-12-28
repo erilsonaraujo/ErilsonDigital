@@ -274,17 +274,17 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex overscroll-none">
-            {/* Desktop Sidebar (Permanent) */}
-            <div className="hidden lg:block w-64 h-screen sticky top-0 flex-shrink-0 z-40 bg-slate-900 border-r border-white/5">
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex isolate">
+            {/* 1. Desktop Sidebar (Fixed) */}
+            <aside className="hidden lg:flex w-64 h-screen fixed left-0 top-0 z-50 bg-slate-900 border-r border-white/5 flex-col shadow-2xl">
                 <Sidebar
                     activeView={activeView}
                     onViewChange={setActiveView}
                     onLogout={handleLogout}
                 />
-            </div>
+            </aside>
 
-            {/* Mobile Sidebar (Fixed Overlay) */}
+            {/* 2. Mobile Sidebar (Overlay) */}
             {sidebarOpen && (
                 <div
                     className="lg:hidden fixed inset-0 z-[100] bg-slate-950/80 backdrop-blur-sm"
@@ -296,7 +296,7 @@ export default function AdminPage() {
                     >
                         <div className="p-4 flex justify-end">
                             <button onClick={() => setSidebarOpen(false)} className="p-2 text-slate-400 hover:text-white">
-                                <X size={24} />
+                                <X size={28} />
                             </button>
                         </div>
                         <Sidebar
@@ -311,26 +311,26 @@ export default function AdminPage() {
                 </div>
             )}
 
-            {/* Main Content Area */}
-            <main className="flex-1 min-w-0 bg-slate-50 dark:bg-dark-950 relative">
+            {/* 3. Main content area (Padded on Desktop to avoid Fixed Sidebar) */}
+            <div className="flex-1 w-full min-w-0 lg:ml-64 relative bg-slate-50 dark:bg-dark-950 flex flex-col min-h-screen">
                 {/* Mobile Header Toggle */}
-                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-30">
-                    <span className="font-bold text-slate-900 dark:text-white">Admin Erilson</span>
+                <div className="lg:hidden flex items-center justify-between p-4 bg-white dark:bg-dark-900 border-b border-slate-200 dark:border-dark-800 sticky top-0 z-40">
+                    <div className="font-black text-slate-900 dark:text-white tracking-widest text-xs uppercase">Erilson Digital</div>
                     <button
                         onClick={() => setSidebarOpen(true)}
-                        className="p-2 bg-slate-900 text-white rounded-xl"
+                        className="p-2 bg-slate-900 text-white rounded-xl shadow-lg active:scale-95 transition-transform"
                     >
                         <Menu size={20} />
                     </button>
                 </div>
 
-                {/* Dashboard Inner Scroll */}
-                <div className="h-full lg:h-screen lg:overflow-y-auto overflow-x-hidden">
+                {/* Dashboard Wrapper */}
+                <main className="flex-1 h-full overflow-y-auto">
                     <div className="max-w-[1600px] mx-auto w-full">
                         {renderContent()}
                     </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
     );
 }
