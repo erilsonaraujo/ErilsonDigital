@@ -1,8 +1,5 @@
 import { Metadata } from 'next';
 import { Providers } from './providers';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
-import { AnalyticsTracker } from '../components/AnalyticsTracker';
 import './globals.css';
 import { Inter, Outfit } from 'next/font/google';
 
