@@ -10,19 +10,28 @@ export default function AdminPage() {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState('leads');
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
-            setSession(session);
-        });
+        try {
+            supabase.auth.getSession().then(({ data: { session } }: { data: { session: any } }) => {
+                setSession(session);
+            }).catch((err) => {
+                console.error('Supabase error:', err);
+                setError('Erro ao conectar com o banco de dados. Verifique as configurações do Supabase.');
+            });
 
-        const {
-            data: { subscription },
-        } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
-            setSession(session);
-        });
+            const {
+                data: { subscription },
+            } = supabase.auth.onAuthStateChange((_event: any, session: any) => {
+                setSession(session);
+            });
 
-        return () => subscription.unsubscribe();
+            return () => subscription.unsubscribe();
+        } catch (err) {
+            console.error('Supabase initialization error:', err);
+            setError('Erro ao inicializar o sistema de autenticação.');
+        }
     }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
@@ -48,6 +57,16 @@ export default function AdminPage() {
             <div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-dark-950">
                 <div className="bg-white dark:bg-dark-900 p-8 rounded-2xl shadow-xl w-full max-w-md border border-slate-200 dark:border-dark-800">
                     <h1 className="text-2xl font-bold text-center mb-6 text-slate-900 dark:text-white">Admin Login</h1>
+
+                    {error && (
+                        <div className="mb-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                            <p className="text-xs text-red-500 dark:text-red-500 mt-2">
+                                Configure as variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY no Vercel.
+                            </p>
+                        </div>
+                    )}
+
                     <form onSubmit={handleLogin} className="space-y-4">
                         <div>
                             <label className="block text-sm font-medium mb-1 dark:text-slate-300">Email</label>
@@ -69,16 +88,17 @@ export default function AdminPage() {
                                 required
                             />
                         </div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
-                        >
-                            {loading ? 'Entrando...' : 'Entrar'}
-                        </button>
-                    </form>
                 </div>
-            </div>
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
+                >
+                    {loading ? 'Entrando...' : 'Entrar'}
+                </button>
+            </form>
+                </div >
+            </div >
         );
     }
 

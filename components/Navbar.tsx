@@ -14,9 +14,9 @@ const Navbar = () => {
         <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-dark-950/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
-                    <div className="flex-shrink-0 flex items-center">
+                    <a href="/" className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity">
                         <span className="font-display font-bold text-xl text-slate-900 dark:text-white tracking-tight">Erilson<span className="text-primary-600 dark:text-primary-500">Digital</span></span>
-                    </div>
+                    </a>
 
                     {/* Desktop Nav */}
                     <div className="hidden md:flex items-center space-x-6">
