@@ -37,6 +37,7 @@ export default function AdminPage() {
     const [loading, setLoading] = useState(true);
     const [loginLoading, setLoginLoading] = useState(false);
     const [activeView, setActiveView] = useState('dashboard');
+    const [sidebarOpen, setSidebarOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [leads, setLeads] = useState<Lead[]>([]);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -255,8 +256,8 @@ export default function AdminPage() {
                                         </td>
                                         <td className="py-6 px-8 text-right">
                                             <span className={`inline-block px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] shadow-sm ${apt.status === 'pending' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400' :
-                                                    apt.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400' :
-                                                        'bg-slate-100 text-slate-500 dark:bg-dark-800'
+                                                apt.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-400' :
+                                                    'bg-slate-100 text-slate-500 dark:bg-dark-800'
                                                 }`}>
                                                 {apt.status}
                                             </span>
@@ -274,14 +275,33 @@ export default function AdminPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans">
-            <Sidebar
-                activeView={activeView}
-                onViewChange={setActiveView}
-                onLogout={handleLogout}
-            />
-            <main className="pl-64 min-h-screen transition-all duration-500">
-                {renderContent()}
+        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 font-sans flex overflow-hidden">
+            {/* Sidebar toggle for mobile */}
+            <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-primary-600 text-white rounded-full shadow-2xl active:scale-90 transition-transform"
+            >
+                <Clock className="w-6 h-6" /> {/* Using Clock as a temporary icon or I should use Menu */}
+            </button>
+
+            <div className={`
+                fixed inset-y-0 left-0 z-50 transform lg:relative lg:translate-x-0 transition-transform duration-300 ease-in-out
+                ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+            `}>
+                <Sidebar
+                    activeView={activeView}
+                    onViewChange={(view) => {
+                        setActiveView(view);
+                        setSidebarOpen(false);
+                    }}
+                    onLogout={handleLogout}
+                />
+            </div>
+
+            <main className="flex-1 h-screen overflow-y-auto overflow-x-hidden relative">
+                <div className="max-w-[1600px] mx-auto min-h-full">
+                    {renderContent()}
+                </div>
             </main>
         </div>
     );
