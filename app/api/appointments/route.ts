@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { client } from '@/lib/db';
+import { pool } from '@/lib/db';
 
 // GET all appointments
 export async function GET(request: NextRequest) {
@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
         }
 
-        const result = await client.query(
+        const result = await pool.query(
             'SELECT * FROM appointments ORDER BY created_at DESC'
         );
 
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const result = await client.query(
+        const result = await pool.query(
             'INSERT INTO appointments (name, email, phone, service, preferred_date, preferred_time, message) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
             [name, email, phone || null, service || null, preferred_date || null, preferred_time || null, message || null]
         );

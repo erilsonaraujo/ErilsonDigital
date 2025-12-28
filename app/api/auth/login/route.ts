@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { client } from '@/lib/db';
+import { pool } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Find admin by email
-        const result = await client.query(
+        const result = await pool.query(
             'SELECT * FROM admins WHERE email = $1 LIMIT 1',
             [email]
         );

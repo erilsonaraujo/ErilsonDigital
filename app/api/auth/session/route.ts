@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { client } from '@/lib/db';
+import { pool } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
     try {
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         const adminId = sessionCookie.value;
 
         // Verify admin exists
-        const result = await client.query(
+        const result = await pool.query(
             'SELECT id, email FROM admins WHERE id = $1 LIMIT 1',
             [adminId]
         );

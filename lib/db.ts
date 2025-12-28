@@ -1,14 +1,19 @@
-import { createClient } from '@vercel/postgres';
+import { Pool } from 'pg';
 
-// Create a client instance
-const client = createClient();
+// Create a connection pool
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
 
-export { client };
+export { pool };
 
 // Helper function to execute queries
 export async function query(text: string, params?: any[]) {
   try {
-    const result = await client.query(text, params);
+    const result = await pool.query(text, params);
     return result;
   } catch (error) {
     console.error('Database query error:', error);
@@ -20,7 +25,7 @@ export async function query(text: string, params?: any[]) {
 export async function initDatabase() {
   try {
     // Create admins table
-    await client.query(`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS admins (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
@@ -30,7 +35,7 @@ export async function initDatabase() {
     `);
 
     // Create leads table
-    await client.query(`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS leads (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -43,7 +48,7 @@ export async function initDatabase() {
     `);
 
     // Create appointments table
-    await client.query(`
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
