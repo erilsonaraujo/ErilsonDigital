@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@vercel/postgres';
+import { client } from '@/lib/db';
 
 export async function GET(request: NextRequest) {
     try {
@@ -15,9 +15,10 @@ export async function GET(request: NextRequest) {
         const adminId = sessionCookie.value;
 
         // Verify admin exists
-        const result = await sql`
-      SELECT id, email FROM admins WHERE id = ${adminId} LIMIT 1
-    `;
+        const result = await client.query(
+            'SELECT id, email FROM admins WHERE id = $1 LIMIT 1',
+            [adminId]
+        );
 
         if (result.rows.length === 0) {
             return NextResponse.json(

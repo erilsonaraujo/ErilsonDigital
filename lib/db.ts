@@ -1,33 +1,36 @@
-import { sql } from '@vercel/postgres';
+import { createClient } from '@vercel/postgres';
 
-export { sql };
+// Create a client instance
+const client = createClient();
+
+export { client };
 
 // Helper function to execute queries
 export async function query(text: string, params?: any[]) {
-    try {
-        const result = await sql.query(text, params);
-        return result;
-    } catch (error) {
-        console.error('Database query error:', error);
-        throw error;
-    }
+  try {
+    const result = await client.query(text, params);
+    return result;
+  } catch (error) {
+    console.error('Database query error:', error);
+    throw error;
+  }
 }
 
 // Initialize database tables
 export async function initDatabase() {
-    try {
-        // Create admins table
-        await sql`
+  try {
+    // Create admins table
+    await client.query(`
       CREATE TABLE IF NOT EXISTS admins (
         id SERIAL PRIMARY KEY,
         email VARCHAR(255) UNIQUE NOT NULL,
         password_hash VARCHAR(255) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
+    `);
 
-        // Create leads table
-        await sql`
+    // Create leads table
+    await client.query(`
       CREATE TABLE IF NOT EXISTS leads (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -37,10 +40,10 @@ export async function initDatabase() {
         source VARCHAR(100),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
+    `);
 
-        // Create appointments table
-        await sql`
+    // Create appointments table
+    await client.query(`
       CREATE TABLE IF NOT EXISTS appointments (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -53,12 +56,12 @@ export async function initDatabase() {
         status VARCHAR(50) DEFAULT 'pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
-    `;
+    `);
 
-        console.log('Database tables initialized successfully');
-        return true;
-    } catch (error) {
-        console.error('Database initialization error:', error);
-        throw error;
-    }
+    console.log('Database tables initialized successfully');
+    return true;
+  } catch (error) {
+    console.error('Database initialization error:', error);
+    throw error;
+  }
 }

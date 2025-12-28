@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@vercel/postgres';
+import { client } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
@@ -14,9 +14,10 @@ export async function POST(request: NextRequest) {
         }
 
         // Find admin by email
-        const result = await sql`
-      SELECT * FROM admins WHERE email = ${email} LIMIT 1
-    `;
+        const result = await client.query(
+            'SELECT * FROM admins WHERE email = $1 LIMIT 1',
+            [email]
+        );
 
         if (result.rows.length === 0) {
             return NextResponse.json(
