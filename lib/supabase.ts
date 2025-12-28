@@ -7,4 +7,17 @@ if (!supabaseUrl || !supabaseAnonKey) {
     console.warn('Supabase URL or Key missing. Check .env');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+// Fallback for build time or missing env vars
+const isBuildTime = typeof window === 'undefined' && (!supabaseUrl || !supabaseAnonKey);
+
+export const supabase = isBuildTime
+    ? {
+        auth: {
+            getSession: () => Promise.resolve({ data: { session: null }, error: null }),
+            onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => { } } } }),
+            signInWithPassword: () => Promise.resolve({ error: { message: 'Supabase not configured' } }),
+            signOut: () => Promise.resolve()
+        },
+        from: () => ({ select: () => Promise.resolve({ data: [], error: null }) })
+    } as any
+    : createClient(supabaseUrl, supabaseAnonKey);
