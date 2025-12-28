@@ -88,15 +88,14 @@ export default function AdminPage() {
                                 required
                             />
                         </div>
-                </div>
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
-                >
-                    {loading ? 'Entrando...' : 'Entrar'}
-                </button>
-            </form>
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 rounded-lg transition-all disabled:opacity-50"
+                        >
+                            {loading ? 'Entrando...' : 'Entrar'}
+                        </button>
+                    </form>
                 </div >
             </div >
         );
