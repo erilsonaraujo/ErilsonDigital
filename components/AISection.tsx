@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send, Sparkles, User, MessageCircle, UserCheck, Calendar } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import { jsPDF } from 'jspdf';
-import { sendMessageToGemini } from '@/services/geminiService';
+import { sendMessageToOpenAI } from '@/services/openaiService';
 import { ChatMessage } from '@/types';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
@@ -21,9 +21,9 @@ const AISection: React.FC = () => {
     // Initial Greeting
     useEffect(() => {
         if (messages.length === 0) {
-            setMessages([{ role: 'model', text: t.subtitle }]);
-        } else if (messages.length === 1 && messages[0].role === 'model') {
-            setMessages([{ role: 'model', text: t.subtitle }]);
+            setMessages([{ role: 'assistant', text: t.subtitle }]);
+        } else if (messages.length === 1 && messages[0].role === 'assistant') {
+            setMessages([{ role: 'assistant', text: t.subtitle }]);
         }
     }, [language]);
 
@@ -46,15 +46,16 @@ const AISection: React.FC = () => {
         setIsLoading(true);
 
         try {
-            const historyForService = updatedMessages.map(m => ({
-                role: m.role === 'model' ? 'model' : 'user',
-                parts: [{ text: m.text }]
+            // Convert history to OpenAI format
+            const openAiMessages = updatedMessages.map(m => ({
+                role: (m.role === 'model' || m.role === 'assistant' ? 'assistant' : 'user') as 'assistant' | 'user',
+                content: m.text
             }));
 
-            const responseText = await sendMessageToGemini(historyForService, textToSend);
+            const responseText = await sendMessageToOpenAI(openAiMessages);
 
             const aiMessage: ChatMessage = {
-                role: 'model',
+                role: 'assistant',
                 text: responseText,
             };
 
@@ -66,7 +67,7 @@ const AISection: React.FC = () => {
 
         } catch (error) {
             console.error(error);
-            setMessages(prev => [...prev, { role: 'model', text: 'Desculpe, tive um erro técnico. Tente novamente.' }]);
+            setMessages(prev => [...prev, { role: 'assistant', text: 'Poxa, tive um pequeno lapso técnico aqui. Pode repetir sua última frase?' }]);
         } finally {
             setIsLoading(false);
         }

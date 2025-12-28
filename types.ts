@@ -24,7 +24,7 @@ export interface Service {
 }
 
 export interface ChatMessage {
-  role: 'user' | 'model';
+  role: 'user' | 'model' | 'assistant';
   text: string;
   isActionable?: boolean;
   // actionType indicates which actionable button(s) to show: 'whatsapp', 'booking', or 'both'
