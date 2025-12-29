@@ -321,11 +321,11 @@ export const PROJECTS: Project[] = [
   {
     id: 'erilson-portfolio',
     title: 'Gêmeo Digital com IA (Este Site)',
-    category: 'AI / React / OpenAI',
+    category: 'AI / React / Gemini',
     summary: 'Portfólio interativo com Inteligência Artificial generativa.',
     problem: 'Diferenciar-se no mercado de trabalho competitivo e mostrar habilidades técnicas na prática.',
     solution: 'Atenção Cliente: Este site que você está vendo foi construído com as mesmas tecnologias que eu uso nos seus projetos. React para performance, Tailwind para design premium e IA para interatividade. Se você gostou da experiência, imagine o que posso fazer pelo seu negócio.',
-    technologies: ['React', 'OpenAI API', 'Tailwind', 'Vercel'],
+    technologies: ['React', 'Gemini 2.0 API', 'Tailwind', 'Vercel'],
     image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&q=80&w=1200',
     liveLink: 'https://erilsondigital.com',
     repoLink: 'https://github.com/erilsonaraujo/portfolio',

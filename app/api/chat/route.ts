@@ -1,49 +1,59 @@
 import { NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { SYSTEM_INSTRUCTION } from '@/constants';
 
 export async function POST(req: Request) {
     try {
         const { messages } = await req.json();
 
-        const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+        const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
 
         if (!apiKey) {
-            console.error("DEBUG: OPENAI_API_KEY and NEXT_PUBLIC_OPENAI_API_KEY are BOTH missing in process.env");
+            console.error("GOOGLE_GENERATIVE_AI_API_KEY is missing in environment variables.");
             return NextResponse.json(
                 {
-                    error: "Erro de Configuração: A chave de API não foi encontrada no servidor.",
-                    details: "Se você estiver no local, reinicie o 'npm run dev'. Se estiver online, adicione a variável OPENAI_API_KEY no painel de controle da sua hospedagem (Vercel/Netlify/etc)."
+                    error: "Erro de Configuração: A chave de API do Gemini não foi encontrada no servidor.",
+                    details: "Certifique-se de configurar GOOGLE_GENERATIVE_AI_API_KEY no painel da sua hospedagem."
                 },
                 { status: 500 }
             );
         }
 
-        console.log("DEBUG: Received messages:", JSON.stringify(messages));
+        const genAI = new GoogleGenerativeAI(apiKey);
 
-        const openai = new OpenAI({ apiKey });
-
-        console.log("DEBUG: Calling OpenAI with model gpt-4o-mini");
-        const response = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
-            messages: [
-                { role: "system", content: SYSTEM_INSTRUCTION },
-                ...messages
-            ],
-            temperature: 0.7,
-            max_tokens: 500,
+        // Using gemini-2.0-flash-exp for superior performance and speed
+        const model = genAI.getGenerativeModel({
+            model: "gemini-2.0-flash-exp",
+            systemInstruction: SYSTEM_INSTRUCTION
         });
-        console.log("DEBUG: OpenAI response received successfully");
 
-        const aiMessage = response.choices[0]?.message?.content || "Recebi sua mensagem, mas meu cérebro falhou em gerar uma resposta.";
+        // Convert message format to Gemini format
+        // Gemini expects history in { role: 'user' | 'model', parts: [{ text: string }] }[]
+        const history = messages.slice(0, -1).map((m: any) => ({
+            role: m.role === 'assistant' ? 'model' : 'user',
+            parts: [{ text: m.content }]
+        }));
+
+        const lastMessage = messages[messages.length - 1].content;
+
+        const chat = model.startChat({
+            history: history,
+            generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1000,
+            },
+        });
+
+        const result = await chat.sendMessage(lastMessage);
+        const response = await result.response;
+        const aiMessage = response.text();
 
         return NextResponse.json({ text: aiMessage });
     } catch (error: any) {
-        console.error("OpenAI API Error:", error);
+        console.error("Gemini API Error:", error);
         return NextResponse.json(
             {
-                error: `Erro na OpenAI: ${error.message || "Erro desconhecido"}`,
-                type: error.type || "unknown_error",
+                error: `Erro no Gemini: ${error.message || "Erro desconhecido"}`,
                 status: error.status || 500
             },
             { status: error.status || 500 }
