@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import { Suspense } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import AnalyticsTracker from '@/components/AnalyticsTracker';
@@ -20,7 +21,9 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
-            <AnalyticsTracker />
+            <Suspense fallback={null}>
+                <AnalyticsTracker />
+            </Suspense>
             <main className="flex-grow flex flex-col pt-20">
                 {children}
             </main>
