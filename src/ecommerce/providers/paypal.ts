@@ -104,7 +104,7 @@ export function createPayPalGateway(): PaymentGateway {
       });
 
       if (!res.ok) return false;
-      const data = await res.json();
+      const data = (await res.json()) as Record<string, any>;
       return data.verification_status === 'SUCCESS';
     },
 
