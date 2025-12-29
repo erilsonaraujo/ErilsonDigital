@@ -21,6 +21,7 @@ import SeoView from '@/components/admin/SeoView';
 import IntegrationsView from '@/components/admin/IntegrationsView';
 import FormBuilderView from '@/components/admin/FormBuilderView';
 import BookingV2View from '@/components/admin/BookingV2View';
+import EcommerceView from '@/components/admin/EcommerceView';
 import { getRecaptchaToken } from '@/lib/recaptchaClient';
 
 interface Lead {
@@ -307,6 +308,7 @@ export default function AdminPage() {
             case 'seo': return <SeoView />;
             case 'integrations': return <IntegrationsView />;
             case 'conversations': return <ConversationsView />;
+            case 'ecommerce': return <EcommerceView />;
             case 'settings': return <SettingsView />;
             case 'leads': return (
                 <div className="rounded-[28px] border border-graphite-800 bg-ink-900/70 shadow-2xl overflow-hidden overflow-x-auto">
@@ -442,6 +444,7 @@ export default function AdminPage() {
         seo: { title: 'SEO Keywords', subtitle: 'Palavras-chave e paginas do Search Console.' },
         integrations: { title: 'Integracoes', subtitle: 'API publica e importadores.' },
         conversations: { title: 'Conversas IA', subtitle: 'Interacoes e transcricoes da Sofia.' },
+        ecommerce: { title: 'E-commerce', subtitle: 'Catalogo, pedidos, estoque e operacao.' },
         settings: { title: 'Configuracoes', subtitle: 'Pixels, integracoes e governanca.' },
     };
 

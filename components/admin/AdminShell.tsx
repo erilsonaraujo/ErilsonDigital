@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target, SplitSquareVertical, Users2, FileText, Tag, Flame, Video, Music, FlaskConical, Search, Plug, FileSignature, CalendarRange } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target, SplitSquareVertical, Users2, FileText, Tag, Flame, Video, Music, FlaskConical, Search, Plug, FileSignature, CalendarRange, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminShellProps {
@@ -34,6 +34,7 @@ const NAV_ITEMS = [
   { id: 'seo', label: 'SEO Keywords', icon: Search },
   { id: 'integrations', label: 'Integracoes', icon: Plug },
   { id: 'conversations', label: 'Conversas IA', icon: MessageSquare },
+  { id: 'ecommerce', label: 'E-commerce', icon: ShoppingCart },
   { id: 'settings', label: 'Configuracoes', icon: Settings },
 ];
 

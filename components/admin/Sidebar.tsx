@@ -7,6 +7,7 @@ import {
     Calendar,
     BarChart3,
     MessageSquare,
+    ShoppingCart,
     LogOut,
     ExternalLink
 } from 'lucide-react';
@@ -25,6 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activeView, onViewChange, onLogout })
         { id: 'appointments', label: 'Agendamentos', icon: Calendar },
         { id: 'analytics', label: 'Analytics', icon: BarChart3 },
         { id: 'conversations', label: 'Conversas IA', icon: MessageSquare },
+        { id: 'ecommerce', label: 'E-commerce', icon: ShoppingCart },
     ];
 
     return (
