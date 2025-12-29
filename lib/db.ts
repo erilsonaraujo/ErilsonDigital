@@ -348,7 +348,7 @@ export async function initDatabase() {
           SELECT 1 FROM information_schema.columns
           WHERE table_name = 'analytics_media_events' AND column_name = 'current_time'
         ) THEN
-          ALTER TABLE analytics_media_events RENAME COLUMN current_time TO media_time;
+          ALTER TABLE analytics_media_events RENAME COLUMN "current_time" TO media_time;
         END IF;
       END $$;
     `);
