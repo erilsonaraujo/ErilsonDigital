@@ -11,8 +11,20 @@
     @apply bg-ink-950 text-graphite-100 antialiased;
   }
 
+  html.light body {
+    @apply bg-graphite-50 text-graphite-700;
+  }
+
   h1, h2, h3, h4, h5, h6 {
     @apply font-display;
+  }
+
+  html.light .section-title {
+    @apply text-graphite-900;
+  }
+
+  html.light .section-lead {
+    @apply text-graphite-600;
   }
 }
 
@@ -39,6 +51,112 @@
 }
 
 @layer utilities {
+  .light .bg-ink-950 {
+    @apply bg-graphite-50;
+  }
+
+  .light .bg-ink-900 {
+    @apply bg-white;
+  }
+
+  .light .bg-ink-900\/60 {
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  .light .bg-ink-900\/70 {
+    background-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .light .bg-ink-900\/80 {
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .light .bg-ink-950\/60 {
+    background-color: rgba(234, 236, 240, 0.6);
+  }
+
+  .light .bg-ink-950\/70 {
+    background-color: rgba(234, 236, 240, 0.7);
+  }
+
+  .light .bg-ink-950\/80 {
+    background-color: rgba(234, 236, 240, 0.8);
+  }
+
+  .light .bg-ink-950\/95 {
+    background-color: rgba(234, 236, 240, 0.95);
+  }
+
+  .light .border-graphite-800 {
+    @apply border-graphite-200;
+  }
+
+  .light .border-graphite-800\/70 {
+    border-color: rgba(214, 218, 225, 0.7);
+  }
+
+  .light .border-graphite-800\/80 {
+    border-color: rgba(214, 218, 225, 0.8);
+  }
+
+  .light .border-graphite-700 {
+    @apply border-graphite-300;
+  }
+
+  .light .text-graphite-100 {
+    @apply text-graphite-900;
+  }
+
+  .light .text-graphite-200 {
+    @apply text-graphite-800;
+  }
+
+  .light .text-graphite-300 {
+    @apply text-graphite-700;
+  }
+
+  .light .text-graphite-400 {
+    @apply text-graphite-600;
+  }
+
+  .light .text-graphite-500 {
+    @apply text-graphite-500;
+  }
+
+  .light .text-white {
+    @apply text-graphite-900;
+  }
+
+  .light .surface-card {
+    @apply bg-white border-graphite-200;
+  }
+
+  .light .glass-panel {
+    @apply bg-white/80 border-graphite-200;
+  }
+
+  .light .primary-cta {
+    @apply text-white;
+  }
+
+  .light .secondary-cta {
+    @apply border-graphite-300 bg-white text-graphite-700 hover:text-graphite-900;
+  }
+
+  .light .noise-bg {
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(47, 85, 255, 0.08), transparent 50%),
+      radial-gradient(circle at 80% 0%, rgba(28, 201, 167, 0.08), transparent 45%),
+      radial-gradient(circle at 0% 90%, rgba(255, 74, 31, 0.06), transparent 45%);
+  }
+
+  .light .grid-fade {
+    background-image:
+      linear-gradient(to right, rgba(21, 25, 36, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(21, 25, 36, 0.08) 1px, transparent 1px);
+    mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.4), transparent 70%);
+  }
+
   .noise-bg {
     background-image:
       radial-gradient(circle at 10% 10%, rgba(47, 85, 255, 0.08), transparent 45%),
