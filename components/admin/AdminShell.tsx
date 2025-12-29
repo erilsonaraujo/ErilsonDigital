@@ -52,14 +52,14 @@ const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLog
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
-      <div className="px-6 py-6 border-b border-graphite-700 bg-ink-950">
+      <div className="px-6 py-6 border-b border-graphite-700/70 bg-ink-900/90">
         <div className="flex items-center gap-3">
-          <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-cobalt-500 to-tide-400 text-ink-950 flex items-center justify-center font-semibold">
+          <div className="h-11 w-11 rounded-2xl bg-gradient-to-br from-cobalt-400 to-tide-300 text-ink-950 flex items-center justify-center font-semibold shadow-[0_12px_30px_-16px_rgba(28,201,167,0.8)]">
             ED
           </div>
           <div>
             <p className="text-sm font-semibold text-white">Erilson Digital</p>
-            <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">Admin</p>
+            <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-300">Admin</p>
           </div>
         </div>
       </div>
@@ -73,12 +73,15 @@ const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLog
                 onViewChange(item.id);
                 setDrawerOpen(false);
               }}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm border transition-all ${isActive
-                ? 'bg-cobalt-500 text-white border-cobalt-400 shadow-[0_12px_24px_-16px_rgba(47,85,255,0.9)]'
-                : 'text-graphite-200 border-graphite-800 hover:text-white hover:bg-ink-800/80 hover:border-graphite-600'}
+              className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-sm border transition-all ${isActive
+                ? 'bg-cobalt-500 text-white border-cobalt-300 shadow-[0_18px_30px_-20px_rgba(47,85,255,0.9)]'
+                : 'bg-ink-900/70 text-white/80 border-graphite-700/70 hover:text-white hover:bg-ink-800/90 hover:border-graphite-500'}
               `}
             >
-              <item.icon size={18} className={isActive ? 'text-white' : 'text-graphite-300'} />
+              {isActive && (
+                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 rounded-full bg-tide-300" />
+              )}
+              <item.icon size={18} className={isActive ? 'text-white' : 'text-white/70'} />
               {item.label}
             </button>
           );
@@ -90,12 +93,12 @@ const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLog
   return (
     <div className="min-h-screen bg-ink-950 text-graphite-100">
       <div className="flex">
-        <aside className="hidden lg:flex w-[280px] border-r border-graphite-800 bg-ink-950/90">
+        <aside className="hidden lg:flex w-[292px] border-r border-graphite-800 bg-gradient-to-b from-ink-900 via-ink-950 to-ink-950">
           <SidebarContent />
         </aside>
 
         <div className="flex-1 min-h-screen">
-          <div className="flex items-center justify-between px-6 py-5 border-b border-graphite-800 bg-ink-950/70 sticky top-0 z-20">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-graphite-800 bg-ink-950 sticky top-0 z-20">
             <button
               className="lg:hidden h-10 w-10 rounded-full border border-graphite-700 text-graphite-200 flex items-center justify-center"
               onClick={() => setDrawerOpen(true)}
@@ -103,7 +106,7 @@ const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLog
               <Menu size={18} />
             </button>
             <div className="hidden lg:block">
-              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Controle Executivo</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-graphite-400">Controle Executivo</p>
             </div>
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-xs text-graphite-400">
