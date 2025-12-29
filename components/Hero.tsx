@@ -1,92 +1,93 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, Github, Linkedin } from 'lucide-react';
-import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
-import { TRANSLATIONS, GITHUB_URL, LINKEDIN_URL } from '@/constants';
-import TechNetworkBackground from './TechNetworkBackground';
+import Image from 'next/image';
+import { ArrowUpRight, ShieldCheck, Sparkles, Workflow } from 'lucide-react';
 
 const Hero: React.FC = () => {
-  const { language } = useThemeLanguage();
-  const t = TRANSLATIONS[language].hero;
-
   return (
-    <section className="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden bg-white dark:bg-dark-950 transition-colors duration-300">
-      {/* background: Animated Tech Grid & Interactive Network */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Base Grid */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+    <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40">
+      <div className="absolute inset-0 noise-bg" />
+      <div className="absolute inset-0 grid-fade opacity-70" />
 
-        {/* Interactive Particle Network */}
-        <TechNetworkBackground />
-
-        {/* Glowing Blobs (Optimized) */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-primary-500/5 dark:bg-primary-600/5 rounded-full blur-[120px] animate-blob"></div>
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-purple-500/5 dark:bg-secondary-600/5 rounded-full blur-[120px] animate-blob" style={{ animationDelay: '2s' }}></div>
-      </div>
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
-          <div className="flex-1 text-center lg:text-left">
-            <div className="inline-flex items-center px-3 py-1 rounded-full bg-white dark:bg-dark-800 border border-slate-200 dark:border-dark-700 text-slate-600 dark:text-primary-400 text-sm font-medium mb-8 shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
-              {t.badge}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-center">
+          <div className="space-y-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-graphite-800 bg-ink-900/70 px-4 py-2 text-xs text-graphite-300">
+              <span className="h-2 w-2 rounded-full bg-tide-400 animate-pulse" />
+              Consultoria premium em engenharia, IA e produto digital
             </div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-bold text-slate-900 dark:text-white tracking-tight mb-6">
-              {t.title} <br className="hidden sm:block" />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-400 block sm:inline mt-2 sm:mt-0">
-                {t.titleHighlight}
-              </span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight">
+              Estruture software de alto valor com engenharia precisa, automacao inteligente e
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cobalt-300 to-tide-300"> execucao global</span>.
             </h1>
 
-            <p className="mt-4 max-w-2xl lg:mx-0 mx-auto text-lg sm:text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-              {t.subtitle}
+            <p className="text-lg text-graphite-300 leading-relaxed max-w-xl">
+              Projetos para empresas que exigem confianca, seguranca e performance real.
+              Construo sistemas que suportam crescimento acelerado e posicionam sua operacao no mesmo nivel de consultorias globais.
             </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
-              <a
-                href="#portfolio"
-                className="px-8 py-4 rounded-lg bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-all shadow-lg shadow-primary-500/30 flex items-center justify-center group"
-              >
-                {t.ctaPrimary}
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            <div className="flex flex-wrap gap-4">
+              <a href="/agendar" className="primary-cta">
+                Diagnostico estrategico <ArrowUpRight size={16} />
               </a>
-              <button
-                onClick={() => window.scrollTo({ top: 600, behavior: 'smooth' })}
-                className="px-8 py-4 rounded-lg bg-white dark:bg-dark-800 text-slate-900 dark:text-white font-semibold border border-slate-200 dark:border-dark-700 hover:bg-slate-50 dark:hover:bg-dark-700 transition-all flex items-center justify-center shadow-sm"
-              >
-                {t.ctaSecondary}
-              </button>
+              <a href="/portfolio" className="secondary-cta">
+                Ver cases
+              </a>
             </div>
 
-            <div className="mt-12 flex justify-center lg:justify-start space-x-6 text-slate-400 border-t border-slate-100 dark:border-dark-800/50 pt-8">
-              <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer"><Github className="h-6 w-6 hover:text-slate-900 dark:hover:text-white cursor-pointer transition-colors" /></a>
-              <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer"><Linkedin className="h-6 w-6 hover:text-blue-600 dark:hover:text-white cursor-pointer transition-colors" /></a>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
+              {[
+                { icon: ShieldCheck, title: 'Seguranca', text: 'Arquitetura OWASP e governanca de dados.' },
+                { icon: Workflow, title: 'Escalabilidade', text: 'Projetos prontos para alto volume e automacao.' },
+                { icon: Sparkles, title: 'Valor Premium', text: 'Entregas alinhadas ao ROI e ao posicionamento.' },
+              ].map((item) => (
+                <div key={item.title} className="glass-panel rounded-2xl p-4">
+                  <item.icon className="text-tide-300 mb-3" size={20} />
+                  <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                  <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="pt-6 border-t border-graphite-800/70">
+              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Confiado por lideres que exigem excelencia</p>
+              <div className="mt-4 flex flex-wrap gap-6 text-sm text-graphite-400">
+                <span>Fintechs</span>
+                <span>LegalTech</span>
+                <span>HealthTech</span>
+                <span>Consultorias</span>
+                <span>SaaS B2B</span>
+              </div>
             </div>
           </div>
 
-          <div className="flex-1 relative lg:block">
-            <div className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-[450px] lg:h-[450px] mx-auto">
-              {/* Decorative elements */}
-              <div className="absolute inset-0 bg-primary-500/10 dark:bg-primary-500/20 rounded-full blur-2xl animate-pulse"></div>
-              <div className="absolute -inset-4 border border-dashed border-primary-500/30 rounded-full animate-spin-slow"></div>
+          <div className="relative">
+            <div className="absolute -top-10 -right-8 h-64 w-64 rounded-full bg-cobalt-500/20 blur-[120px]" />
+            <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-tide-500/20 blur-[120px]" />
 
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border-4 border-white dark:border-dark-800 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-500 group">
-                <img
+            <div className="relative rounded-[32px] border border-graphite-800/70 bg-ink-900/60 p-6 shadow-2xl">
+              <div className="rounded-[24px] overflow-hidden border border-graphite-800">
+                <Image
                   src="/erilson.jpg"
                   alt="Erilson Araujo"
-                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 scale-110 group-hover:scale-100"
+                  width={640}
+                  height={720}
+                  className="h-[420px] w-full object-cover"
+                  priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary-900/40 to-transparent opacity-60"></div>
               </div>
-
-              {/* Float labels */}
-              <div className="absolute -right-4 top-10 bg-white dark:bg-dark-800 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow hidden sm:block">
-                <p className="text-primary-600 font-bold text-sm">AI Agent Expert 🤖</p>
-              </div>
-              <div className="absolute -left-8 bottom-20 bg-white dark:bg-dark-800 p-4 rounded-xl shadow-xl border border-slate-100 dark:border-dark-700 animate-bounce-slow delay-700 hidden sm:block">
-                <p className="text-secondary-500 font-bold text-sm">Fullstack Dev 💻</p>
+              <div className="mt-6 grid grid-cols-2 gap-4">
+                {[
+                  { label: 'Especialidades', value: 'IA aplicada, backends criticos, produtos premium' },
+                  { label: 'Foco', value: 'Solucoes sob medida com eficiencia de capital' },
+                ].map((item) => (
+                  <div key={item.label} className="rounded-2xl border border-graphite-800 bg-ink-950/70 p-4">
+                    <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{item.label}</p>
+                    <p className="text-sm text-graphite-200 mt-2">{item.value}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

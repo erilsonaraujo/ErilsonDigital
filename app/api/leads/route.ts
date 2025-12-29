@@ -24,7 +24,7 @@ export async function GET(request: NextRequest) {
 // POST new lead
 export async function POST(request: NextRequest) {
     try {
-        const { name, email, phone, message, source } = await request.json();
+        const { name, email, phone, company, projectType, budget, timeline, message, source } = await request.json();
 
         if (!name || !email) {
             return NextResponse.json(
@@ -34,8 +34,19 @@ export async function POST(request: NextRequest) {
         }
 
         const result = await pool.query(
-            'INSERT INTO leads (name, email, phone, message, source) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-            [name, email, phone || null, message || null, source || 'website']
+            `INSERT INTO leads (name, email, phone, company, project_type, budget, timeline, message, source)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
+            [
+                name,
+                email,
+                phone || null,
+                company || null,
+                projectType || null,
+                budget || null,
+                timeline || null,
+                message || null,
+                source || 'website'
+            ]
         );
 
         return NextResponse.json({ lead: result.rows[0] }, { status: 201 });

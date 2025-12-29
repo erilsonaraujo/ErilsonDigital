@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
 const UMAMI_API_URL = 'https://api.umami.is/v1';
-const WEBSITE_ID = '458b37ce-b9e9-4105-aa3b-0f15f0f54d1f';
-const API_KEY = 'api_EtFfi8D5pFnDYMkKDhaY1SgsgjT0rdsM';
+const WEBSITE_ID = process.env.UMAMI_WEBSITE_ID;
+const API_KEY = process.env.UMAMI_API_KEY;
 
 // Helper to get time ranges
 const getTimeRange = (range: string) => {
@@ -24,6 +24,10 @@ export async function GET(request: Request) {
     const { start, end } = getTimeRange(range);
 
     try {
+        if (!WEBSITE_ID || !API_KEY) {
+            return NextResponse.json({ error: 'Umami not configured' }, { status: 500 });
+        }
+
         let endpoint = '';
 
         // Debug note: The user says administration is not showing data.

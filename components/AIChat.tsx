@@ -92,7 +92,7 @@ const AIChat: React.FC = () => {
         {/* Header */}
         <div className="p-4 bg-dark-800 rounded-t-2xl border-b border-dark-700 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-500 to-purple-600 flex items-center justify-center text-xs font-bold text-white">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cobalt-400 to-tide-400 flex items-center justify-center text-xs font-bold text-white">
               IA
             </div>
             <div>

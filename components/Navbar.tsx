@@ -1,92 +1,65 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, Moon, Sun, Globe } from 'lucide-react';
-import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
-import { TRANSLATIONS } from '@/constants';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 
 const Navbar = () => {
-    const { theme, toggleTheme, language, setLanguage } = useThemeLanguage();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const t = TRANSLATIONS[language].nav;
+
+    const navItems = [
+        { label: 'Servicos', href: '/servicos' },
+        { label: 'Cases', href: '/portfolio' },
+        { label: 'Processo', href: '/#processo' },
+        { label: 'Sobre', href: '/sobre' },
+        { label: 'Contato', href: '/contato' },
+    ];
 
     return (
-        <nav className="fixed top-0 w-full z-50 bg-white/80 dark:bg-dark-950/80 backdrop-blur-md border-b border-slate-200 dark:border-white/5 transition-colors duration-300">
+        <nav className="fixed top-0 w-full z-50 border-b border-graphite-800/80 bg-ink-950/70 backdrop-blur-xl">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16 items-center">
-                    <a href="/" className="flex-shrink-0 flex items-center hover:opacity-80 transition-opacity">
-                        <span className="font-display font-bold text-xl text-slate-900 dark:text-white tracking-tight">Erilson<span className="text-primary-600 dark:text-primary-500">Digital</span></span>
+                <div className="flex items-center justify-between h-20">
+                    <a href="/" className="flex items-center gap-3">
+                        <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-cobalt-400 to-tide-400 text-ink-950 flex items-center justify-center font-semibold">
+                            ED
+                        </div>
+                        <div className="leading-none">
+                            <span className="block text-sm font-semibold tracking-[0.25em] text-graphite-400">ERILSON</span>
+                            <span className="block text-lg font-semibold text-white">Digital</span>
+                        </div>
                     </a>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center space-x-6">
-                        <a href="/#services" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.services}</a>
-                        <a href="/#portfolio" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.portfolio}</a>
-                        <a href="/sobre" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.about}</a>
-                        <a href="/contato" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.contact}</a>
-                        <a href="/agendar" className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 dark:hover:text-white transition-colors">{t.booking}</a>
-
-                        <div className="h-6 w-px bg-slate-200 dark:bg-dark-700 mx-2"></div>
-
-                        {/* Theme Toggle */}
-                        <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-dark-800 text-slate-600 dark:text-slate-400 transition-colors">
-                            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-                        </button>
-
-                        {/* Lang Toggle */}
-                        <div className="relative group">
-                            <button className="flex items-center gap-1 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-600 transition-colors uppercase">
-                                <Globe className="w-4 h-4" /> {language}
-                            </button>
-                            <div className="absolute right-0 mt-2 w-24 bg-white dark:bg-dark-800 rounded-md shadow-lg py-1 border border-slate-200 dark:border-dark-700 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-                                {(['pt', 'en', 'es'] as const).map(l => (
-                                    <button
-                                        key={l}
-                                        onClick={() => setLanguage(l)}
-                                        className={`block w-full text-left px-4 py-2 text-sm uppercase ${language === l ? 'text-primary-600 font-bold bg-slate-50 dark:bg-dark-700' : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-dark-700'}`}
-                                    >
-                                        {l}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        <a href="/admin" className="px-4 py-2 rounded-md bg-slate-900 dark:bg-primary-600 text-white text-sm font-medium hover:opacity-90 transition-all shadow-md">
-                            Admin
+                    <div className="hidden lg:flex items-center gap-10 text-sm text-graphite-300">
+                        {navItems.map((item) => (
+                            <a key={item.href} href={item.href} className="hover:text-white transition-colors">
+                                {item.label}
+                            </a>
+                        ))}
+                        <a href="/agendar" className="primary-cta">
+                            Diagnostico Estrategico <ArrowUpRight size={16} />
                         </a>
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden flex items-center gap-4">
-                        <button onClick={toggleTheme} className="text-slate-600 dark:text-slate-400">
-                            {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
-                        </button>
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-slate-900 dark:text-slate-300 hover:text-primary-600">
-                            <Menu className="w-6 h-6" />
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        className="lg:hidden flex items-center justify-center h-10 w-10 rounded-full border border-graphite-700 text-graphite-200"
+                        aria-label="Abrir menu"
+                    >
+                        {isMenuOpen ? <X size={18} /> : <Menu size={18} />}
+                    </button>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             {isMenuOpen && (
-                <div className="md:hidden bg-white dark:bg-dark-900 border-t border-slate-200 dark:border-dark-800 px-4 pt-2 pb-6 space-y-4 shadow-xl">
-                    <a href="/#services" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.services}</a>
-                    <a href="/#portfolio" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.portfolio}</a>
-                    <a href="/sobre" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.about}</a>
-                    <a href="/contato" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.contact}</a>
-                    <a href="/agendar" className="block text-slate-600 dark:text-slate-300 py-2" onClick={() => setIsMenuOpen(false)}>{t.booking}</a>
-                    <a href="/admin" className="block text-primary-600 dark:text-primary-400 font-medium py-2" onClick={() => setIsMenuOpen(false)}>Admin</a>
-                    <div className="flex gap-4 pt-2 border-t border-slate-100 dark:border-dark-800">
-                        {(['pt', 'en', 'es'] as const).map(l => (
-                            <button
-                                key={l}
-                                onClick={() => { setLanguage(l); setIsMenuOpen(false); }}
-                                className={`px-3 py-1 rounded border ${language === l ? 'border-primary-500 text-primary-600' : 'border-slate-200 dark:border-dark-700 text-slate-500'} text-xs uppercase`}
-                            >
-                                {l}
-                            </button>
+                <div className="lg:hidden border-t border-graphite-800 bg-ink-950/95 px-6 pb-8 pt-4">
+                    <div className="flex flex-col gap-4 text-base text-graphite-200">
+                        {navItems.map((item) => (
+                            <a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="hover:text-white">
+                                {item.label}
+                            </a>
                         ))}
+                        <a href="/agendar" className="secondary-cta w-full justify-between">
+                            Diagnostico Estrategico <ArrowUpRight size={16} />
+                        </a>
                     </div>
                 </div>
             )}

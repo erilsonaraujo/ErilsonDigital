@@ -7,6 +7,7 @@ import About from '../components/About';
 import Contact from '../components/Contact';
 import BookingSection from '../components/BookingSection';
 import ErrorBoundary from '../components/ErrorBoundary';
+import Process from '../components/Process';
 
 export default function Home() {
     return (
@@ -14,6 +15,7 @@ export default function Home() {
             <Hero />
             <AISection />
             <Services />
+            <Process />
             <Projects />
             <Testimonials />
             <ErrorBoundary>

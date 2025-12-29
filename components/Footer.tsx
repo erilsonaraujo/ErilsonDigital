@@ -1,60 +1,62 @@
 import React from 'react';
-import { Github, Linkedin, Mail, Phone, Instagram, MessageCircle } from 'lucide-react';
-import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER, DISCORD_URL, INSTAGRAM_URL } from '@/constants';
+import { Github, Linkedin, Mail, Phone } from 'lucide-react';
+import { GITHUB_URL, LINKEDIN_URL, EMAIL_ADDRESS, WHATSAPP_NUMBER } from '@/constants';
 
 const Footer = () => {
     return (
-        <footer className="bg-dark-900 border-t border-dark-800 py-12">
+        <footer className="bg-ink-950 border-t border-graphite-800 py-14">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
-
-                    <div className="max-w-xs">
-                        <span className="text-2xl font-display font-bold text-white">Erilson<span className="text-primary-500">.</span></span>
-                        <p className="text-sm text-slate-400 mt-4 leading-relaxed">
-                            Desenvolvimento Full-Stack focado em resolver problemas de negócio com código limpo, seguro e escalável. Java & Python.
+                <div className="grid grid-cols-1 md:grid-cols-[1.2fr_0.8fr_0.8fr] gap-10">
+                    <div className="space-y-4">
+                        <div className="flex items-center gap-3">
+                            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-cobalt-400 to-tide-400 text-ink-950 flex items-center justify-center font-semibold">
+                                ED
+                            </div>
+                            <div>
+                                <p className="text-sm uppercase tracking-[0.3em] text-graphite-500">Erilson Digital</p>
+                                <p className="text-lg text-white font-semibold">Engenharia Premium</p>
+                            </div>
+                        </div>
+                        <p className="text-sm text-graphite-300 leading-relaxed">
+                            Consultoria boutique para software, IA e produto. Arquitetura segura, execucao precisa e entregas de alto impacto.
                         </p>
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                        <h4 className="text-white font-bold text-sm uppercase tracking-wider">Contato Direto</h4>
-                        <div className="flex flex-col gap-2 text-sm text-slate-400">
-                            <a href={`mailto:${EMAIL_ADDRESS}`} className="hover:text-primary-500 transition-colors flex items-center gap-2">
+                    <div className="space-y-4">
+                        <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Contato direto</p>
+                        <div className="space-y-3 text-sm text-graphite-300">
+                            <a href={`mailto:${EMAIL_ADDRESS}`} className="flex items-center gap-2 hover:text-white">
                                 <Mail className="w-4 h-4" /> {EMAIL_ADDRESS}
                             </a>
-                            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="hover:text-green-500 transition-colors flex items-center gap-2">
+                            <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white">
                                 <Phone className="w-4 h-4" /> +55 84 99434-9355
                             </a>
                         </div>
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                        <h4 className="text-white font-bold text-sm uppercase tracking-wider">Redes & Código</h4>
-                        <div className="flex space-x-4">
-                            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white transition-all transform hover:-translate-y-1">
-                                <Linkedin className="h-5 w-5" />
+                    <div className="space-y-4">
+                        <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Presenca</p>
+                        <div className="flex gap-3">
+                            <a href={LINKEDIN_URL} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-300 flex items-center justify-center hover:border-graphite-500 hover:text-white">
+                                <Linkedin className="h-4 w-4" />
                             </a>
-                            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-slate-700 hover:text-white transition-all transform hover:-translate-y-1">
-                                <Github className="h-5 w-5" />
+                            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-300 flex items-center justify-center hover:border-graphite-500 hover:text-white">
+                                <Github className="h-4 w-4" />
                             </a>
-                            <a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-pink-600 hover:text-white transition-all transform hover:-translate-y-1">
-                                <Instagram className="h-5 w-5" />
-                            </a>
-                            <a href={DISCORD_URL} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-indigo-600 hover:text-white transition-all transform hover:-translate-y-1">
-                                <MessageCircle className="h-5 w-5" />
-                            </a>
-                            <a href={`mailto:${EMAIL_ADDRESS}`} className="w-10 h-10 rounded-lg bg-dark-800 flex items-center justify-center text-slate-400 hover:bg-primary-600 hover:text-white transition-all transform hover:-translate-y-1">
-                                <Mail className="h-5 w-5" />
+                            <a href={`mailto:${EMAIL_ADDRESS}`} className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-300 flex items-center justify-center hover:border-graphite-500 hover:text-white">
+                                <Mail className="h-4 w-4" />
                             </a>
                         </div>
                     </div>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-dark-800 flex flex-col md:flex-row justify-between items-center text-xs text-slate-500">
+                <div className="mt-12 pt-6 border-t border-graphite-800 flex flex-col md:flex-row justify-between items-center text-xs text-graphite-500 gap-4">
                     <p>&copy; {new Date().getFullYear()} Erilson Digital. Todos os direitos reservados.</p>
-                    <p className="mt-2 md:mt-0">Feito com React, Next.js, Tailwind & Supabase.</p>
-                    <div className="mt-4 md:mt-0 flex gap-4">
-                        <a href="/legal/privacidade" className="hover:text-primary-500">Privacidade</a>
-                        <a href="/legal/termos" className="hover:text-primary-500">Termos</a>
+                    <div className="flex flex-wrap gap-4">
+                        <a href="/legal/privacidade" className="hover:text-white">Privacidade</a>
+                        <a href="/legal/cookies" className="hover:text-white">Cookies</a>
+                        <a href="/legal/termos" className="hover:text-white">Termos</a>
+                        <a href="/legal/seguranca" className="hover:text-white">Seguranca</a>
                     </div>
                 </div>
             </div>

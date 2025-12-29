@@ -28,6 +28,8 @@ const AnalyticsView: React.FC = () => {
         os: [],
         device: [],
         country: [],
+        region: [],
+        city: [],
         event: []
     });
     const [loading, setLoading] = useState(true);
@@ -35,7 +37,7 @@ const AnalyticsView: React.FC = () => {
     const fetchAllMetrics = async () => {
         setLoading(true);
         try {
-            const types = ['url', 'referrer', 'browser', 'os', 'device', 'country', 'event'];
+            const types = ['url', 'referrer', 'browser', 'os', 'device', 'country', 'region', 'city', 'event'];
             const [statsRes, ...metricsPromises] = await Promise.all([
                 fetch(`/api/admin/umami?type=stats&range=${range}`),
                 ...types.map(t => fetch(`/api/admin/umami?type=metrics&metric=${t}&range=${range}`))
@@ -172,6 +174,8 @@ const AnalyticsView: React.FC = () => {
                     <MetricTable title="Páginas (URL)" data={metrics.url} icon={Navigation} color="blue" />
                     <MetricTable title="Fontes de Tráfego" data={metrics.referrer} icon={Search} color="primary" />
                     <MetricTable title="Geolocalização" data={metrics.country} icon={Globe} color="emerald" suffix="visitantes" />
+                    <MetricTable title="Regioes" data={metrics.region} icon={Globe} color="indigo" suffix="visitantes" />
+                    <MetricTable title="Cidades" data={metrics.city} icon={Globe} color="rose" suffix="visitantes" />
                     <MetricTable title="Navegadores" data={metrics.browser} icon={Monitor} color="indigo" />
                     <MetricTable title="Sistemas" data={metrics.os} icon={Navigation} color="slate" />
                     <MetricTable title="Dispositivos" data={metrics.device} icon={Smartphone} color="rose" />

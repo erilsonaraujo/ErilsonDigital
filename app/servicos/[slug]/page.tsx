@@ -1,177 +1,129 @@
-import React from 'react';
-import { SERVICES, WHATSAPP_NUMBER } from '@/constants';
-import { notFound } from 'next/navigation';
-import { ArrowLeft, CheckCircle, Code2, Cpu, Zap, MessageCircle } from 'lucide-react';
-import Link from 'next/link';
 import { Metadata } from 'next';
+import Image from 'next/image';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { ArrowUpRight, CheckCircle2 } from 'lucide-react';
+import { SERVICE_DETAILS } from '@/constants';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
-// Generate static params for all services
-export async function generateStaticParams() {
-    return SERVICES.map((service) => ({
-        slug: service.id,
-    }));
+interface ServicePageProps {
+  params: { slug: string };
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-    const { slug } = await params;
-    const service = SERVICES.find((s) => s.id === slug);
-    if (!service) return { title: 'Serviço Não Encontrado' };
+export const dynamicParams = false;
 
-    return {
-        title: `${service.title} | Erilson Digital`,
-        description: service.description,
-    };
+export function generateStaticParams() {
+  return SERVICE_DETAILS.map((service) => ({ slug: service.id }));
 }
 
-export default async function ServicePage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = await params;
-    const service = SERVICES.find((s) => s.id === slug);
+export function generateMetadata({ params }: ServicePageProps): Metadata {
+  const service = SERVICE_DETAILS.find((item) => item.id === params.slug);
+  if (!service) return {};
+  return {
+    title: `${service.title} | Erilson Digital`,
+    description: service.summary,
+  };
+}
 
-    if (!service) {
-        notFound();
-    }
+export default function ServicePage({ params }: ServicePageProps) {
+  const service = SERVICE_DETAILS.find((item) => item.id === params.slug);
+  if (!service) return notFound();
 
-    const benefits = [
-        "Aumento de produtividade imediato",
-        "Redução de custos operacionais",
-        "Segurança e escalabilidade garantidas",
-        "Suporte técnico especializado"
-    ];
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: service.title,
+    description: service.description,
+    provider: {
+      '@type': 'Organization',
+      name: 'Erilson Digital',
+      url: 'https://erilsondigital.com',
+    },
+  };
 
-    const processSteps = [
-        { title: "Análise", desc: "Entendemos seu negócio e necessidades." },
-        { title: "Design", desc: "Desenhamos a melhor solução técnica." },
-        { title: "Desenvolvimento", desc: "Codificação com melhores práticas." },
-        { title: "Entrega", desc: "Deploy e treinamento da equipe." }
-    ];
+  return (
+    <div className="min-h-screen bg-ink-950 pt-28 pb-20">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-    return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950">
-            {/* Hero Service */}
-            <section className="bg-dark-900 border-b border-white/5 py-20 relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-primary-600/20 blur-3xl -mr-20 -mt-20 rounded-full"></div>
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <Breadcrumbs />
-                    <Link href="/servicos" className="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors">
-                        <ArrowLeft className="w-4 h-4 mr-2" /> Voltar para Serviços
-                    </Link>
-                    <div className="flex items-center gap-4 mb-6">
-                        <div className="p-3 bg-primary-600/10 rounded-xl border border-primary-600/30 text-primary-500">
-                            <service.icon className="w-8 h-8" />
-                        </div>
-                        <h1 className="text-4xl md:text-5xl font-display font-bold text-white tracking-tight">{service.title}</h1>
-                    </div>
-                    <p className="text-xl text-slate-300 max-w-2xl leading-relaxed">
-                        {service.description} Transforme a maneira como sua empresa opera com soluções de ponta.
-                    </p>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Breadcrumbs />
+        <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Servico premium</p>
+            <h1 className="text-4xl md:text-5xl font-semibold text-white mt-4">{service.title}</h1>
+            <p className="text-lg text-graphite-300 mt-6">{service.description}</p>
+            <div className="mt-8 flex flex-wrap gap-4">
+              <Link href="/agendar" className="primary-cta">
+                Agendar diagnostico <ArrowUpRight size={16} />
+              </Link>
+              <Link href="/contato" className="secondary-cta">
+                Enviar briefing
+              </Link>
+            </div>
+
+            <div className="mt-10 rounded-[24px] border border-graphite-800 bg-ink-900/70 p-6">
+              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Resultados esperados</p>
+              <ul className="mt-4 space-y-3 text-sm text-graphite-200">
+                {service.outcomes.map((item) => (
+                  <li key={item} className="flex items-start gap-2">
+                    <CheckCircle2 size={16} className="text-tide-300 mt-1" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          <div className="rounded-[32px] border border-graphite-800 bg-ink-900/70 p-6">
+            <div className="rounded-[24px] overflow-hidden border border-graphite-800">
+              <Image
+                src={service.image}
+                alt={service.title}
+                width={600}
+                height={520}
+                className="h-64 w-full object-cover"
+              />
+            </div>
+            <div className="mt-6 space-y-6">
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Entregaveis</p>
+                <ul className="mt-3 space-y-2 text-sm text-graphite-200">
+                  {service.deliverables.map((item) => (
+                    <li key={item} className="flex items-start gap-2">
+                      <CheckCircle2 size={14} className="text-cobalt-300 mt-1" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Timeline media</p>
+                <p className="text-sm text-graphite-200 mt-2">{service.timeline}</p>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Stack recomendada</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {service.stack.map((item) => (
+                    <span key={item} className="rounded-full border border-graphite-700 px-3 py-1 text-[11px] text-graphite-300">
+                      {item}
+                    </span>
+                  ))}
                 </div>
-            </section>
-
-            {/* Content */}
-            <section className="py-20">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-
-                        {/* Main Content */}
-                        <div className="lg:col-span-8 space-y-16">
-                            {/* Problem / Solution */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Zap className="w-6 h-6 text-yellow-500" /> O Problema
-                                </h2>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed mb-8">
-                                    Empresas perdem milhões anualmente com processos manuais, sistemas lentos e falta de inteligência de dados.
-                                    Se você sente que sua operação está travada ou que poderia vender mais com a tecnologia certa, nós temos a solução.
-                                </p>
-
-                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <CheckCircle className="w-6 h-6 text-green-500" /> A Solução
-                                </h2>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                                    Implementamos {service.title} com foco total em ROI. Nossa abordagem não é apenas entregar código,
-                                    mas entregar um ativo digital que trabalha pela sua empresa 24 horas por dia.
-                                </p>
-                            </div>
-
-                            {/* Process */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-8">Nosso Processo</h2>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    {processSteps.map((step, idx) => (
-                                        <div key={idx} className="bg-white dark:bg-dark-900 p-6 rounded-xl border border-slate-200 dark:border-dark-800">
-                                            <span className="text-4xl font-bold text-slate-100 dark:text-dark-800 block mb-2">0{idx + 1}</span>
-                                            <h3 className="font-bold text-slate-900 dark:text-white mb-2">{step.title}</h3>
-                                            <p className="text-sm text-slate-500 dark:text-slate-400">{step.desc}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
-                            {/* Tech Stack */}
-                            <div>
-                                <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
-                                    <Cpu className="w-6 h-6 text-primary-500" /> Tecnologias
-                                </h2>
-                                <div className="flex flex-wrap gap-3">
-                                    {['React', 'Next.js', 'Node.js', 'Python', 'AI / LLMs', 'Vercel Postgres', 'AWS'].map(tech => (
-                                        <span key={tech} className="px-4 py-2 bg-slate-100 dark:bg-dark-800 text-slate-700 dark:text-slate-300 rounded-lg text-sm font-medium">
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-
-                        {/* Sidebar */}
-                        <div className="lg:col-span-4">
-                            <div className="bg-white dark:bg-dark-900 p-8 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-xl lg:sticky lg:top-24">
-                                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Por que escolher?</h3>
-                                <ul className="space-y-4 mb-8">
-                                    {benefits.map((benefit, i) => (
-                                        <li key={i} className="flex items-start gap-3">
-                                            <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                                            <span className="text-sm text-slate-600 dark:text-slate-400">{benefit}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-
-                                <a
-                                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=Olá! Tenho interesse em ${encodeURIComponent(service.title)}.`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="block w-full bg-[#25D366] hover:bg-[#128C7E] text-white text-center font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl mb-4 flex items-center justify-center gap-2"
-                                >
-                                    <MessageCircle className="w-5 h-5" />
-                                    Falar no WhatsApp
-                                </a>
-                                <Link
-                                    href="/agendar"
-                                    className="block w-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-center font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl mb-4"
-                                >
-                                    Agendar Consultoria
-                                </Link>
-                                <p className="text-xs text-center text-slate-400">
-                                    Resposta rápida em horário comercial.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Indicado para</p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {service.suitableFor.map((item) => (
+                    <span key={item} className="rounded-full border border-graphite-700 px-3 py-1 text-[11px] text-graphite-300">
+                      {item}
+                    </span>
+                  ))}
                 </div>
-            </section>
-
-            {/* CTA Bottom */}
-            <section className="py-20 bg-primary-600">
-                <div className="max-w-4xl mx-auto px-4 text-center">
-                    <h2 className="text-3xl font-bold text-white mb-6">Pronto para escalar seu negócio?</h2>
-                    <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-                        Não deixe para depois. A tecnologia avança rápido e sua empresa precisa acompanhar.
-                    </p>
-                    <Link href="/contato" className="inline-block bg-white text-primary-600 font-bold py-4 px-10 rounded-full hover:bg-slate-100 transition-all shadow-xl">
-                        Solicitar Orçamento
-                    </Link>
-                </div>
-            </section>
+              </div>
+            </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

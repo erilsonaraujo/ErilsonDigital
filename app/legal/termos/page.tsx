@@ -1,28 +1,38 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Termos e Condições | Erilson Digital',
+    title: 'Termos | Erilson Digital',
 };
 
 export default function TermsPage() {
     return (
-        <div className="pt-32 pb-20 px-4 bg-white dark:bg-dark-950 min-h-screen">
+        <div className="pt-32 pb-20 px-4 bg-ink-950 min-h-screen">
             <div className="max-w-4xl mx-auto">
-                <div className="prose prose-lg dark:prose-invert max-w-none">
-                    <h1 className="text-4xl font-bold mb-4">Termos de Serviço</h1>
-                    <p className="text-slate-600 dark:text-slate-400 mb-8">Última atualização: {new Date().toLocaleDateString('pt-BR')}</p>
+                <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-10 text-graphite-200">
+                    <h1 className="text-3xl md:text-4xl font-semibold text-white mb-3">Termos de Uso</h1>
+                    <p className="text-sm text-graphite-400 mb-8">Ultima atualizacao: {new Date().toLocaleDateString('pt-BR')}</p>
 
-                    <h2 className="text-2xl font-bold mt-8 mb-4">1. Termos</h2>
-                    <p>Ao acessar ao site <a href="https://erilsondigital.com" className="text-primary-600 hover:text-primary-700">Erilson Digital</a>, você concorda em cumprir estes termos de serviço, todas as leis e regulamentos aplicáveis ​​e concorda que é responsável pelo cumprimento de todas as leis locais aplicáveis.</p>
+                    <div className="space-y-6 text-sm leading-relaxed">
+                        <div>
+                            <h2 className="text-lg font-semibold text-white mb-2">1. Aceitacao</h2>
+                            <p>Ao utilizar este site, voce concorda com estes termos e com a legislacao aplicavel.</p>
+                        </div>
 
-                    <h2 className="text-2xl font-bold mt-8 mb-4">2. Uso de Licença</h2>
-                    <p>É concedida permissão para baixar temporariamente uma cópia dos materiais (informações ou software) no site Erilson Digital, apenas para visualização transitória pessoal e não comercial.</p>
+                        <div>
+                            <h2 className="text-lg font-semibold text-white mb-2">2. Uso permitido</h2>
+                            <p>O conteudo disponibilizado e exclusivamente informativo, nao configurando proposta contratual automatica.</p>
+                        </div>
 
-                    <h2 className="text-2xl font-bold mt-8 mb-4">3. Isenção de responsabilidade</h2>
-                    <p>Os materiais no site da Erilson Digital são fornecidos 'como estão'. Erilson Digital não oferece garantias, expressas ou implícitas, e, por este meio, isenta e nega todas as outras garantias, incluindo, sem limitação, garantias implícitas ou condições de comercialização, adequação a um fim específico ou não violação de propriedade intelectual ou outra violação de direitos.</p>
+                        <div>
+                            <h2 className="text-lg font-semibold text-white mb-2">3. Responsabilidades</h2>
+                            <p>As decisoes comerciais tomadas com base nas informacoes do site sao de responsabilidade do visitante.</p>
+                        </div>
 
-                    <h2 className="text-2xl font-bold mt-8 mb-4">4. Limitações</h2>
-                    <p>Em nenhum caso o Erilson Digital ou seus fornecedores serão responsáveis ​​por quaisquer danos (incluindo, sem limitação, danos por perda de dados ou lucro ou devido a interrupção dos negócios) decorrentes do uso ou da incapacidade de usar os materiais em Erilson Digital.</p>
+                        <div>
+                            <h2 className="text-lg font-semibold text-white mb-2">4. Propriedade intelectual</h2>
+                            <p>Marcas, textos e layouts sao de propriedade da Erilson Digital e nao podem ser reproduzidos sem autorizacao.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

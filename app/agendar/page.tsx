@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Calendar, Clock, CheckCircle2, User, Mail, Phone, FileText, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import { Calendar, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 export default function BookingPage() {
@@ -11,19 +11,13 @@ export default function BookingPage() {
         name: '',
         email: '',
         phone: '',
+        company: '',
         service: '',
+        budget: '',
         preferredDate: '',
         preferredTime: '',
-        message: ''
+        message: '',
     });
-
-    const services = [
-        'Desenvolvimento Web',
-        'Automação com IA',
-        'Agentes Inteligentes',
-        'Consultoria Técnica',
-        'Outro'
-    ];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,19 +31,20 @@ export default function BookingPage() {
                     name: formData.name,
                     email: formData.email,
                     phone: formData.phone,
+                    company: formData.company,
                     service: formData.service,
+                    budget: formData.budget,
                     preferred_date: formData.preferredDate,
                     preferred_time: formData.preferredTime,
                     message: formData.message,
                 }),
             });
 
-            if (response.ok) {
-                setStatus('success');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                setStatus('error');
+            if (!response.ok) {
+                throw new Error('Failed to create appointment');
             }
+
+            setStatus('success');
         } catch (err) {
             console.error('Failed to save appointment', err);
             setStatus('error');
@@ -58,29 +53,24 @@ export default function BookingPage() {
 
     if (status === 'success') {
         return (
-            <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-32 pb-20">
+            <div className="min-h-screen bg-ink-950 pt-32 pb-20">
                 <div className="max-w-2xl mx-auto px-4 text-center">
-                    <div className="inline-flex p-6 bg-emerald-100 dark:bg-emerald-900/30 rounded-full mb-8 animate-bounce">
-                        <CheckCircle2 className="w-16 h-16 text-emerald-600 dark:text-emerald-400" />
+                    <div className="inline-flex p-6 bg-tide-500/10 rounded-full mb-8">
+                        <CheckCircle2 className="w-16 h-16 text-tide-300" />
                     </div>
-                    <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-6">Solicitação Recebida!</h1>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 mb-10 leading-relaxed">
-                        Muito obrigado pelo interesse, <span className="font-bold text-primary-600">{formData.name.split(' ')[0]}</span>.
-                        Já registrei seu pedido de agendamento para o dia <span className="font-bold">{new Date(formData.preferredDate).toLocaleDateString('pt-BR')}</span> às <span className="font-bold">{formData.preferredTime}</span>.
-                        Entrarei em contato via e-mail ou WhatsApp em breve para confirmarmos!
+                    <h1 className="text-4xl font-semibold text-white mb-6">Diagnostico confirmado</h1>
+                    <p className="text-lg text-graphite-300 mb-10">
+                        Seu pedido foi registrado. Em breve retornarei com a confirmacao e agenda oficial.
                     </p>
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link
-                            href="/"
-                            className="px-8 py-4 bg-primary-600 hover:bg-primary-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-primary-500/25"
-                        >
-                            Voltar para o Início
+                        <Link href="/" className="primary-cta">
+                            Voltar ao inicio <ArrowUpRight size={16} />
                         </Link>
                         <button
                             onClick={() => setStatus('idle')}
-                            className="px-8 py-4 bg-white dark:bg-dark-900 text-slate-700 dark:text-slate-300 font-bold rounded-xl border border-slate-200 dark:border-dark-800 hover:bg-slate-50 transition-all"
+                            className="secondary-cta"
                         >
-                            Agendar outro horário
+                            Agendar outro horario
                         </button>
                     </div>
                 </div>
@@ -89,173 +79,146 @@ export default function BookingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-dark-950 pt-24 pb-20">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-ink-950 pt-28 pb-20">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Breadcrumbs />
-                {/* Header */}
                 <div className="text-center mb-12">
-                    <div className="inline-flex p-4 bg-primary-100 dark:bg-primary-900/30 rounded-full mb-4">
-                        <Calendar className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+                    <div className="inline-flex p-4 bg-cobalt-500/10 rounded-2xl mb-4">
+                        <Calendar className="w-7 h-7 text-cobalt-300" />
                     </div>
-                    <h1 className="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4 tracking-tight">
-                        Agende sua Consultoria
-                    </h1>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                        Preencha os detalhes abaixo para reservar seu horário.
-                        Sua solicitação será processada internamente e respondida rapidamente.
+                    <h1 className="text-4xl md:text-5xl font-semibold text-white">Agendar diagnostico estrategico</h1>
+                    <p className="text-lg text-graphite-300 mt-4 max-w-2xl mx-auto">
+                        Informe os detalhes para receber um plano inicial de execucao, escopo e investimento sugerido.
                     </p>
                 </div>
 
-                {/* Form */}
-                <div className="bg-white dark:bg-dark-900 p-8 md:p-12 rounded-3xl border border-slate-200 dark:border-dark-800 shadow-2xl relative overflow-hidden">
-                    {/* Decorative element */}
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary-500/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
-
-                    <form onSubmit={handleSubmit} className="relative z-10 space-y-8">
+                <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-8 md:p-12">
+                    <form onSubmit={handleSubmit} className="space-y-8">
                         {status === 'error' && (
-                            <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-600 dark:text-red-400 text-sm font-medium">
-                                Ops! Ocorreu um erro ao processar seu agendamento. Por favor, tente novamente ou entre em contato diretamente.
+                            <div className="p-4 bg-ember-500/10 border border-ember-500/30 rounded-xl text-ember-200 text-sm">
+                                Ocorreu um erro ao processar. Tente novamente.
                             </div>
                         )}
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                                <label htmlFor="name" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <User className="w-4 h-4 text-primary-500" />
-                                    Nome Completo
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Nome completo</label>
                                 <input
                                     type="text"
-                                    id="name"
                                     required
                                     value={formData.name}
                                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
-                                    placeholder="Como prefere ser chamado?"
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                                 />
                             </div>
-
-                            <div className="space-y-2">
-                                <label htmlFor="email" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <Mail className="w-4 h-4 text-primary-500" />
-                                    Seu melhor E-mail
-                                </label>
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Email</label>
                                 <input
                                     type="email"
-                                    id="email"
                                     required
                                     value={formData.email}
                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
-                                    placeholder="seu@exemplo.com"
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                                 />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                                <label htmlFor="phone" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <Phone className="w-4 h-4 text-primary-500" />
-                                    WhatsApp
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Telefone</label>
                                 <input
                                     type="tel"
-                                    id="phone"
-                                    required
                                     value={formData.phone}
                                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
-                                    placeholder="(00) 00000-0000"
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                                 />
                             </div>
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Empresa</label>
+                                <input
+                                    type="text"
+                                    value={formData.company}
+                                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                />
+                            </div>
+                        </div>
 
-                            <div className="space-y-2">
-                                <label htmlFor="service" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <FileText className="w-4 h-4 text-primary-500" />
-                                    Serviço de Interesse
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Servico</label>
                                 <select
-                                    id="service"
                                     required
                                     value={formData.service}
                                     onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none appearance-none"
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                                 >
-                                    <option value="">Selecione um serviço...</option>
-                                    {services.map((service) => (
-                                        <option key={service} value={service}>{service}</option>
-                                    ))}
+                                    <option value="">Selecione</option>
+                                    <option value="Automacao e IA">Automacao e IA aplicada</option>
+                                    <option value="Backend enterprise">Backends enterprise</option>
+                                    <option value="Produto digital">Produto digital premium</option>
+                                    <option value="Dados e analytics">Dados e observabilidade</option>
+                                    <option value="Cloud e DevOps">Cloud e DevOps</option>
                                 </select>
+                            </div>
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Budget</label>
+                                <select
+                                    required
+                                    value={formData.budget}
+                                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                >
+                                    <option value="">Selecione</option>
+                                    <option value="50-100">R$ 50k - 100k</option>
+                                    <option value="100-200">R$ 100k - 200k</option>
+                                    <option value="200-500">R$ 200k - 500k</option>
+                                    <option value="500+">R$ 500k+</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Data preferida</label>
+                                <input
+                                    type="date"
+                                    required
+                                    value={formData.preferredDate}
+                                    onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                />
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div className="space-y-2">
-                                <label htmlFor="preferredDate" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <Calendar className="w-4 h-4 text-primary-500" />
-                                    Data Preferida
-                                </label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Horario preferido</label>
                                 <input
-                                    type="date"
-                                    id="preferredDate"
-                                    required
-                                    min={new Date().toISOString().split('T')[0]}
-                                    value={formData.preferredDate}
-                                    onChange={(e) => setFormData({ ...formData, preferredDate: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none"
-                                />
-                            </div>
-
-                            <div className="space-y-2">
-                                <label htmlFor="preferredTime" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                                    <Clock className="w-4 h-4 text-primary-500" />
-                                    Melhor Período
-                                </label>
-                                <select
-                                    id="preferredTime"
+                                    type="time"
                                     required
                                     value={formData.preferredTime}
                                     onChange={(e) => setFormData({ ...formData, preferredTime: e.target.value })}
-                                    className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none appearance-none"
-                                >
-                                    <option value="">Selecione o turno...</option>
-                                    <option value="Manhã (09h - 12h)">Manhã (09h - 12h)</option>
-                                    <option value="Tarde (14h - 18h)">Tarde (14h - 18h)</option>
-                                    <option value="Noite (19h - 21h)">Noite (19h - 21h)</option>
-                                </select>
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                />
                             </div>
-                        </div>
-
-                        <div className="space-y-2">
-                            <label htmlFor="message" className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                                Mensagem Adicional (opcional)
-                            </label>
-                            <textarea
-                                id="message"
-                                rows={4}
-                                value={formData.message}
-                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                className="w-full px-5 py-4 rounded-xl border border-slate-200 dark:border-dark-800 bg-slate-50 dark:bg-dark-950 text-slate-900 dark:text-white focus:ring-2 focus:ring-primary-500 transition-all outline-none resize-none"
-                                placeholder="Fale um pouco sobre sua necessidade..."
-                            ></textarea>
+                            <div>
+                                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Mensagem</label>
+                                <textarea
+                                    rows={3}
+                                    value={formData.message}
+                                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                />
+                            </div>
                         </div>
 
                         <button
                             type="submit"
                             disabled={status === 'loading'}
-                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-5 rounded-2xl transition-all shadow-xl hover:shadow-primary-500/25 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 text-lg"
+                            className="primary-cta w-full justify-center"
                         >
-                            {status === 'loading' ? (
-                                <>Aguarde...</>
-                            ) : (
-                                <>Confirmar Minha Solicitação</>
-                            )}
+                            {status === 'loading' ? 'Enviando...' : 'Confirmar diagnostico'}
+                            <ArrowUpRight size={16} />
                         </button>
                     </form>
-                </div>
-
-                <div className="mt-12 text-center text-slate-500 dark:text-slate-400 text-sm">
-                    <p>Ao solicitar, você concorda com nossos Termos de Uso e Política de Privacidade.</p>
                 </div>
             </div>
         </div>

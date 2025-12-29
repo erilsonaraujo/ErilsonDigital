@@ -23,6 +23,19 @@ export interface Service {
   icon: LucideIcon;
 }
 
+export interface ServiceDetail {
+  id: string;
+  title: string;
+  summary: string;
+  description: string;
+  outcomes: string[];
+  deliverables: string[];
+  timeline: string;
+  suitableFor: string[];
+  stack: string[];
+  image: string;
+}
+
 export interface ChatMessage {
   role: 'user' | 'model' | 'assistant';
   text: string;

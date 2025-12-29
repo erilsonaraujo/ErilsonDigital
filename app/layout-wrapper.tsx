@@ -19,7 +19,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
-            <main className="flex-grow flex flex-col pt-16">
+            <main className="flex-grow flex flex-col pt-20">
                 {children}
             </main>
             <Footer />

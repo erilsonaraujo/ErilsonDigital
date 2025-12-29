@@ -6,12 +6,17 @@ import AdminTopNav from '@/components/admin/AdminTopNav';
 import DashboardHome from '@/components/admin/DashboardHome';
 import AnalyticsView from '@/components/admin/AnalyticsView';
 import ConversationsView from '@/components/admin/ConversationsView';
+import SettingsView from '@/components/admin/SettingsView';
 
 interface Lead {
     id: number;
     name: string;
     email: string;
     phone?: string;
+    company?: string;
+    project_type?: string;
+    budget?: string;
+    timeline?: string;
     message?: string;
     source?: string;
     created_at: string;
@@ -22,6 +27,8 @@ interface Appointment {
     name: string;
     email: string;
     phone?: string;
+    company?: string;
+    budget?: string;
     service?: string;
     preferred_date?: string;
     preferred_time?: string;
@@ -178,6 +185,7 @@ export default function AdminPage() {
             case 'dashboard': return <DashboardHome />;
             case 'analytics': return <AnalyticsView />;
             case 'conversations': return <ConversationsView />;
+            case 'settings': return <SettingsView />;
             case 'leads': return (
                 <div className="max-w-[1600px] mx-auto p-4 md:p-8 lg:p-12">
                     <header className="mb-10">
@@ -188,8 +196,9 @@ export default function AdminPage() {
                         <table className="w-full">
                             <thead>
                                 <tr className="bg-slate-50 dark:bg-dark-800/30 border-b border-slate-200 dark:border-dark-800">
-                                    <th className="text-left py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Informações do Lead</th>
-                                    <th className="text-left py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Mensagem Transcrita</th>
+                                    <th className="text-left py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Lead</th>
+                                    <th className="text-left py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Qualificacao</th>
+                                    <th className="text-left py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Contexto</th>
                                     <th className="text-right py-5 px-8 text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Data</th>
                                 </tr>
                             </thead>
@@ -201,6 +210,14 @@ export default function AdminPage() {
                                                 <span className="font-bold text-slate-900 dark:text-white text-base mb-1">{lead.name}</span>
                                                 <span className="text-xs text-slate-500 font-medium">{lead.email}</span>
                                                 {lead.phone && <span className="text-[10px] text-primary-500 font-black mt-2 bg-primary-500/5 px-2 py-0.5 rounded-full w-fit tracking-tighter">{lead.phone}</span>}
+                                            </div>
+                                        </td>
+                                        <td className="py-6 px-8">
+                                            <div className="text-xs text-slate-500 space-y-1">
+                                                <div>Empresa: <span className="text-slate-700 dark:text-slate-200">{lead.company || '-'}</span></div>
+                                                <div>Projeto: <span className="text-slate-700 dark:text-slate-200">{lead.project_type || '-'}</span></div>
+                                                <div>Budget: <span className="text-slate-700 dark:text-slate-200">{lead.budget || '-'}</span></div>
+                                                <div>Timeline: <span className="text-slate-700 dark:text-slate-200">{lead.timeline || '-'}</span></div>
                                             </div>
                                         </td>
                                         <td className="py-6 px-8">
@@ -246,9 +263,11 @@ export default function AdminPage() {
                                         <td className="py-6 px-8">
                                             <div className="flex flex-col">
                                                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{apt.service || 'Consultoria'}</span>
+                                                <span className="text-xs text-slate-500 mt-2">Empresa: {apt.company || '-'}</span>
+                                                <span className="text-xs text-slate-500">Budget: {apt.budget || '-'}</span>
                                                 <div className="flex items-center gap-2 text-[10px] text-primary-500 font-black mt-2 uppercase tracking-widest bg-primary-500/5 px-2 py-0.5 rounded-full w-fit">
                                                     <Clock className="w-3 h-3" />
-                                                    {new Date(apt.preferred_date!).toLocaleDateString('pt-BR')} às {apt.preferred_time}
+                                                    {apt.preferred_date ? new Date(apt.preferred_date).toLocaleDateString('pt-BR') : '-'} às {apt.preferred_time || '-'}
                                                 </div>
                                             </div>
                                         </td>

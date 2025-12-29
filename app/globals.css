@@ -6,4 +6,55 @@
   html {
     scroll-behavior: smooth;
   }
+
+  body {
+    @apply bg-ink-950 text-graphite-100 antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+}
+
+@layer components {
+  .section-title {
+    @apply text-4xl md:text-5xl font-semibold tracking-tight text-white;
+  }
+
+  .section-lead {
+    @apply text-base md:text-lg text-graphite-300 leading-relaxed;
+  }
+
+  .surface-card {
+    @apply bg-ink-900/80 border border-graphite-800 rounded-3xl shadow-xl;
+  }
+
+  .primary-cta {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-cobalt-500 px-6 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_-24px_rgba(47,85,255,0.8)] transition-transform duration-300 hover:-translate-y-0.5 hover:bg-cobalt-400;
+  }
+
+  .secondary-cta {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-graphite-700 bg-ink-900/60 px-6 py-3 text-sm font-semibold text-graphite-100 transition-colors hover:border-graphite-500 hover:text-white;
+  }
+}
+
+@layer utilities {
+  .noise-bg {
+    background-image:
+      radial-gradient(circle at 10% 10%, rgba(47, 85, 255, 0.08), transparent 45%),
+      radial-gradient(circle at 80% 0%, rgba(28, 201, 167, 0.1), transparent 40%),
+      radial-gradient(circle at 0% 90%, rgba(255, 74, 31, 0.08), transparent 40%);
+  }
+
+  .grid-fade {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.9), transparent 70%);
+  }
+
+  .glass-panel {
+    @apply bg-ink-900/70 border border-graphite-800 backdrop-blur-xl;
+  }
 }

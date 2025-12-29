@@ -41,11 +41,20 @@ export async function initDatabase() {
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         phone VARCHAR(50),
+        company VARCHAR(255),
+        project_type VARCHAR(100),
+        budget VARCHAR(50),
+        timeline VARCHAR(50),
         message TEXT,
         source VARCHAR(100),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    await pool.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS company VARCHAR(255)`);
+    await pool.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS project_type VARCHAR(100)`);
+    await pool.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS budget VARCHAR(50)`);
+    await pool.query(`ALTER TABLE leads ADD COLUMN IF NOT EXISTS timeline VARCHAR(50)`);
 
     // Create appointments table
     await pool.query(`
@@ -54,14 +63,21 @@ export async function initDatabase() {
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL,
         phone VARCHAR(50),
+        company VARCHAR(255),
+        budget VARCHAR(50),
         service VARCHAR(255),
         preferred_date DATE,
         preferred_time VARCHAR(20),
         message TEXT,
         status VARCHAR(50) DEFAULT 'pending',
+        calendar_event_id VARCHAR(255),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+
+    await pool.query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS company VARCHAR(255)`);
+    await pool.query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS budget VARCHAR(50)`);
+    await pool.query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS calendar_event_id VARCHAR(255)`);
 
     // Create conversations table
     await pool.query(`
@@ -92,6 +108,14 @@ export async function initDatabase() {
         browser VARCHAR(50),
         os VARCHAR(50),
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS site_settings (
+        key VARCHAR(100) PRIMARY KEY,
+        value TEXT,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 

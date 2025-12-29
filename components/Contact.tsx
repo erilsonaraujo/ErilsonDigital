@@ -2,134 +2,211 @@
 
 import React, { useState } from 'react';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
-import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
-import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { WHATSAPP_NUMBER } from '@/constants';
 
 const Contact: React.FC = () => {
-  const { language } = useThemeLanguage();
-  const t = TRANSLATIONS[language].contact;
-
-  const [formState, setFormState] = useState({ name: '', email: '', message: '' });
+  const [formState, setFormState] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    projectType: '',
+    budget: '',
+    timeline: '',
+    message: '',
+  });
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('sending');
 
-    // Como o site é estático, usamos mailto para garantir a entrega da mensagem
-    // simulando uma experiência de formulário real.
-    setTimeout(() => {
-      const subject = `Contato via Site de ${formState.name}`;
-      const body = `Nome: ${formState.name}\nEmail: ${formState.email}\n\nMensagem:\n${formState.message}`;
+    try {
+      const response = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formState, source: 'site-premium' }),
+      });
 
-      window.location.href = `mailto:joseerilsonaraujo@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      if (!response.ok) {
+        throw new Error('Failed');
+      }
 
       setStatus('success');
-      setFormState({ name: '', email: '', message: '' });
-      setTimeout(() => setStatus('idle'), 3000);
-    }, 1000);
+      setFormState({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        projectType: '',
+        budget: '',
+        timeline: '',
+        message: '',
+      });
+    } catch (err) {
+      setStatus('error');
+    }
   };
 
   return (
-    <section id="contact" className="py-24 relative overflow-hidden bg-white dark:bg-dark-950 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-dark-900 rounded-2xl border border-slate-200 dark:border-dark-800 shadow-2xl overflow-hidden flex flex-col lg:flex-row">
+    <section id="contact" className="py-24 bg-ink-950 relative">
+      <div className="absolute inset-0 noise-bg opacity-70" />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10">
+          <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-8 md:p-10">
+            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Contato estrategico</p>
+            <h2 className="text-3xl font-semibold text-white mt-4">Vamos desenhar o proximo salto da sua empresa.</h2>
+            <p className="text-graphite-300 mt-4">
+              Responda o briefing para avaliarmos alinhamento tecnico e escopo. Voce recebe retorno com estimativa macro e proximos passos.
+            </p>
 
-          {/* Info Side */}
-          <div className="lg:w-5/12 bg-slate-900 dark:bg-primary-900 p-10 text-white flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black/50 z-0"></div>
-            <div className="relative z-10">
-              <h3 className="text-2xl font-bold mb-6">{t.title}</h3>
-              <p className="text-slate-300 mb-12 leading-relaxed">
-                {t.subtitle}
-              </p>
-
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <Phone className="w-5 h-5 text-white" />
-                  </div>
-                  <span>+55 84 99434-9355</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <Mail className="w-5 h-5 text-white" />
-                  </div>
-                  <span>joseerilsonaraujo@gmail.com</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-white" />
-                  </div>
-                  <span>Natal, RN - Brasil (Remoto/Híbrido)</span>
-                </div>
+            <div className="mt-8 space-y-4 text-sm text-graphite-200">
+              <div className="flex items-center gap-3">
+                <Phone size={18} className="text-tide-300" />
+                +55 84 99434-9355
+              </div>
+              <div className="flex items-center gap-3">
+                <Mail size={18} className="text-tide-300" />
+                joseerilsonaraujo@gmail.com
+              </div>
+              <div className="flex items-center gap-3">
+                <MapPin size={18} className="text-tide-300" />
+                Natal, RN - Brasil (Remoto / Hibrido)
               </div>
             </div>
 
-            <div className="relative z-10 mt-12">
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition-colors shadow-lg shadow-green-900/20"
-              >
-                {t.whatsappBtn}
-              </a>
-            </div>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border border-graphite-700 px-5 py-2 text-sm text-graphite-200 hover:border-graphite-500"
+            >
+              Conversar no WhatsApp
+            </a>
           </div>
 
-          {/* Form Side */}
-          <div className="lg:w-7/12 p-10 bg-white dark:bg-dark-900">
+          <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-8 md:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-2">{t.nameLabel}</label>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Nome</label>
                   <input
                     type="text"
-                    id="name"
                     required
                     value={formState.name}
-                    onChange={e => setFormState({ ...formState, name: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-dark-700 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all"
+                    onChange={(e) => setFormState({ ...formState, name: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-2">{t.emailLabel}</label>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Email</label>
                   <input
                     type="email"
-                    id="email"
                     required
                     value={formState.email}
-                    onChange={e => setFormState({ ...formState, email: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-dark-700 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all"
+                    onChange={(e) => setFormState({ ...formState, email: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Telefone</label>
+                  <input
+                    type="tel"
+                    value={formState.phone}
+                    onChange={(e) => setFormState({ ...formState, phone: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Empresa</label>
+                  <input
+                    type="text"
+                    value={formState.company}
+                    onChange={(e) => setFormState({ ...formState, company: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Tipo de projeto</label>
+                  <select
+                    required
+                    value={formState.projectType}
+                    onChange={(e) => setFormState({ ...formState, projectType: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="produto-digital">Produto digital</option>
+                    <option value="ia-automacao">IA e automacao</option>
+                    <option value="backend">Backend enterprise</option>
+                    <option value="dados">Analytics e dados</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Budget</label>
+                  <select
+                    required
+                    value={formState.budget}
+                    onChange={(e) => setFormState({ ...formState, budget: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="50-100">R$ 50k - 100k</option>
+                    <option value="100-200">R$ 100k - 200k</option>
+                    <option value="200-500">R$ 200k - 500k</option>
+                    <option value="500+">R$ 500k+</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Timeline</label>
+                  <select
+                    required
+                    value={formState.timeline}
+                    onChange={(e) => setFormState({ ...formState, timeline: e.target.value })}
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                  >
+                    <option value="">Selecione</option>
+                    <option value="30d">30-60 dias</option>
+                    <option value="60d">60-90 dias</option>
+                    <option value="90d+">90+ dias</option>
+                  </select>
                 </div>
               </div>
 
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-slate-700 dark:text-slate-400 mb-2">{t.msgLabel}</label>
+                <label className="text-xs uppercase tracking-[0.3em] text-graphite-500">Contexto do projeto</label>
                 <textarea
-                  id="message"
-                  rows={4}
                   required
+                  rows={4}
                   value={formState.message}
-                  onChange={e => setFormState({ ...formState, message: e.target.value })}
-                  className="w-full bg-slate-50 dark:bg-dark-800 border border-slate-200 dark:border-dark-700 rounded-lg px-4 py-3 text-slate-900 dark:text-white focus:outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500 transition-all resize-none"
-                ></textarea>
+                  onChange={(e) => setFormState({ ...formState, message: e.target.value })}
+                  className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                />
               </div>
 
-              <div className="flex items-center justify-end">
-                <button
-                  type="submit"
-                  disabled={status === 'sending' || status === 'success'}
-                  className={`flex items-center px-8 py-3 rounded-lg font-semibold text-white transition-all ${status === 'success' ? 'bg-green-600' : 'bg-primary-600 hover:bg-primary-700'}`}
-                >
-                  {status === 'sending' ? t.btnSending : status === 'success' ? t.btnSent : <>{t.btnSend} <Send className="ml-2 w-4 h-4" /></>}
-                </button>
-              </div>
+              {status === 'error' && (
+                <p className="text-sm text-ember-400">Nao foi possivel enviar. Tente novamente.</p>
+              )}
+              {status === 'success' && (
+                <p className="text-sm text-tide-300">Briefing enviado. Em breve voce recebe retorno.</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="primary-cta w-full justify-center"
+              >
+                {status === 'sending' ? 'Enviando...' : 'Enviar briefing'}
+                <Send size={16} />
+              </button>
             </form>
           </div>
-
         </div>
       </div>
     </section>

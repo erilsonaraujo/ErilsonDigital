@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
+import { createCalendarEvent } from '@/lib/googleCalendar';
 
 // GET all appointments
 export async function GET(request: NextRequest) {
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
 // POST new appointment
 export async function POST(request: NextRequest) {
     try {
-        const { name, email, phone, service, preferred_date, preferred_time, message } = await request.json();
+        const { name, email, phone, company, budget, service, preferred_date, preferred_time, message } = await request.json();
 
         if (!name || !email) {
             return NextResponse.json(
@@ -33,9 +34,36 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        let calendarEventId: string | null = null;
+        if (preferred_date && preferred_time) {
+            const timezone = process.env.GOOGLE_CALENDAR_TIMEZONE || 'America/Sao_Paulo';
+            const start = new Date(`${preferred_date}T${preferred_time}:00`);
+            const end = new Date(start.getTime() + 30 * 60 * 1000);
+
+            calendarEventId = await createCalendarEvent({
+                summary: `Diagnostico - ${name}`,
+                description: `Lead: ${name}\nEmail: ${email}\nTelefone: ${phone || '-'}\nEmpresa: ${company || '-'}\nServico: ${service || '-'}\nBudget: ${budget || '-'}\nMensagem: ${message || '-'}`,
+                startIso: start.toISOString(),
+                endIso: end.toISOString(),
+                timeZone: timezone,
+            });
+        }
+
         const result = await pool.query(
-            'INSERT INTO appointments (name, email, phone, service, preferred_date, preferred_time, message) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-            [name, email, phone || null, service || null, preferred_date || null, preferred_time || null, message || null]
+            `INSERT INTO appointments (name, email, phone, company, budget, service, preferred_date, preferred_time, message, calendar_event_id)
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
+            [
+                name,
+                email,
+                phone || null,
+                company || null,
+                budget || null,
+                service || null,
+                preferred_date || null,
+                preferred_time || null,
+                message || null,
+                calendarEventId
+            ]
         );
 
         return NextResponse.json({ appointment: result.rows[0] }, { status: 201 });

@@ -1,39 +1,70 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { SERVICES, TRANSLATIONS } from '@/constants';
-import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { SERVICES, SERVICE_DETAILS } from '@/constants';
 
 const Services: React.FC = () => {
-  const { language } = useThemeLanguage();
-  const t = TRANSLATIONS[language].services;
+  const cards = SERVICES.map((service) => {
+    const detail = SERVICE_DETAILS.find((item) => item.id === service.id);
+    return {
+      ...service,
+      image: detail?.image,
+      summary: detail?.summary,
+    };
+  });
 
   return (
-    <section id="services" className="py-24 bg-slate-100 dark:bg-dark-900 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 dark:text-white mb-4">
-            {t.title}
-          </h2>
-          <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-            {t.subtitle}
+    <section id="services" className="py-24 relative">
+      <div className="absolute inset-0 bg-ink-950" />
+      <div className="absolute inset-0 noise-bg opacity-60" />
+
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[0.45fr_0.55fr] gap-12 items-end mb-16">
+          <div>
+            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Servicos premium</p>
+            <h2 className="section-title mt-4">Arquitetura, produto e IA para empresas que cobram mais.</h2>
+          </div>
+          <p className="section-lead">
+            Cada frente de trabalho foi desenhada para gerar margem, velocidade de execucao e diferenciacao. Escolha uma vertical ou combine
+            para construir uma operacao de alto valor percebido.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {SERVICES.map((service) => (
-            <Link href={`/servicos/${service.id}`}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {cards.map((service) => (
+            <Link
+              href={`/servicos/${service.id}`}
               key={service.id}
-              className="bg-white dark:bg-dark-800 p-6 rounded-xl border border-slate-200 dark:border-dark-700 hover:border-primary-500 dark:hover:border-primary-500 transition-all duration-300 hover:-translate-y-1 group shadow-sm hover:shadow-xl block"
+              className="group rounded-[28px] border border-graphite-800 bg-ink-900/70 overflow-hidden shadow-xl hover:shadow-2xl transition-transform duration-500 hover:-translate-y-1"
             >
-              <div className="w-12 h-12 bg-primary-50 dark:bg-dark-950 rounded-lg flex items-center justify-center mb-4 group-hover:bg-primary-600 group-hover:text-white transition-all text-primary-600">
-                <service.icon className="w-6 h-6" />
+              <div className="relative h-48">
+                {service.image && (
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/30 to-transparent" />
+                <div className="absolute bottom-4 left-5">
+                  <div className="flex items-center gap-2 text-xs text-graphite-200">
+                    <service.icon size={16} className="text-tide-300" />
+                    {service.title}
+                  </div>
+                </div>
               </div>
-              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{service.title}</h3>
-              <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                {service.description}
-              </p>
+              <div className="p-6 space-y-3">
+                <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                <p className="text-sm text-graphite-300">{service.description}</p>
+                {service.summary && (
+                  <p className="text-xs text-graphite-500 uppercase tracking-[0.25em]">{service.summary}</p>
+                )}
+                <span className="text-sm text-tide-300">Ver detalhe do servico</span>
+              </div>
             </Link>
           ))}
         </div>

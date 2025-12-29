@@ -29,6 +29,7 @@ const AdminTopNav: React.FC<AdminTopNavProps> = ({ activeView, onViewChange, onL
         { id: 'appointments', label: 'Agendamentos', icon: Calendar },
         { id: 'analytics', label: 'Analytics', icon: BarChart3 },
         { id: 'conversations', label: 'Conversas IA', icon: MessageSquare },
+        { id: 'settings', label: 'Pixels', icon: Globe },
     ];
 
     return (
