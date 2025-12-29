@@ -4,6 +4,7 @@ import { createCalendarEvent } from '@/lib/googleCalendar';
 import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
 import { createBooking, ensureDefaultResource } from '@/lib/bookingV2';
 import { ensureAdminSession } from '@/lib/adminAuth';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 // GET all appointments
 export async function GET(request: NextRequest) {
@@ -28,13 +29,18 @@ export async function GET(request: NextRequest) {
 // POST new appointment
 export async function POST(request: NextRequest) {
     try {
-        const { name, email, phone, company, budget, service, preferred_date, preferred_time, message } = await request.json();
+        const { name, email, phone, company, budget, service, preferred_date, preferred_time, message, recaptchaToken } = await request.json();
 
         if (!name || !email) {
             return NextResponse.json(
                 { error: 'Nome e email são obrigatórios' },
                 { status: 400 }
             );
+        }
+
+        const recaptcha = await verifyRecaptcha(recaptchaToken, request);
+        if (!recaptcha.ok) {
+            return NextResponse.json({ error: 'Recaptcha inválido' }, { status: 403 });
         }
 
         let calendarEventId: string | null = null;

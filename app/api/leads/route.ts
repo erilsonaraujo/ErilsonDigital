@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
 import { ensureAdminSession } from '@/lib/adminAuth';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 // GET all leads
 export async function GET(request: NextRequest) {
@@ -26,13 +27,18 @@ export async function GET(request: NextRequest) {
 // POST new lead
 export async function POST(request: NextRequest) {
     try {
-        const { name, email, phone, company, projectType, budget, timeline, message, source } = await request.json();
+        const { name, email, phone, company, projectType, budget, timeline, message, source, recaptchaToken } = await request.json();
 
         if (!name || !email) {
             return NextResponse.json(
                 { error: 'Nome e email são obrigatórios' },
                 { status: 400 }
             );
+        }
+
+        const recaptcha = await verifyRecaptcha(recaptchaToken, request);
+        if (!recaptcha.ok) {
+            return NextResponse.json({ error: 'Recaptcha inválido' }, { status: 403 });
         }
 
         const result = await pool.query(

@@ -10,6 +10,7 @@ interface AdminShellProps {
   onLogout: () => void;
   title?: string;
   subtitle?: string;
+  idleRemainingMs?: number;
   children: React.ReactNode;
 }
 
@@ -36,8 +37,15 @@ const NAV_ITEMS = [
   { id: 'settings', label: 'Configuracoes', icon: Settings },
 ];
 
-const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLogout, title, subtitle, children }) => {
+const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLogout, title, subtitle, idleRemainingMs, children }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const formatIdle = (ms?: number) => {
+    if (ms === undefined) return 'Sessao ativa';
+    const totalSeconds = Math.max(0, Math.floor(ms / 1000));
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `Inatividade: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+  };
 
   const Header = () => (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
@@ -125,7 +133,7 @@ const AdminShell: React.FC<AdminShellProps> = ({ activeView, onViewChange, onLog
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 text-xs text-graphite-400">
                 <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                Sessao ativa
+                {formatIdle(idleRemainingMs)}
               </div>
             </div>
           </div>

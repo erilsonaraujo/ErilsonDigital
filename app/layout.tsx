@@ -4,6 +4,7 @@ import './globals.css';
 import { Manrope, Space_Grotesk } from 'next/font/google';
 import RootLayoutWrapper from './layout-wrapper';
 import TrackingScripts from '@/components/TrackingScripts';
+import Script from 'next/script';
 
 const manrope = Manrope({ subsets: ['latin'], variable: '--font-manrope' });
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space-grotesk' });
@@ -46,6 +47,7 @@ export default function RootLayout({
 }: {
     children: React.ReactNode;
 }) {
+    const recaptchaKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
     const orgSchema = {
         '@context': 'https://schema.org',
         '@type': 'Organization',
@@ -65,6 +67,12 @@ export default function RootLayout({
         <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable} scroll-smooth`} suppressHydrationWarning>
             <body className="bg-ink-950 text-graphite-100 font-sans selection:bg-cobalt-500 selection:text-white">
                 <TrackingScripts />
+                {recaptchaKey && (
+                    <Script
+                        src={`https://www.google.com/recaptcha/api.js?render=${recaptchaKey}`}
+                        strategy="afterInteractive"
+                    />
+                )}
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />
                 <Providers>
                     <RootLayoutWrapper>

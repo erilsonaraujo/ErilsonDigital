@@ -5,6 +5,7 @@ import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { trackEvent } from '@/components/AnalyticsTracker';
+import { getRecaptchaToken } from '@/lib/recaptchaClient';
 
 const Contact: React.FC = () => {
   const { language } = useThemeLanguage();
@@ -26,10 +27,11 @@ const Contact: React.FC = () => {
     setStatus('sending');
 
     try {
+      const recaptchaToken = await getRecaptchaToken('lead_submit');
       const response = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...formState, source: 'site-premium' }),
+        body: JSON.stringify({ ...formState, source: 'site-premium', recaptchaToken }),
       });
 
       if (!response.ok) {

@@ -7,6 +7,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 import { TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { trackEvent } from '@/components/AnalyticsTracker';
+import { getRecaptchaToken } from '@/lib/recaptchaClient';
 
 export default function BookingPage() {
     const { language } = useThemeLanguage();
@@ -29,6 +30,7 @@ export default function BookingPage() {
         setStatus('loading');
 
         try {
+            const recaptchaToken = await getRecaptchaToken('booking_submit');
             const response = await fetch('/api/appointments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -42,6 +44,7 @@ export default function BookingPage() {
                     preferred_date: formData.preferredDate,
                     preferred_time: formData.preferredTime,
                     message: formData.message,
+                    recaptchaToken,
                 }),
             });
 

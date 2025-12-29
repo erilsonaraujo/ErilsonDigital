@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { createAdminSession, getClientIp, getSessionCookieOptions, isLoginLocked, registerLoginAttempt } from '@/lib/adminAuth';
+import { verifyRecaptcha } from '@/lib/recaptcha';
 
 export async function POST(request: NextRequest) {
     try {
-        const { email, password } = await request.json();
+        const { email, password, recaptchaToken } = await request.json();
 
         if (!email || !password) {
             return NextResponse.json(
@@ -40,6 +41,15 @@ export async function POST(request: NextRequest) {
         }
 
         const admin = result.rows[0];
+
+        const recaptcha = await verifyRecaptcha(recaptchaToken, request);
+        if (!recaptcha.ok) {
+            await registerLoginAttempt(identifier, ip, false);
+            return NextResponse.json(
+                { error: 'Recaptcha inválido' },
+                { status: 403 }
+            );
+        }
 
         // Verify password
         const isValid = await bcrypt.compare(password, admin.password_hash);

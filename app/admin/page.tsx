@@ -21,6 +21,7 @@ import SeoView from '@/components/admin/SeoView';
 import IntegrationsView from '@/components/admin/IntegrationsView';
 import FormBuilderView from '@/components/admin/FormBuilderView';
 import BookingV2View from '@/components/admin/BookingV2View';
+import { getRecaptchaToken } from '@/lib/recaptchaClient';
 
 interface Lead {
     id: number;
@@ -62,6 +63,7 @@ export default function AdminPage() {
     const [leads, setLeads] = useState<Lead[]>([]);
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [statusUpdating, setStatusUpdating] = useState<number | null>(null);
+    const [idleRemainingMs, setIdleRemainingMs] = useState<number>(30 * 60 * 1000);
 
     useEffect(() => {
         checkSession();
@@ -77,6 +79,10 @@ export default function AdminPage() {
     useEffect(() => {
         if (!authenticated) return;
         let lastPing = Date.now();
+        let lastActivity = Date.now();
+        let idleTimer: number | null = null;
+        const idleLimit = 30 * 60 * 1000;
+        let countdownTimer: number | null = null;
 
         const pingSession = async () => {
             const now = Date.now();
@@ -92,8 +98,24 @@ export default function AdminPage() {
             }
         };
 
+        const resetIdleTimer = () => {
+            if (idleTimer) window.clearTimeout(idleTimer);
+            if (countdownTimer) window.clearInterval(countdownTimer);
+            idleTimer = window.setTimeout(async () => {
+                await fetch('/api/auth/logout', { method: 'POST' });
+                setAuthenticated(false);
+                setError('Sessao expirada por inatividade.');
+            }, idleLimit);
+            countdownTimer = window.setInterval(() => {
+                const remaining = Math.max(0, idleLimit - (Date.now() - lastActivity));
+                setIdleRemainingMs(remaining);
+            }, 1000);
+        };
+
         const handleActivity = () => {
+            lastActivity = Date.now();
             pingSession();
+            resetIdleTimer();
         };
 
         window.addEventListener('mousemove', handleActivity);
@@ -101,12 +123,15 @@ export default function AdminPage() {
         window.addEventListener('click', handleActivity);
 
         const interval = window.setInterval(pingSession, 120_000);
+        resetIdleTimer();
 
         return () => {
             window.removeEventListener('mousemove', handleActivity);
             window.removeEventListener('keydown', handleActivity);
             window.removeEventListener('click', handleActivity);
             window.clearInterval(interval);
+            if (idleTimer) window.clearTimeout(idleTimer);
+            if (countdownTimer) window.clearInterval(countdownTimer);
         };
     }, [authenticated]);
 
@@ -127,10 +152,11 @@ export default function AdminPage() {
         setLoginLoading(true);
         setError(null);
         try {
+            const recaptchaToken = await getRecaptchaToken('admin_login');
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email, password, recaptchaToken }),
             });
             if (response.ok) {
                 setAuthenticated(true);
@@ -428,6 +454,7 @@ export default function AdminPage() {
             onLogout={handleLogout}
             title={current.title}
             subtitle={current.subtitle}
+            idleRemainingMs={idleRemainingMs}
         >
             {renderContent()}
         </AdminShell>
