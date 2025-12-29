@@ -6,12 +6,17 @@ export async function GET(request: NextRequest) {
   const session = await ensureAdminSession(request);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const result = await query('SELECT * FROM forms_v2 ORDER BY created_at DESC');
-  const forms = result.rows.map((row) => ({
-    ...row,
-    schema: typeof row.schema === 'string' ? JSON.parse(row.schema) : row.schema
-  }));
-  return NextResponse.json({ forms });
+  try {
+    const result = await query('SELECT * FROM forms_v2 ORDER BY created_at DESC');
+    const forms = result.rows.map((row) => ({
+      ...row,
+      schema: typeof row.schema === 'string' ? JSON.parse(row.schema) : row.schema
+    }));
+    return NextResponse.json({ forms });
+  } catch (error: any) {
+    console.error('Forms v2 list error:', error);
+    return NextResponse.json({ error: 'Internal Server Error', details: error?.message }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {
