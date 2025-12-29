@@ -136,7 +136,7 @@
   }
 
   .light .primary-cta {
-    @apply text-white;
+    color: #ffffff;
   }
 
   .light .secondary-cta {
