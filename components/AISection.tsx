@@ -54,9 +54,17 @@ const AISection: React.FC = () => {
 
             const responseText = await sendMessageToOpenAI(openAiMessages);
 
+            // Trigger detection and text cleaning
+            const hasOfferWhatsApp = /\[OFFER_WHATSAPP\]/i.test(responseText);
+            const hasOfferBooking = /\[OFFER_BOOKING\]/i.test(responseText);
+
+            const cleanText = responseText.replace(/\[OFFER_WHATSAPP\]|\[OFFER_BOOKING\]/gi, '').trim();
+
             const aiMessage: ChatMessage = {
                 role: 'assistant',
-                text: responseText,
+                text: cleanText,
+                isActionable: hasOfferWhatsApp || hasOfferBooking,
+                actionType: hasOfferWhatsApp && hasOfferBooking ? 'both' : (hasOfferWhatsApp ? 'whatsapp' : 'booking')
             };
 
             const finalMessages = [...updatedMessages, aiMessage];

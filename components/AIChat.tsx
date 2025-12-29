@@ -39,14 +39,18 @@ const AIChat: React.FC = () => {
 
       const responseText = await sendMessageToOpenAI(openAiMessages);
 
-      // Check for specific tag to trigger WhatsApp Action (maintained for backward compatibility if prompt uses it)
-      const hasAction = responseText.includes('[OFFER_WHATSAPP]');
-      const cleanText = responseText.replace('[OFFER_WHATSAPP]', '');
+      // Check for tags to trigger UI actions, then strip them globally for display
+      const hasOfferWhatsApp = /\[OFFER_WHATSAPP\]/i.test(responseText);
+      const hasOfferBooking = /\[OFFER_BOOKING\]/i.test(responseText);
+
+      // Clean text by removing all internal tags
+      const cleanText = responseText.replace(/\[OFFER_WHATSAPP\]|\[OFFER_BOOKING\]/gi, '').trim();
 
       const aiMessage: ChatMessage = {
         role: 'assistant',
         text: cleanText,
-        isActionable: hasAction
+        isActionable: hasOfferWhatsApp || hasOfferBooking,
+        actionType: hasOfferWhatsApp && hasOfferBooking ? 'both' : hasOfferWhatsApp ? 'whatsapp' : 'booking'
       };
 
       setMessages(prev => [...prev, aiMessage]);
@@ -110,8 +114,8 @@ const AIChat: React.FC = () => {
             <div key={index} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
               <div
                 className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                    ? 'bg-primary-600 text-white rounded-br-none'
-                    : 'bg-dark-800 text-slate-200 border border-dark-700 rounded-bl-none'
+                  ? 'bg-primary-600 text-white rounded-br-none'
+                  : 'bg-dark-800 text-slate-200 border border-dark-700 rounded-bl-none'
                   }`}
               >
                 {msg.text}
