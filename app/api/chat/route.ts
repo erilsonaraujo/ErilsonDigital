@@ -21,8 +21,8 @@ export async function POST(req: Request) {
 
         const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Use gemini-1.5-flash as the base model
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+        // Use gemini-flash-latest which is verified to work with this API Key (Maps to 1.5 or 2.5 depending on version)
+        const model = genAI.getGenerativeModel({ model: "gemini-flash-latest" });
 
         // Convert message format to Gemini format
         // Gemini expects history in { role: 'user' | 'model', parts: [{ text: string }] }[]
