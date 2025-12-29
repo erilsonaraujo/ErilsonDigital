@@ -62,7 +62,7 @@ export default function RootLayout({
     };
 
     return (
-        <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable} scroll-smooth dark`}>
+        <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable} scroll-smooth`} suppressHydrationWarning>
             <body className="bg-ink-950 text-graphite-100 font-sans selection:bg-cobalt-500 selection:text-white">
                 <TrackingScripts />
                 <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }} />

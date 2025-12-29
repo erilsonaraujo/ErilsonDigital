@@ -3,8 +3,13 @@
 import React from 'react';
 import Image from 'next/image';
 import { ArrowUpRight, ShieldCheck, Sparkles, Workflow } from 'lucide-react';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { TRANSLATIONS } from '@/constants';
 
 const Hero: React.FC = () => {
+  const { language } = useThemeLanguage();
+  const t = TRANSLATIONS[language];
+
   return (
     <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40">
       <div className="absolute inset-0 noise-bg" />
@@ -15,33 +20,31 @@ const Hero: React.FC = () => {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-graphite-800 bg-ink-900/70 px-4 py-2 text-xs text-graphite-300">
               <span className="h-2 w-2 rounded-full bg-tide-400 animate-pulse" />
-              Consultoria premium em engenharia, IA e produto digital
+              {t.hero.badge}
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight">
-              Estruture software de alto valor com engenharia precisa, automacao inteligente e
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cobalt-300 to-tide-300"> execucao global</span>.
+              {t.hero.title}
             </h1>
 
             <p className="text-lg text-graphite-300 leading-relaxed max-w-xl">
-              Projetos para empresas que exigem confianca, seguranca e performance real.
-              Construo sistemas que suportam crescimento acelerado e posicionam sua operacao no mesmo nivel de consultorias globais.
+              {t.hero.subtitle}
             </p>
 
             <div className="flex flex-wrap gap-4">
               <a href="/agendar" className="primary-cta">
-                Diagnostico estrategico <ArrowUpRight size={16} />
+                {t.hero.ctaPrimary} <ArrowUpRight size={16} />
               </a>
               <a href="/portfolio" className="secondary-cta">
-                Ver cases
+                {t.hero.ctaSecondary}
               </a>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
               {[
-                { icon: ShieldCheck, title: 'Seguranca', text: 'Arquitetura OWASP e governanca de dados.' },
-                { icon: Workflow, title: 'Escalabilidade', text: 'Projetos prontos para alto volume e automacao.' },
-                { icon: Sparkles, title: 'Valor Premium', text: 'Entregas alinhadas ao ROI e ao posicionamento.' },
+                { icon: ShieldCheck, ...t.hero.highlights[0] },
+                { icon: Workflow, ...t.hero.highlights[1] },
+                { icon: Sparkles, ...t.hero.highlights[2] },
               ].map((item) => (
                 <div key={item.title} className="glass-panel rounded-2xl p-4">
                   <item.icon className="text-tide-300 mb-3" size={20} />
@@ -52,13 +55,11 @@ const Hero: React.FC = () => {
             </div>
 
             <div className="pt-6 border-t border-graphite-800/70">
-              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Confiado por lideres que exigem excelencia</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.hero.industriesLabel}</p>
               <div className="mt-4 flex flex-wrap gap-6 text-sm text-graphite-400">
-                <span>Fintechs</span>
-                <span>LegalTech</span>
-                <span>HealthTech</span>
-                <span>Consultorias</span>
-                <span>SaaS B2B</span>
+                {t.hero.industries.map((item) => (
+                  <span key={item}>{item}</span>
+                ))}
               </div>
             </div>
           </div>
@@ -79,10 +80,7 @@ const Hero: React.FC = () => {
                 />
               </div>
               <div className="mt-6 grid grid-cols-2 gap-4">
-                {[
-                  { label: 'Especialidades', value: 'IA aplicada, backends criticos, produtos premium' },
-                  { label: 'Foco', value: 'Solucoes sob medida com eficiencia de capital' },
-                ].map((item) => (
+                {t.hero.profileCards.map((item) => (
                   <div key={item.label} className="rounded-2xl border border-graphite-800 bg-ink-950/70 p-4">
                     <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{item.label}</p>
                     <p className="text-sm text-graphite-200 mt-2">{item.value}</p>

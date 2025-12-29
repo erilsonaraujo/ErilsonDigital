@@ -61,66 +61,126 @@ export interface Testimonial {
 }
 
 export interface Translations {
+  nav: {
+    home: string;
+    services: string;
+    cases: string;
+    process: string;
+    about: string;
+    contact: string;
+    booking: string;
+    themeToggle: string;
+    languageToggle: string;
+    menuToggle: string;
+  };
   hero: {
     badge: string;
     title: string;
-    titleHighlight: string;
     subtitle: string;
     ctaPrimary: string;
     ctaSecondary: string;
-  };
-  ai: {
-    title: string;
-    subtitle: string;
-    placeholder: string;
-    disclaimer: string;
-    suggestion1: string;
-    suggestion2: string;
-    suggestion3: string;
-    help_label: string;
+    industriesLabel: string;
+    industries: string[];
+    highlights: { title: string; text: string }[];
+    profileCards: { label: string; value: string }[];
   };
   services: {
     title: string;
     subtitle: string;
+    note: string;
+    cta: string;
+  };
+  process: {
+    title: string;
+    subtitle: string;
+    stepLabel: string;
+    steps: {
+      title: string;
+      text: string;
+    }[];
   };
   projects: {
     title: string;
     subtitle: string;
-    problem: string;
+    challenge: string;
     solution: string;
-    viewCode: string;
     viewProject: string;
   };
-  about: {
+  testimonials: {
     title: string;
-    text1: string;
-    text2: string;
-    text3: string;
-    stats_projects: string;
-    stats_commitment: string;
-    methodology_title: string;
-    methodology_text: string;
+    subtitle: string;
+    lead: string;
+  };
+  booking: {
+    label: string;
+    title: string;
+    description: string;
+    ctaPrimary: string;
+    ctaSecondary: string;
+    items: string[];
+    form: {
+      dateLabel: string;
+      timeLabel: string;
+    };
+    successTitle: string;
+    successDescription: string;
+    error: string;
+  };
+  about: {
+    label: string;
+    headline: string;
+    description: string;
+    highlights: { title: string; text: string }[];
+    ctaPrimary: string;
+    ctaSecondary: string;
+    stackLabel: string;
   };
   contact: {
     title: string;
     subtitle: string;
-    nameLabel: string;
-    emailLabel: string;
-    msgLabel: string;
-    btnSend: string;
-    btnSending: string;
-    btnSent: string;
-    whatsappBtn: string;
+    description: string;
+    labels: {
+      name: string;
+      email: string;
+      phone: string;
+      company: string;
+      projectType: string;
+      budget: string;
+      timeline: string;
+      message: string;
+    };
+    projectOptions: string[];
+    budgetOptions: string[];
+    timelineOptions: string[];
+    cta: string;
+    ctaSending: string;
+    ctaSent: string;
+    success: string;
+    error: string;
+    whatsapp: string;
+    infoLocation: string;
   };
-  nav: {
-    services: string;
-    portfolio: string;
-    about: string;
-    contact: string;
-    booking: string;
-  };
-  booking: {
-    title: string;
+  ai: {
+    name: string;
+    role: string;
+    status: string;
+    errorFallback: string;
+    conversationTitle: string;
+    conversationUserLabel: string;
+    conversationAssistantLabel: string;
     subtitle: string;
+    disclaimer: string;
+    suggestions: string[];
+    helpLabel: string;
+    placeholder: string;
+    bookingCta: string;
+    whatsappCta: string;
+  };
+  servicePage: {
+    outcomesLabel: string;
+    deliverablesLabel: string;
+    timelineLabel: string;
+    stackLabel: string;
+    idealForLabel: string;
   };
 }

@@ -5,18 +5,17 @@ import { Send, Sparkles, User, MessageCircle, UserCheck, Calendar } from 'lucide
 import ReactMarkdown from 'react-markdown';
 import { sendMessageToOpenAI } from '@/services/openaiService';
 import { ChatMessage } from '@/types';
-import { WHATSAPP_NUMBER } from '@/constants';
+import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const AISection: React.FC = () => {
-    const suggestions = [
-        'Qual o caminho ideal para estruturar um MVP premium?',
-        'Como voce reduz riscos tecnicos em projetos criticos?',
-        'Que stack recomenda para SaaS B2B de alto ticket?'
-    ];
+    const { language } = useThemeLanguage();
+    const t = TRANSLATIONS[language];
 
-    const subtitle = 'Sou Sofia, assistente estrategica. Posso explicar cases, servicos e como estruturamos projetos premium.';
-    const disclaimer = 'Sofia: assistente virtual treinada para qualificar oportunidades de alto valor.';
-    const helpLabel = 'Sugestoes de conversa';
+    const suggestions = t.ai.suggestions;
+    const subtitle = t.ai.subtitle;
+    const disclaimer = t.ai.disclaimer;
+    const helpLabel = t.ai.helpLabel;
 
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -71,7 +70,7 @@ const AISection: React.FC = () => {
 
         } catch (error) {
             console.error(error);
-            setMessages(prev => [...prev, { role: 'assistant', text: 'Poxa, tive um pequeno lapso técnico aqui. Pode repetir sua última frase?' }]);
+            setMessages(prev => [...prev, { role: 'assistant', text: t.ai.errorFallback }]);
         } finally {
             setIsLoading(false);
         }
@@ -143,11 +142,11 @@ const AISection: React.FC = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="font-display font-bold text-lg text-white leading-tight">Sofia</h3>
-                                    <p className="text-xs text-tide-300 font-medium">Assistente Estrategica</p>
+                                    <h3 className="font-display font-bold text-lg text-white leading-tight">{t.ai.name}</h3>
+                                    <p className="text-xs text-tide-300 font-medium">{t.ai.role}</p>
                                     <div className="flex items-center gap-1.5 mt-1">
                                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                        <span className="text-[10px] text-graphite-400 uppercase tracking-wide">Disponivel</span>
+                                        <span className="text-[10px] text-graphite-400 uppercase tracking-wide">{t.ai.status}</span>
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +216,7 @@ const AISection: React.FC = () => {
                                                         className="inline-flex items-center gap-2 bg-cobalt-500 hover:bg-cobalt-400 text-white px-4 py-2 rounded-lg font-medium transition-all shadow-md hover:shadow-lg"
                                                     >
                                                         <Calendar className="w-4 h-4" />
-                                                        Agendar Reunião
+                                                        {t.ai.bookingCta}
                                                     </a>
                                                 )}
                                                 {/* WhatsApp Button - Send conversation summary directly */}
@@ -229,12 +228,14 @@ const AISection: React.FC = () => {
                                                             // Create a formatted conversation summary
                                                             const conversationText = messages
                                                                 .map((m) => {
-                                                                    const prefix = m.role === 'user' ? '👤 Você' : '🤖 Sofia';
+                                                                    const prefix = m.role === 'user'
+                                                                        ? `👤 ${t.ai.conversationUserLabel}`
+                                                                        : `🤖 ${t.ai.conversationAssistantLabel}`;
                                                                     return `${prefix}:\n${m.text}\n`;
                                                                 })
                                                                 .join('\n---\n\n');
 
-                                                            const fullMessage = `📋 *Conversa com Sofia - Erilson Digital*\n\n${conversationText}\n\n_Enviado via erilsondigital.com_`;
+                                                            const fullMessage = `📋 *${t.ai.conversationTitle}*\n\n${conversationText}`;
 
                                                             // Open WhatsApp with the conversation
                                                             const waMsg = encodeURIComponent(fullMessage);
@@ -243,7 +244,7 @@ const AISection: React.FC = () => {
                                                         className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
                                                     >
                                                         <MessageCircle className="w-4 h-4" />
-                                                        Falar com Erilson agora
+                                                        {t.ai.whatsappCta}
                                                     </button>
                                                 )}
                                             </div>
@@ -270,7 +271,7 @@ const AISection: React.FC = () => {
                                     type="text"
                                     value={input}
                                     onChange={(e) => setInput(e.target.value)}
-              placeholder="Descreva seu desafio..."
+              placeholder={t.ai.placeholder}
                                     className="flex-1 bg-transparent px-4 text-sm text-graphite-100 placeholder-graphite-500 focus:outline-none h-10"
                                 />
                                 <button

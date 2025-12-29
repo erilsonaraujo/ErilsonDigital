@@ -3,13 +3,22 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { SERVICES, SERVICE_DETAILS } from '@/constants';
+import { SERVICES, SERVICES_I18N, SERVICE_DETAILS_BY_LANG, TRANSLATIONS } from '@/constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const Services: React.FC = () => {
+  const { language } = useThemeLanguage();
+  const t = TRANSLATIONS[language];
+  const serviceCopy = SERVICES_I18N[language];
+  const details = SERVICE_DETAILS_BY_LANG[language];
+
   const cards = SERVICES.map((service) => {
-    const detail = SERVICE_DETAILS.find((item) => item.id === service.id);
+    const copy = serviceCopy.find((item) => item.id === service.id);
+    const detail = details.find((item) => item.id === service.id);
     return {
       ...service,
+      title: copy?.title || service.title,
+      description: copy?.description || service.description,
       image: detail?.image,
       summary: detail?.summary,
     };
@@ -23,12 +32,11 @@ const Services: React.FC = () => {
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[0.45fr_0.55fr] gap-12 items-end mb-16">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Servicos premium</p>
-            <h2 className="section-title mt-4">Arquitetura, produto e IA para empresas que cobram mais.</h2>
+            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.services.note}</p>
+            <h2 className="section-title mt-4">{t.services.title}</h2>
           </div>
           <p className="section-lead">
-            Cada frente de trabalho foi desenhada para gerar margem, velocidade de execucao e diferenciacao. Escolha uma vertical ou combine
-            para construir uma operacao de alto valor percebido.
+            {t.services.subtitle}
           </p>
         </div>
 
@@ -63,7 +71,7 @@ const Services: React.FC = () => {
                 {service.summary && (
                   <p className="text-xs text-graphite-500 uppercase tracking-[0.25em]">{service.summary}</p>
                 )}
-                <span className="text-sm text-tide-300">Ver detalhe do servico</span>
+                <span className="text-sm text-tide-300">{t.services.cta}</span>
               </div>
             </Link>
           ))}

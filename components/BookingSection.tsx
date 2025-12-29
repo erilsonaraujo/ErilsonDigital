@@ -3,9 +3,12 @@
 import React from 'react';
 import Link from 'next/link';
 import { ArrowUpRight, Calendar, ShieldCheck, MessageCircle } from 'lucide-react';
-import { WHATSAPP_NUMBER } from '@/constants';
+import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
+import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
 const BookingSection: React.FC = () => {
+    const { language } = useThemeLanguage();
+    const t = TRANSLATIONS[language];
     return (
         <section id="booking" className="py-24 bg-ink-950 relative">
             <div className="absolute inset-0 noise-bg opacity-70" />
@@ -13,41 +16,40 @@ const BookingSection: React.FC = () => {
                 <div className="rounded-[36px] border border-graphite-800 bg-ink-900/80 p-10 md:p-14 shadow-2xl">
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
                         <div className="space-y-6">
-                            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Diagnostico premium</p>
+                            <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.booking.label}</p>
                             <h2 className="text-3xl md:text-4xl font-semibold text-white">
-                                Estruture a estrategia tecnica antes de investir alto.
+                                {t.booking.title}
                             </h2>
                             <p className="text-graphite-300">
-                                Uma sessao executiva para mapear riscos, oportunidades e o plano de execucao mais eficiente.
-                                Indicada para projetos de alto ticket e operacoes criticas.
+                                {t.booking.description}
                             </p>
                             <div className="flex flex-wrap gap-3">
                                 <Link href="/agendar" className="primary-cta">
-                                    Agendar diagnostico <ArrowUpRight size={16} />
+                                    {t.booking.ctaPrimary} <ArrowUpRight size={16} />
                                 </Link>
                                 <a
-                                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Olá! Gostaria de agendar um diagnostico estrategico.')}`}
+                                    href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(t.booking.ctaSecondary)}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="secondary-cta"
                                 >
-                                    Conversar no WhatsApp
+                                    {t.booking.ctaSecondary}
                                 </a>
                             </div>
                         </div>
 
                         <div className="space-y-4">
                             {[
-                                { icon: Calendar, title: 'Sessao estrategica', text: '30 minutos com foco em ROI e caminho tecnico.' },
-                                { icon: ShieldCheck, title: 'Confidencialidade', text: 'Conversas protegidas e NDA disponivel.' },
-                                { icon: MessageCircle, title: 'Follow-up executivo', text: 'Resumo com proximos passos e estimativa macro.' },
-                            ].map((item) => (
-                                <div key={item.title} className="rounded-2xl border border-graphite-800 bg-ink-950/70 p-4 flex items-start gap-4">
+                                { icon: Calendar, text: t.booking.items[0] },
+                                { icon: ShieldCheck, text: t.booking.items[1] },
+                                { icon: MessageCircle, text: t.booking.items[2] },
+                            ].map((item, index) => (
+                                <div key={index} className="rounded-2xl border border-graphite-800 bg-ink-950/70 p-4 flex items-start gap-4">
                                     <div className="h-10 w-10 rounded-xl bg-tide-500/10 text-tide-300 flex items-center justify-center">
                                         <item.icon size={18} />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-white">{item.title}</p>
+                                        <p className="text-sm font-semibold text-white">#{index + 1}</p>
                                         <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
                                     </div>
                                 </div>
