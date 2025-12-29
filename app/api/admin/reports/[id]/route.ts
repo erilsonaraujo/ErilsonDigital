@@ -116,9 +116,9 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     return NextResponse.json({
       report,
-      data: dataRes.rows.map((row) => ({
-        dimensions: dimensionMeta.map((_, index) => row[`dim${index}`]),
-        metrics: metricExprs.map((_, index) => Number(row[`m${index}`]))
+      data: dataRes.rows.map((row: Record<string, any>) => ({
+        dimensions: dimensionMeta.map((_unused: { field: string }, index: number) => row[`dim${index}`]),
+        metrics: metricExprs.map((_unused: string, index: number) => Number(row[`m${index}`]))
       }))
     });
   } catch (error) {
