@@ -29,10 +29,16 @@ export async function POST(req: Request) {
 
         // Convert message format to Gemini format
         // Gemini expects history in { role: 'user' | 'model', parts: [{ text: string }] }[]
-        const history = messages.slice(0, -1).map((m: any) => ({
+        // CRITICAL: The first message in history MUST be from the 'user'.
+        let history = messages.slice(0, -1).map((m: any) => ({
             role: m.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: m.content }]
         }));
+
+        // Remove any initial messages that are not from the 'user'
+        while (history.length > 0 && history[0].role !== 'user') {
+            history.shift();
+        }
 
         const lastMessage = messages[messages.length - 1].content;
 
