@@ -104,27 +104,27 @@
   }
 
   .light .text-graphite-100 {
-    @apply text-graphite-900;
+    color: #151924;
   }
 
   .light .text-graphite-200 {
-    @apply text-graphite-800;
+    color: #232835;
   }
 
   .light .text-graphite-300 {
-    @apply text-graphite-700;
+    color: #353c4c;
   }
 
   .light .text-graphite-400 {
-    @apply text-graphite-600;
+    color: #4c5466;
   }
 
   .light .text-graphite-500 {
-    @apply text-graphite-500;
+    color: #6b7487;
   }
 
   .light .text-white {
-    @apply text-graphite-900;
+    color: #151924;
   }
 
   .light .surface-card {
