@@ -31,7 +31,7 @@ export const createBooking = async (payload: {
        SELECT 1 FROM bookings_v2
        WHERE resource_id = $1
          AND status NOT IN ('canceled', 'declined')
-         AND tstzrange(start_at, end_at, '[)') && tstzrange($3, $4, '[)')
+         AND tsrange(start_at, end_at, '[)') && tsrange($3, $4, '[)')
      )
      RETURNING id`,
     [

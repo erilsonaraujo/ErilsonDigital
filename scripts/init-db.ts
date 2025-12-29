@@ -518,7 +518,7 @@ async function initializeDatabase() {
     await pool.query(`
       CREATE INDEX IF NOT EXISTS bookings_v2_conflict_gist
       ON bookings_v2
-      USING GIST (resource_id, tstzrange(start_at, end_at, '[)'))
+      USING GIST (resource_id, tsrange(start_at, end_at, '[)'))
       WHERE status NOT IN ('canceled', 'declined')
     `);
     console.log('✓ Index bookings_v2_conflict_gist created');

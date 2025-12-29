@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
        SELECT 1 FROM bookings_v2
        WHERE resource_id = $1
          AND status NOT IN ('canceled', 'declined')
-         AND tstzrange(start_at, end_at, '[)') && tstzrange($2, $3, '[)')
+         AND tsrange(start_at, end_at, '[)') && tsrange($2, $3, '[)')
      )
      RETURNING *`,
     [resourceId, new Date(startAt), new Date(endAt), customerName || null, customerEmail || null, customerPhone || null, notes || null]
