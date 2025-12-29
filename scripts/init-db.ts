@@ -524,6 +524,54 @@ async function initializeDatabase() {
     console.log('✓ Index bookings_v2_conflict_gist created');
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_seasons_v2 (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        start_date DATE NOT NULL,
+        end_date DATE NOT NULL,
+        status VARCHAR(20) DEFAULT 'active'
+      )
+    `);
+    console.log('✓ Table booking_seasons_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_pricing_v2 (
+        id SERIAL PRIMARY KEY,
+        resource_id INTEGER NOT NULL REFERENCES booking_resources_v2(id) ON DELETE CASCADE,
+        season_id INTEGER REFERENCES booking_seasons_v2(id) ON DELETE SET NULL,
+        price_per_day NUMERIC DEFAULT 0,
+        price_per_hour NUMERIC DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table booking_pricing_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_coupons_v2 (
+        id SERIAL PRIMARY KEY,
+        code VARCHAR(50) UNIQUE NOT NULL,
+        discount_type VARCHAR(20) NOT NULL,
+        discount_value NUMERIC NOT NULL,
+        min_total NUMERIC DEFAULT 0,
+        expires_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table booking_coupons_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_payments_v2 (
+        id SERIAL PRIMARY KEY,
+        booking_id INTEGER NOT NULL REFERENCES bookings_v2(id) ON DELETE CASCADE,
+        provider VARCHAR(50) NOT NULL,
+        amount NUMERIC NOT NULL,
+        status VARCHAR(30) DEFAULT 'pending',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table booking_payments_v2 created');
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS site_settings (
         key VARCHAR(100) PRIMARY KEY,
         value TEXT,
