@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { BarChart3, Activity, Users, Clock, TrendingDown, RefreshCcw, Globe, Monitor, Smartphone, Compass, Search } from 'lucide-react';
+import { BarChart3, Activity, Users, Clock, TrendingDown, RefreshCcw, Globe, Monitor, Smartphone, Compass, Search, Flag, MapPinned, Target, Route } from 'lucide-react';
 
 interface AnalyticsResponse {
   stats: {
     pageviews: number;
     visitors: number;
+    sessions: number;
     avgSession: number;
     bounceRate: number;
   };
@@ -20,7 +21,14 @@ interface AnalyticsResponse {
     region: { x: string; y: number }[];
     city: { x: string; y: number }[];
     event: { x: string; y: number }[];
+    utm_source: { x: string; y: number }[];
+    utm_medium: { x: string; y: number }[];
+    utm_campaign: { x: string; y: number }[];
+    landing: { x: string; y: number }[];
+    exit: { x: string; y: number }[];
   };
+  goals: { id: number; name: string; type: string; match_value: string; conversions: number; total_value: number }[];
+  funnels: { id: number; name: string; steps: { order: number; type: string; match: string; total: number }[] }[];
 }
 
 const AnalyticsView: React.FC = () => {
@@ -99,7 +107,7 @@ const AnalyticsView: React.FC = () => {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-3 text-graphite-400">
           <BarChart3 size={18} className="text-cobalt-300" />
-          <span className="text-xs uppercase tracking-[0.3em]">Analytics interno</span>
+          <span className="text-xs uppercase tracking-[0.3em]">Erilson Analytics</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex rounded-full border border-graphite-800 bg-ink-900/70 p-1">
@@ -125,9 +133,10 @@ const AnalyticsView: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6">
         <MetricCard icon={Activity} label="Pageviews" value={stats?.pageviews || 0} note="Total de paginas vistas" />
         <MetricCard icon={Users} label="Visitantes" value={stats?.visitors || 0} note="Usuarios unicos" />
+        <MetricCard icon={Compass} label="Sessoes" value={stats?.sessions || 0} note="Sessao ativa" />
         <MetricCard icon={Clock} label="Sessao media" value={`${Math.floor((stats?.avgSession || 0) / 60)}m`} note="Tempo medio" />
         <MetricCard icon={TrendingDown} label="Bounce" value={`${stats?.bounceRate || 0}%`} note="Saidas rapidas" />
       </div>
@@ -135,6 +144,11 @@ const AnalyticsView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <MetricTable title="Paginas" icon={Compass} data={data?.metrics.url || []} />
         <MetricTable title="Origem" icon={Search} data={data?.metrics.referrer || []} />
+        <MetricTable title="Landing pages" icon={Flag} data={data?.metrics.landing || []} />
+        <MetricTable title="Exit pages" icon={Flag} data={data?.metrics.exit || []} />
+        <MetricTable title="UTM Source" icon={MapPinned} data={data?.metrics.utm_source || []} />
+        <MetricTable title="UTM Medium" icon={MapPinned} data={data?.metrics.utm_medium || []} />
+        <MetricTable title="UTM Campaign" icon={MapPinned} data={data?.metrics.utm_campaign || []} />
         <MetricTable title="Paises" icon={Globe} data={data?.metrics.country || []} />
         <MetricTable title="Regioes" icon={Globe} data={data?.metrics.region || []} />
         <MetricTable title="Cidades" icon={Globe} data={data?.metrics.city || []} />
@@ -142,6 +156,57 @@ const AnalyticsView: React.FC = () => {
         <MetricTable title="Sistemas" icon={Monitor} data={data?.metrics.os || []} />
         <MetricTable title="Dispositivos" icon={Smartphone} data={data?.metrics.device || []} />
         <MetricTable title="Eventos" icon={Activity} data={data?.metrics.event || []} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="rounded-[24px] border border-graphite-800 bg-ink-900/70 p-6 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-tide-500/10 text-tide-300 flex items-center justify-center">
+              <Target size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white">Metas</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">Conversoes</p>
+            </div>
+          </div>
+          <div className="mt-5 space-y-3">
+            {(data?.goals || []).map((goal) => (
+              <div key={goal.id} className="flex items-center justify-between text-sm text-graphite-300">
+                <span className="truncate pr-4">{goal.name}</span>
+                <span className="text-graphite-100">{goal.conversions || 0}</span>
+              </div>
+            ))}
+            {(data?.goals || []).length === 0 && <p className="text-xs text-graphite-500">Nenhuma meta cadastrada.</p>}
+          </div>
+        </div>
+
+        <div className="rounded-[24px] border border-graphite-800 bg-ink-900/70 p-6 shadow-xl">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-tide-500/10 text-tide-300 flex items-center justify-center">
+              <Route size={18} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white">Funis</p>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">Conversao por etapa</p>
+            </div>
+          </div>
+          <div className="mt-5 space-y-4">
+            {(data?.funnels || []).map((funnel) => (
+              <div key={funnel.id} className="border border-graphite-800 rounded-2xl p-4">
+                <p className="text-sm text-white font-semibold">{funnel.name}</p>
+                <div className="mt-3 space-y-2">
+                  {funnel.steps.map((step) => (
+                    <div key={`${step.order}-${step.match}`} className="flex items-center justify-between text-xs text-graphite-400">
+                      <span>#{step.order} {step.type}: {step.match}</span>
+                      <span className="text-graphite-100">{step.total}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+            {(data?.funnels || []).length === 0 && <p className="text-xs text-graphite-500">Nenhum funil configurado.</p>}
+          </div>
+        </div>
       </div>
     </div>
   );

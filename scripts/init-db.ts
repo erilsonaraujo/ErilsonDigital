@@ -110,7 +110,13 @@ async function initializeDatabase() {
         visitor_id VARCHAR(255),
         session_id VARCHAR(255),
         path VARCHAR(255) NOT NULL,
+        title VARCHAR(255),
         referrer TEXT,
+        utm_source VARCHAR(100),
+        utm_medium VARCHAR(100),
+        utm_campaign VARCHAR(100),
+        utm_term VARCHAR(100),
+        utm_content VARCHAR(100),
         ip VARCHAR(50),
         user_agent TEXT,
         country VARCHAR(100),
@@ -125,6 +131,34 @@ async function initializeDatabase() {
     console.log('✓ Table analytics created');
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_sessions (
+        id SERIAL PRIMARY KEY,
+        session_id VARCHAR(255) UNIQUE NOT NULL,
+        visitor_id VARCHAR(255),
+        first_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        last_seen TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        pageviews INTEGER DEFAULT 0,
+        events INTEGER DEFAULT 0,
+        landing_path VARCHAR(255),
+        exit_path VARCHAR(255),
+        referrer TEXT,
+        utm_source VARCHAR(100),
+        utm_medium VARCHAR(100),
+        utm_campaign VARCHAR(100),
+        utm_term VARCHAR(100),
+        utm_content VARCHAR(100),
+        country VARCHAR(100),
+        region VARCHAR(100),
+        city VARCHAR(100),
+        device VARCHAR(50),
+        browser VARCHAR(50),
+        os VARCHAR(50),
+        user_agent TEXT
+      )
+    `);
+    console.log('✓ Table analytics_sessions created');
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS analytics_events (
         id SERIAL PRIMARY KEY,
         visitor_id VARCHAR(255),
@@ -136,6 +170,54 @@ async function initializeDatabase() {
       )
     `);
     console.log('✓ Table analytics_events created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_goals (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        type VARCHAR(20) NOT NULL,
+        match_value VARCHAR(255) NOT NULL,
+        value NUMERIC DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_goals created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_goal_conversions (
+        id SERIAL PRIMARY KEY,
+        goal_id INTEGER NOT NULL REFERENCES analytics_goals(id) ON DELETE CASCADE,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        path VARCHAR(255),
+        event_name VARCHAR(100),
+        value NUMERIC DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    await pool.query(`
+      CREATE UNIQUE INDEX IF NOT EXISTS analytics_goal_unique
+      ON analytics_goal_conversions (goal_id, session_id)
+    `);
+    console.log('✓ Table analytics_goal_conversions created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_funnels (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_funnel_steps (
+        id SERIAL PRIMARY KEY,
+        funnel_id INTEGER NOT NULL REFERENCES analytics_funnels(id) ON DELETE CASCADE,
+        step_order INTEGER NOT NULL,
+        type VARCHAR(20) NOT NULL,
+        match_value VARCHAR(255) NOT NULL
+      )
+    `);
+    console.log('✓ Table analytics_funnels created');
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS site_settings (

@@ -38,7 +38,7 @@ const Navbar = () => {
                                 {item.label}
                             </a>
                         ))}
-                        <a href="/agendar" className="primary-cta">
+                        <a href="/agendar" className="primary-cta" data-analytics-label="nav-agendar">
                             {t.nav.booking} <ArrowUpRight size={16} />
                         </a>
                         <button

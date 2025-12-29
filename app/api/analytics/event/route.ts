@@ -22,6 +22,31 @@ export async function POST(request: NextRequest) {
       ]
     );
 
+    if (sessionId) {
+      await pool.query(
+        `UPDATE analytics_sessions
+         SET last_seen = NOW(), events = events + 1
+         WHERE session_id = $1`,
+        [sessionId]
+      );
+    }
+
+    if (sessionId) {
+      const goals = await pool.query(
+        'SELECT id, value FROM analytics_goals WHERE type = $1 AND match_value = $2',
+        ['event', name]
+      );
+
+      for (const goal of goals.rows) {
+        await pool.query(
+          `INSERT INTO analytics_goal_conversions (goal_id, visitor_id, session_id, event_name, value)
+           VALUES ($1, $2, $3, $4, $5)
+           ON CONFLICT (goal_id, session_id) DO NOTHING`,
+          [goal.id, visitorId || null, sessionId, name, goal.value || 0]
+        );
+      }
+    }
+
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Analytics event error:', error);

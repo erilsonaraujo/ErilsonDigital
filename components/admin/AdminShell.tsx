@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminShellProps {
@@ -18,6 +18,7 @@ const NAV_ITEMS = [
   { id: 'leads', label: 'Leads', icon: Users },
   { id: 'appointments', label: 'Agendamentos', icon: CalendarCheck2 },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'goals', label: 'Metas & Funis', icon: Target },
   { id: 'conversations', label: 'Conversas IA', icon: MessageSquare },
   { id: 'settings', label: 'Configuracoes', icon: Settings },
 ];

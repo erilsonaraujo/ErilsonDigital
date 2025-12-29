@@ -32,10 +32,10 @@ const Hero: React.FC = () => {
             </p>
 
             <div className="flex flex-wrap gap-4">
-              <a href="/agendar" className="primary-cta">
+              <a href="/agendar" className="primary-cta" data-analytics-label="hero-agendar">
                 {t.hero.ctaPrimary} <ArrowUpRight size={16} />
               </a>
-              <a href="/portfolio" className="secondary-cta">
+              <a href="/portfolio" className="secondary-cta" data-analytics-label="hero-portfolio">
                 {t.hero.ctaSecondary}
               </a>
             </div>

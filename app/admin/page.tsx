@@ -7,6 +7,7 @@ import DashboardHome from '@/components/admin/DashboardHome';
 import AnalyticsView from '@/components/admin/AnalyticsView';
 import ConversationsView from '@/components/admin/ConversationsView';
 import SettingsView from '@/components/admin/SettingsView';
+import GoalsView from '@/components/admin/GoalsView';
 
 interface Lead {
     id: number;
@@ -252,6 +253,7 @@ export default function AdminPage() {
         switch (activeView) {
             case 'dashboard': return <DashboardHome />;
             case 'analytics': return <AnalyticsView />;
+            case 'goals': return <GoalsView />;
             case 'conversations': return <ConversationsView />;
             case 'settings': return <SettingsView />;
             case 'leads': return (
@@ -373,6 +375,7 @@ export default function AdminPage() {
         leads: { title: 'Leads', subtitle: 'Oportunidades qualificadas capturadas.' },
         appointments: { title: 'Agendamentos', subtitle: 'Controle de agenda e status de atendimento.' },
         analytics: { title: 'Analytics', subtitle: 'Inteligencia de trafego com tracking interno.' },
+        goals: { title: 'Metas & Funis', subtitle: 'Conversoes personalizadas e jornadas do usuario.' },
         conversations: { title: 'Conversas IA', subtitle: 'Interacoes e transcricoes da Sofia.' },
         settings: { title: 'Configuracoes', subtitle: 'Pixels, integracoes e governanca.' },
     };

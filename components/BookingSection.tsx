@@ -24,7 +24,7 @@ const BookingSection: React.FC = () => {
                                 {t.booking.description}
                             </p>
                             <div className="flex flex-wrap gap-3">
-                                <Link href="/agendar" className="primary-cta">
+                                <Link href="/agendar" className="primary-cta" data-analytics-label="booking-agendar">
                                     {t.booking.ctaPrimary} <ArrowUpRight size={16} />
                                 </Link>
                                 <a
@@ -32,6 +32,7 @@ const BookingSection: React.FC = () => {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="secondary-cta"
+                                    data-analytics-label="booking-whatsapp"
                                 >
                                     {t.booking.ctaSecondary}
                                 </a>
