@@ -181,7 +181,7 @@ const SeoView: React.FC = () => {
 
         <div className="rounded-[28px] border border-graphite-800 bg-ink-900/70 p-8 shadow-2xl space-y-4">
           <h3 className="text-lg font-semibold text-white">Importar manual</h3>
-          <p className="text-xs text-graphite-400">Cole JSON no formato: [{"date":"YYYY-MM-DD","query":"..."}]</p>
+          <p className="text-xs text-graphite-400">{'Cole JSON no formato: [{"date":"YYYY-MM-DD","query":"..."}]'}</p>
           <textarea
             value={manualJson}
             onChange={(e) => setManualJson(e.target.value)}
