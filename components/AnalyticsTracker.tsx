@@ -263,7 +263,7 @@ const AnalyticsTracker = () => {
         const json = await res.json();
         if (!res.ok) return;
         const experiments: ExperimentDefinition[] = json.experiments || [];
-        experiments.forEach((experiment) => {
+        for (const experiment of experiments) {
           const key = `erilson_exp_${experiment.id}`;
           const existing = localStorage.getItem(key);
           if (existing) {
@@ -272,11 +272,11 @@ const AnalyticsTracker = () => {
             } catch {
               localStorage.removeItem(key);
             }
-            return;
+            continue;
           }
 
           const trafficRoll = Math.random() * 100;
-          if (experiment.traffic_percent && trafficRoll > experiment.traffic_percent) return;
+          if (experiment.traffic_percent && trafficRoll > experiment.traffic_percent) continue;
           const totalWeight = experiment.variants.reduce((sum, variant) => sum + (variant.weight || 0), 0);
           let roll = Math.random() * totalWeight;
           let selected = experiment.variants[0];
@@ -302,7 +302,7 @@ const AnalyticsTracker = () => {
             })
           });
           trackEvent('experiment_assignment', { experiment: experiment.name, variant: selected.name });
-        });
+        }
 
         (window as any).__erilsonExperiments = experimentAssignmentsRef.current;
         (window as any).erilsonAnalyticsConvert = async (experimentName: string, goal: string, value?: number) => {
