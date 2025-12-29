@@ -82,8 +82,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Invalid metrics for selected dimensions' }, { status: 400 });
     }
 
-    const dimensionSelect = dimensionMeta.map((dim, index) => `COALESCE(NULLIF(${dim.field}, ''), '(not set)') AS dim${index}`);
-    const metricSelect = metricExprs.map((expr, index) => `${expr} AS m${index}`);
+    const dimensionSelect = dimensionMeta.map((dim: { field: string }, index: number) => `COALESCE(NULLIF(${dim.field}, ''), '(not set)') AS dim${index}`);
+    const metricSelect = metricExprs.map((expr: string, index: number) => `${expr} AS m${index}`);
 
     const conditions: string[] = ['created_at BETWEEN $1 AND $2'];
     const values: any[] = [start, end];
@@ -107,7 +107,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       SELECT ${dimensionSelect.join(', ')}, ${metricSelect.join(', ')}
       FROM ${table}
       WHERE ${conditions.join(' AND ')}
-      GROUP BY ${dimensionMeta.map((dim) => dim.field).join(', ')}
+      GROUP BY ${dimensionMeta.map((dim: { field: string }) => dim.field).join(', ')}
       ORDER BY m0 DESC
       LIMIT 100
     `;
