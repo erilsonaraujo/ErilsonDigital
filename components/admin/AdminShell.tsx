@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target, SplitSquareVertical, Users2, FileText, Tag, Flame, Video, Music, FlaskConical } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminShellProps {
@@ -19,6 +19,15 @@ const NAV_ITEMS = [
   { id: 'appointments', label: 'Agendamentos', icon: CalendarCheck2 },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'goals', label: 'Metas & Funis', icon: Target },
+  { id: 'attribution', label: 'Atribuicao', icon: SplitSquareVertical },
+  { id: 'cohorts', label: 'Coortes', icon: Users2 },
+  { id: 'reports', label: 'Relatorios', icon: FileText },
+  { id: 'tag-manager', label: 'Tag Manager', icon: Tag },
+  { id: 'heatmaps', label: 'Heatmaps', icon: Flame },
+  { id: 'recordings', label: 'Recordings', icon: Video },
+  { id: 'forms', label: 'Forms', icon: FileText },
+  { id: 'media', label: 'Media', icon: Music },
+  { id: 'experiments', label: 'A/B Testing', icon: FlaskConical },
   { id: 'conversations', label: 'Conversas IA', icon: MessageSquare },
   { id: 'settings', label: 'Configuracoes', icon: Settings },
 ];

@@ -220,6 +220,160 @@ async function initializeDatabase() {
     console.log('✓ Table analytics_funnels created');
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_tags (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        status VARCHAR(20) DEFAULT 'active',
+        trigger_type VARCHAR(30) NOT NULL,
+        trigger_match VARCHAR(255),
+        match_type VARCHAR(20) DEFAULT 'contains',
+        tag_type VARCHAR(30) NOT NULL,
+        tag_config JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_tags created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_reports (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        dimensions JSONB NOT NULL,
+        metrics JSONB NOT NULL,
+        filters JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_reports created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_heatmap_points (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        path VARCHAR(255) NOT NULL,
+        event_type VARCHAR(20) NOT NULL,
+        x_percent NUMERIC,
+        y_percent NUMERIC,
+        viewport_w INTEGER,
+        viewport_h INTEGER,
+        element_tag VARCHAR(50),
+        element_label VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_heatmap_points created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_recordings (
+        id SERIAL PRIMARY KEY,
+        session_id VARCHAR(255) UNIQUE NOT NULL,
+        visitor_id VARCHAR(255),
+        start_path VARCHAR(255),
+        started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        ended_at TIMESTAMP,
+        duration_seconds INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_recordings created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_recording_chunks (
+        id SERIAL PRIMARY KEY,
+        recording_id INTEGER NOT NULL REFERENCES analytics_recordings(id) ON DELETE CASCADE,
+        sequence INTEGER NOT NULL,
+        events JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_recording_chunks created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_form_events (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        path VARCHAR(255),
+        form_id VARCHAR(255),
+        form_name VARCHAR(255),
+        field_name VARCHAR(255),
+        field_type VARCHAR(100),
+        action VARCHAR(50) NOT NULL,
+        value_length INTEGER,
+        time_since_start INTEGER,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_form_events created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_media_events (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        path VARCHAR(255),
+        media_type VARCHAR(20) NOT NULL,
+        media_label VARCHAR(255),
+        action VARCHAR(50) NOT NULL,
+        current_time NUMERIC,
+        duration NUMERIC,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_media_events created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_experiments (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        status VARCHAR(20) DEFAULT 'active',
+        target_path VARCHAR(255),
+        traffic_percent INTEGER DEFAULT 100,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_experiments created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_experiment_variants (
+        id SERIAL PRIMARY KEY,
+        experiment_id INTEGER NOT NULL REFERENCES analytics_experiments(id) ON DELETE CASCADE,
+        name VARCHAR(255) NOT NULL,
+        weight INTEGER DEFAULT 50
+      )
+    `);
+    console.log('✓ Table analytics_experiment_variants created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_experiment_assignments (
+        id SERIAL PRIMARY KEY,
+        experiment_id INTEGER NOT NULL REFERENCES analytics_experiments(id) ON DELETE CASCADE,
+        variant_id INTEGER NOT NULL REFERENCES analytics_experiment_variants(id) ON DELETE CASCADE,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_experiment_assignments created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_experiment_conversions (
+        id SERIAL PRIMARY KEY,
+        experiment_id INTEGER NOT NULL REFERENCES analytics_experiments(id) ON DELETE CASCADE,
+        variant_id INTEGER NOT NULL REFERENCES analytics_experiment_variants(id) ON DELETE CASCADE,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        goal VARCHAR(255),
+        value NUMERIC DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table analytics_experiment_conversions created');
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS site_settings (
         key VARCHAR(100) PRIMARY KEY,
         value TEXT,

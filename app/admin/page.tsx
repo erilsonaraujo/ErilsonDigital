@@ -8,6 +8,15 @@ import AnalyticsView from '@/components/admin/AnalyticsView';
 import ConversationsView from '@/components/admin/ConversationsView';
 import SettingsView from '@/components/admin/SettingsView';
 import GoalsView from '@/components/admin/GoalsView';
+import AttributionView from '@/components/admin/AttributionView';
+import CohortsView from '@/components/admin/CohortsView';
+import ReportsView from '@/components/admin/ReportsView';
+import TagManagerView from '@/components/admin/TagManagerView';
+import HeatmapsView from '@/components/admin/HeatmapsView';
+import RecordingsView from '@/components/admin/RecordingsView';
+import FormsView from '@/components/admin/FormsView';
+import MediaView from '@/components/admin/MediaView';
+import ExperimentsView from '@/components/admin/ExperimentsView';
 
 interface Lead {
     id: number;
@@ -254,6 +263,15 @@ export default function AdminPage() {
             case 'dashboard': return <DashboardHome />;
             case 'analytics': return <AnalyticsView />;
             case 'goals': return <GoalsView />;
+            case 'attribution': return <AttributionView />;
+            case 'cohorts': return <CohortsView />;
+            case 'reports': return <ReportsView />;
+            case 'tag-manager': return <TagManagerView />;
+            case 'heatmaps': return <HeatmapsView />;
+            case 'recordings': return <RecordingsView />;
+            case 'forms': return <FormsView />;
+            case 'media': return <MediaView />;
+            case 'experiments': return <ExperimentsView />;
             case 'conversations': return <ConversationsView />;
             case 'settings': return <SettingsView />;
             case 'leads': return (
@@ -376,6 +394,15 @@ export default function AdminPage() {
         appointments: { title: 'Agendamentos', subtitle: 'Controle de agenda e status de atendimento.' },
         analytics: { title: 'Analytics', subtitle: 'Inteligencia de trafego com tracking interno.' },
         goals: { title: 'Metas & Funis', subtitle: 'Conversoes personalizadas e jornadas do usuario.' },
+        attribution: { title: 'Atribuicao', subtitle: 'Modelos multi-touch e canais de conversao.' },
+        cohorts: { title: 'Coortes', subtitle: 'Retencao e recorrencia por janela temporal.' },
+        reports: { title: 'Relatorios', subtitle: 'Construtor de relatorios customizados.' },
+        'tag-manager': { title: 'Tag Manager', subtitle: 'Controle de tags e disparos por gatilho.' },
+        heatmaps: { title: 'Heatmaps', subtitle: 'Mapa de cliques e intensidade por pagina.' },
+        recordings: { title: 'Session Recordings', subtitle: 'Replays anonimizados por sessao.' },
+        forms: { title: 'Form Analytics', subtitle: 'Conversao e friccao em formularios.' },
+        media: { title: 'Media Analytics', subtitle: 'Engajamento em audio e video.' },
+        experiments: { title: 'A/B Testing', subtitle: 'Experimentos e conversoes por variante.' },
         conversations: { title: 'Conversas IA', subtitle: 'Interacoes e transcricoes da Sofia.' },
         settings: { title: 'Configuracoes', subtitle: 'Pixels, integracoes e governanca.' },
     };
