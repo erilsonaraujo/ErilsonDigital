@@ -48,7 +48,7 @@ export function createStripeGateway(): PaymentGateway {
         throw new Error(`Stripe checkout error: ${text}`);
       }
 
-      const data = await res.json();
+      const data = (await res.json()) as Record<string, any>;
       return {
         providerPaymentId: data.id,
         checkoutUrl: data.url,
@@ -78,7 +78,7 @@ export function createStripeGateway(): PaymentGateway {
     },
 
     async parseWebhookEvent(rawBody: string): Promise<PaymentEvent | null> {
-      const payload = JSON.parse(rawBody);
+      const payload = JSON.parse(rawBody) as Record<string, any>;
       const eventType = payload.type;
       const eventId = payload.id;
       const dataObject = payload.data?.object || {};

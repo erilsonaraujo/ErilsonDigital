@@ -16,7 +16,7 @@ async function fetchPaymentDetails(paymentId: string) {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error('Mercado Pago payment lookup failed');
-  return res.json();
+  return (await res.json()) as Record<string, any>;
 }
 
 export function createMercadoPagoGateway(): PaymentGateway {
@@ -54,7 +54,7 @@ export function createMercadoPagoGateway(): PaymentGateway {
         throw new Error(`Mercado Pago checkout error: ${text}`);
       }
 
-      const data = await res.json();
+      const data = (await res.json()) as Record<string, any>;
       return {
         providerPaymentId: data.id,
         checkoutUrl: data.init_point,
@@ -71,7 +71,7 @@ export function createMercadoPagoGateway(): PaymentGateway {
     },
 
     async parseWebhookEvent(rawBody: string): Promise<PaymentEvent | null> {
-      const payload = JSON.parse(rawBody);
+      const payload = JSON.parse(rawBody) as Record<string, any>;
       const providerEventId = payload.id || payload.data?.id || crypto.randomUUID();
 
       if (payload.type !== 'payment' && payload.action !== 'payment.created') {

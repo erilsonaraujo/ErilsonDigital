@@ -26,7 +26,7 @@ async function getAccessToken() {
     const text = await res.text();
     throw new Error(`PayPal token error: ${text}`);
   }
-  const data = await res.json();
+  const data = (await res.json()) as Record<string, any>;
   return data.access_token as string;
 }
 
@@ -63,7 +63,7 @@ export function createPayPalGateway(): PaymentGateway {
         throw new Error(`PayPal checkout error: ${text}`);
       }
 
-      const data = await res.json();
+      const data = (await res.json()) as Record<string, any>;
       const approval = data.links?.find((link: any) => link.rel === 'approve');
       return {
         providerPaymentId: data.id,
@@ -109,7 +109,7 @@ export function createPayPalGateway(): PaymentGateway {
     },
 
     async parseWebhookEvent(rawBody: string): Promise<PaymentEvent | null> {
-      const payload = JSON.parse(rawBody);
+      const payload = JSON.parse(rawBody) as Record<string, any>;
       const eventId = payload.id;
       const eventType = payload.event_type;
       const resource = payload.resource || {};
