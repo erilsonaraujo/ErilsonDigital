@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
 
     await pool.query(
       `INSERT INTO analytics_media_events
-        (visitor_id, session_id, path, media_type, media_label, action, current_time, duration)
+        (visitor_id, session_id, path, media_type, media_label, action, media_time, duration)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
       [
         visitorId || null,

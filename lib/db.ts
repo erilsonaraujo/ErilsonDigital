@@ -335,10 +335,22 @@ export async function initDatabase() {
         media_type VARCHAR(20) NOT NULL,
         media_label VARCHAR(255),
         action VARCHAR(50) NOT NULL,
-        current_time NUMERIC,
+        media_time NUMERIC,
         duration NUMERIC,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+
+    await pool.query(`
+      DO $$
+      BEGIN
+        IF EXISTS (
+          SELECT 1 FROM information_schema.columns
+          WHERE table_name = 'analytics_media_events' AND column_name = 'current_time'
+        ) THEN
+          ALTER TABLE analytics_media_events RENAME COLUMN current_time TO media_time;
+        END IF;
+      END $$;
     `);
 
     await pool.query(`
