@@ -68,9 +68,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: 'Report missing dimensions or metrics' }, { status: 400 });
     }
 
-    const dimensionMeta = dimensions.map((dim: string) => DIMENSIONS[dim as keyof typeof DIMENSIONS]).filter(Boolean);
+    const dimensionMeta = dimensions
+      .map((dim: string) => DIMENSIONS[dim as keyof typeof DIMENSIONS])
+      .filter(Boolean);
     const table = dimensionMeta[0]?.table;
-    if (!table || !dimensionMeta.every((dim) => dim.table === table)) {
+    if (!table || !dimensionMeta.every((dim: { table: string }) => dim.table === table)) {
       return NextResponse.json({ error: 'Invalid dimensions' }, { status: 400 });
     }
 
