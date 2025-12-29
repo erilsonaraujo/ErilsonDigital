@@ -21,29 +21,42 @@ export async function POST(req: Request) {
 
         const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Using gemini-1.5-flash which has much higher free quotas
-        const model = genAI.getGenerativeModel({
-            model: "gemini-1.5-flash",
-            systemInstruction: SYSTEM_INSTRUCTION
-        });
+        // Use gemini-1.5-flash as the base model
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         // Convert message format to Gemini format
         // Gemini expects history in { role: 'user' | 'model', parts: [{ text: string }] }[]
-        // CRITICAL: The first message in history MUST be from the 'user'.
+        // We prepend the SYSTEM_INSTRUCTION as the first user message if it's a new chat,
+        // or ensure it's contextually present.
+
         let history = messages.slice(0, -1).map((m: any) => ({
             role: m.role === 'assistant' ? 'model' : 'user',
             parts: [{ text: m.content }]
         }));
 
-        // Remove any initial messages that are not from the 'user'
-        while (history.length > 0 && history[0].role !== 'user') {
-            history.shift();
+        // CRITICAL: Ensure history starts with user, and prepend system instruction for context
+        // This is a more robust way than using the systemInstruction parameter which sometimes triggers v1beta 404s
+        const systemPrompt = {
+            role: 'user',
+            parts: [{ text: `INSTRUÇÃO DE SISTEMA: ${SYSTEM_INSTRUCTION}\n\nPor favor, siga estas instruções rigorosamente em todas as respostas.` }]
+        };
+        const systemAcknowledge = {
+            role: 'model',
+            parts: [{ text: "Entendido. Sou Sofia, estrategista de vendas do Erilson. Estou pronta para atuar com persuasão, elegância e foco em fechamento de contratos. Como posso ajudar?" }]
+        };
+
+        // Combine system prompt + history
+        const fullHistory = [systemPrompt, systemAcknowledge, ...history];
+
+        // Clean history to ensure it starts with USER and alternates correctly
+        while (fullHistory.length > 0 && fullHistory[0].role !== 'user') {
+            fullHistory.shift();
         }
 
         const lastMessage = messages[messages.length - 1].content;
 
         const chat = model.startChat({
-            history: history,
+            history: fullHistory,
             generationConfig: {
                 temperature: 0.7,
                 maxOutputTokens: 1000,
