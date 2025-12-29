@@ -57,6 +57,17 @@ export async function POST(req: Request) {
         return NextResponse.json({ text: aiMessage });
     } catch (error: any) {
         console.error("Gemini API Error:", error);
+
+        if (error.status === 429 || error.message?.includes('429')) {
+            return NextResponse.json(
+                {
+                    error: "Limite de Requisições Atingido no Gemini (Free Tier).",
+                    details: "O Google atingiu o limite temporário de mensagens gratuitas. Por favor, aguarde alguns segundos e tente novamente."
+                },
+                { status: 429 }
+            );
+        }
+
         return NextResponse.json(
             {
                 error: `Erro no Gemini: ${error.message || "Erro desconhecido"}`,
