@@ -122,8 +122,8 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     if (format === 'csv') {
       const header = [
-        ...dimensionMeta.map((_, index) => `dimension_${index + 1}`),
-        ...metricExprs.map((_, index) => `metric_${index + 1}`)
+        ...dimensionMeta.map((_unused: { field: string }, index: number) => `dimension_${index + 1}`),
+        ...metricExprs.map((_unused: string, index: number) => `metric_${index + 1}`)
       ];
       const rows = data.map((row) => [...row.dimensions, ...row.metrics].join(','));
       const csv = [header.join(','), ...rows].join('\n');
