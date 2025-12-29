@@ -7,7 +7,7 @@ import { SERVICE_DETAILS } from '@/constants';
 import Breadcrumbs from '@/components/Breadcrumbs';
 
 interface ServicePageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export const dynamicParams = false;
@@ -16,8 +16,9 @@ export function generateStaticParams() {
   return SERVICE_DETAILS.map((service) => ({ slug: service.id }));
 }
 
-export function generateMetadata({ params }: ServicePageProps): Metadata {
-  const service = SERVICE_DETAILS.find((item) => item.id === params.slug);
+export async function generateMetadata({ params }: ServicePageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const service = SERVICE_DETAILS.find((item) => item.id === slug);
   if (!service) return {};
   return {
     title: `${service.title} | Erilson Digital`,
@@ -25,8 +26,9 @@ export function generateMetadata({ params }: ServicePageProps): Metadata {
   };
 }
 
-export default function ServicePage({ params }: ServicePageProps) {
-  const service = SERVICE_DETAILS.find((item) => item.id === params.slug);
+export default async function ServicePage({ params }: ServicePageProps) {
+  const { slug } = await params;
+  const service = SERVICE_DETAILS.find((item) => item.id === slug);
   if (!service) return notFound();
 
   const jsonLd = {
