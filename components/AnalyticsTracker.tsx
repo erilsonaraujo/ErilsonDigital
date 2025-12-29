@@ -432,7 +432,7 @@ const AnalyticsTracker = () => {
         yPercent: typeof yPercent === 'number' ? Number(yPercent.toFixed(2)) : null,
         viewportW: window.innerWidth,
         viewportH: window.innerHeight,
-        elementTag: el.tagName.toLowerCase(),
+        elementTag: el ? el.tagName.toLowerCase() : null,
         elementLabel: label || null
       });
       pushRecordingEvent({
