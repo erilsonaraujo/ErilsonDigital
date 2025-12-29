@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target, SplitSquareVertical, Users2, FileText, Tag, Flame, Video, Music, FlaskConical, Search, Plug } from 'lucide-react';
+import { LayoutDashboard, Users, CalendarCheck2, BarChart3, MessageSquare, Settings, LogOut, Globe, Menu, X, Target, SplitSquareVertical, Users2, FileText, Tag, Flame, Video, Music, FlaskConical, Search, Plug, FileSignature, CalendarRange } from 'lucide-react';
 import Link from 'next/link';
 
 interface AdminShellProps {
@@ -18,6 +18,8 @@ const NAV_ITEMS = [
   { id: 'leads', label: 'Leads', icon: Users },
   { id: 'appointments', label: 'Agendamentos', icon: CalendarCheck2 },
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+  { id: 'forms-v2', label: 'Forms 2.0', icon: FileSignature },
+  { id: 'booking-v2', label: 'Booking 2.0', icon: CalendarRange },
   { id: 'goals', label: 'Metas & Funis', icon: Target },
   { id: 'attribution', label: 'Atribuicao', icon: SplitSquareVertical },
   { id: 'cohorts', label: 'Coortes', icon: Users2 },

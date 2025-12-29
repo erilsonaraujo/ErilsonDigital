@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
+import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
 import { ensureAdminSession } from '@/lib/adminAuth';
 
 // GET all leads
@@ -49,6 +50,18 @@ export async function POST(request: NextRequest) {
                 source || 'website'
             ]
         );
+
+        if (process.env.FORMS_V2_ENABLED === 'true') {
+            const formId = await ensureDefaultContactForm();
+            await createFormEntry(
+                formId,
+                { name, email, phone, company, projectType, budget, timeline, message, source },
+                {
+                    ip: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined,
+                    userAgent: request.headers.get('user-agent') || undefined
+                }
+            );
+        }
 
         return NextResponse.json({ lead: result.rows[0] }, { status: 201 });
     } catch (error) {

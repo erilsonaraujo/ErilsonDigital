@@ -19,6 +19,8 @@ import MediaView from '@/components/admin/MediaView';
 import ExperimentsView from '@/components/admin/ExperimentsView';
 import SeoView from '@/components/admin/SeoView';
 import IntegrationsView from '@/components/admin/IntegrationsView';
+import FormBuilderView from '@/components/admin/FormBuilderView';
+import BookingV2View from '@/components/admin/BookingV2View';
 
 interface Lead {
     id: number;
@@ -264,6 +266,8 @@ export default function AdminPage() {
         switch (activeView) {
             case 'dashboard': return <DashboardHome />;
             case 'analytics': return <AnalyticsView />;
+            case 'forms-v2': return <FormBuilderView />;
+            case 'booking-v2': return <BookingV2View />;
             case 'goals': return <GoalsView />;
             case 'attribution': return <AttributionView />;
             case 'cohorts': return <CohortsView />;
@@ -397,6 +401,8 @@ export default function AdminPage() {
         leads: { title: 'Leads', subtitle: 'Oportunidades qualificadas capturadas.' },
         appointments: { title: 'Agendamentos', subtitle: 'Controle de agenda e status de atendimento.' },
         analytics: { title: 'Analytics', subtitle: 'Inteligencia de trafego com tracking interno.' },
+        'forms-v2': { title: 'Forms 2.0', subtitle: 'Construa formularios dinamicos com schema versionado.' },
+        'booking-v2': { title: 'Booking 2.0', subtitle: 'Recursos e reservas com motor de disponibilidade.' },
         goals: { title: 'Metas & Funis', subtitle: 'Conversoes personalizadas e jornadas do usuario.' },
         attribution: { title: 'Atribuicao', subtitle: 'Modelos multi-touch e canais de conversao.' },
         cohorts: { title: 'Coortes', subtitle: 'Retencao e recorrencia por janela temporal.' },

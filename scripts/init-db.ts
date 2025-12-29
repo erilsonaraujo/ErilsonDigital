@@ -405,6 +405,113 @@ async function initializeDatabase() {
     console.log('✓ Table analytics_ga_imports created');
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS forms_v2 (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        status VARCHAR(20) DEFAULT 'active',
+        version INTEGER DEFAULT 1,
+        schema JSONB NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table forms_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS form_entries_v2 (
+        id SERIAL PRIMARY KEY,
+        form_id INTEGER NOT NULL REFERENCES forms_v2(id) ON DELETE CASCADE,
+        status VARCHAR(20) DEFAULT 'submitted',
+        data JSONB NOT NULL,
+        ip VARCHAR(64),
+        user_agent TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table form_entries_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS form_drafts_v2 (
+        id SERIAL PRIMARY KEY,
+        form_id INTEGER NOT NULL REFERENCES forms_v2(id) ON DELETE CASCADE,
+        token VARCHAR(255) UNIQUE NOT NULL,
+        data JSONB NOT NULL,
+        expires_at TIMESTAMP,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table form_drafts_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS form_actions_v2 (
+        id SERIAL PRIMARY KEY,
+        form_id INTEGER NOT NULL REFERENCES forms_v2(id) ON DELETE CASCADE,
+        action_type VARCHAR(50) NOT NULL,
+        config JSONB,
+        enabled BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table form_actions_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_resources_v2 (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        status VARCHAR(20) DEFAULT 'active',
+        capacity INTEGER DEFAULT 1,
+        timezone VARCHAR(100),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table booking_resources_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS booking_blocks_v2 (
+        id SERIAL PRIMARY KEY,
+        resource_id INTEGER NOT NULL REFERENCES booking_resources_v2(id) ON DELETE CASCADE,
+        start_at TIMESTAMP NOT NULL,
+        end_at TIMESTAMP NOT NULL,
+        reason VARCHAR(255),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    console.log('✓ Table booking_blocks_v2 created');
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS bookings_v2 (
+        id SERIAL PRIMARY KEY,
+        resource_id INTEGER NOT NULL REFERENCES booking_resources_v2(id) ON DELETE CASCADE,
+        form_entry_id INTEGER REFERENCES form_entries_v2(id) ON DELETE SET NULL,
+        status VARCHAR(30) DEFAULT 'pending',
+        start_at TIMESTAMP NOT NULL,
+        end_at TIMESTAMP NOT NULL,
+        customer_name VARCHAR(255),
+        customer_email VARCHAR(255),
+        customer_phone VARCHAR(50),
+        notes TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS bookings_v2_resource_time
+      ON bookings_v2 (resource_id, start_at, end_at)
+    `);
+    console.log('✓ Table bookings_v2 created');
+
+    await pool.query(`
+      CREATE EXTENSION IF NOT EXISTS btree_gist
+    `);
+    await pool.query(`
+      CREATE INDEX IF NOT EXISTS bookings_v2_conflict_gist
+      ON bookings_v2
+      USING GIST (resource_id, tstzrange(start_at, end_at, '[)'))
+      WHERE status NOT IN ('canceled', 'declined')
+    `);
+    console.log('✓ Index bookings_v2_conflict_gist created');
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS site_settings (
         key VARCHAR(100) PRIMARY KEY,
         value TEXT,

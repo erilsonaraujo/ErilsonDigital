@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 import { createCalendarEvent } from '@/lib/googleCalendar';
+import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
+import { createBooking, ensureDefaultResource } from '@/lib/bookingV2';
 import { ensureAdminSession } from '@/lib/adminAuth';
 
 // GET all appointments
@@ -66,6 +68,41 @@ export async function POST(request: NextRequest) {
                 calendarEventId
             ]
         );
+
+        if (process.env.BOOKING_V2_ENABLED === 'true') {
+            const resourceId = await ensureDefaultResource();
+            const formId = await ensureDefaultContactForm();
+            const formEntryId = await createFormEntry(
+                formId,
+                { name, email, phone, company, budget, service, preferred_date, preferred_time, message },
+                {
+                    ip: request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || undefined,
+                    userAgent: request.headers.get('user-agent') || undefined
+                }
+            );
+
+            if (preferred_date && preferred_time) {
+                const startAt = new Date(`${preferred_date}T${preferred_time}:00`);
+                const endAt = new Date(startAt.getTime() + 30 * 60 * 1000);
+                try {
+                    await createBooking({
+                        resourceId,
+                        formEntryId,
+                        startAt,
+                        endAt,
+                        customerName: name,
+                        customerEmail: email,
+                        customerPhone: phone || undefined,
+                        notes: message || undefined
+                    });
+                } catch (error: any) {
+                    if (error?.message === 'Conflict') {
+                        return NextResponse.json({ error: 'Horario indisponivel' }, { status: 409 });
+                    }
+                    throw error;
+                }
+            }
+        }
 
         return NextResponse.json({ appointment: result.rows[0] }, { status: 201 });
     } catch (error) {
