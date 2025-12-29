@@ -21,9 +21,9 @@ export async function POST(req: Request) {
 
         const genAI = new GoogleGenerativeAI(apiKey);
 
-        // Using gemini-2.0-flash-exp for superior performance and speed
+        // Using gemini-1.5-flash which has much higher free quotas
         const model = genAI.getGenerativeModel({
-            model: "gemini-2.0-flash-exp",
+            model: "gemini-1.5-flash",
             systemInstruction: SYSTEM_INSTRUCTION
         });
 
