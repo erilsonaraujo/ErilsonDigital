@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
   const result = await query('SELECT * FROM forms_v2 ORDER BY created_at DESC');
   const forms = result.rows.map((row) => ({
     ...row,
-    schema: row.schema ? JSON.parse(row.schema) : null
+    schema: typeof row.schema === 'string' ? JSON.parse(row.schema) : row.schema
   }));
   return NextResponse.json({ forms });
 }

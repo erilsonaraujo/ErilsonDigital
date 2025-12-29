@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
   );
   const entries = result.rows.map((row) => ({
     ...row,
-    data: row.data ? JSON.parse(row.data) : null
+    data: typeof row.data === 'string' ? JSON.parse(row.data) : row.data
   }));
   return NextResponse.json({ entries });
 }
