@@ -10,7 +10,7 @@ export async function GET() {
     return NextResponse.json({ error: 'Ecommerce disabled' }, { status: 404 });
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionId = cookieStore.get(CART_COOKIE)?.value || null;
   if (!sessionId) return NextResponse.json({ cart: null });
 
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { customerId } = await request.json().catch(() => ({ customerId: null }));
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionId = cookieStore.get(CART_COOKIE)?.value || null;
 
   const cart = await resolveCart(sessionId, customerId || null);

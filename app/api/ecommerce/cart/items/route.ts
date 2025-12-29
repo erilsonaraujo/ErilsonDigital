@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'variantId and qty required' }, { status: 400 });
   }
 
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const sessionId = cookieStore.get(CART_COOKIE)?.value || null;
   const cart = await resolveCart(sessionId, null);
   const updated = await addItem(cart.id, variantId, Number(qty));
