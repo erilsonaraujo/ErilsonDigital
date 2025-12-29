@@ -6,6 +6,7 @@ import { Calendar, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { trackEvent } from '@/components/AnalyticsTracker';
 
 export default function BookingPage() {
     const { language } = useThemeLanguage();
@@ -48,6 +49,7 @@ export default function BookingPage() {
                 throw new Error('Failed to create appointment');
             }
 
+            trackEvent('appointment_requested', { service: formData.service, budget: formData.budget });
             setStatus('success');
         } catch (err) {
             console.error('Failed to save appointment', err);

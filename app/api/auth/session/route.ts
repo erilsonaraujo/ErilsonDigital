@@ -1,23 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
+import { ensureAdminSession } from '@/lib/adminAuth';
 
 export async function GET(request: NextRequest) {
     try {
-        const sessionCookie = request.cookies.get('admin_session');
-
-        if (!sessionCookie) {
-            return NextResponse.json(
-                { authenticated: false },
-                { status: 401 }
-            );
+        const session = await ensureAdminSession(request);
+        if (!session) {
+            return NextResponse.json({ authenticated: false }, { status: 401 });
         }
-
-        const adminId = sessionCookie.value;
 
         // Verify admin exists
         const result = await pool.query(
             'SELECT id, email FROM admins WHERE id = $1 LIMIT 1',
-            [adminId]
+            [session.admin_id]
         );
 
         if (result.rows.length === 0) {

@@ -34,6 +34,34 @@ export async function initDatabase() {
       )
     `);
 
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS admin_sessions (
+        id SERIAL PRIMARY KEY,
+        admin_id INTEGER NOT NULL REFERENCES admins(id) ON DELETE CASCADE,
+        session_token VARCHAR(255) UNIQUE NOT NULL,
+        ip VARCHAR(64),
+        user_agent TEXT,
+        last_active_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        expires_at TIMESTAMP NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS login_attempts (
+        id SERIAL PRIMARY KEY,
+        identifier VARCHAR(255) NOT NULL,
+        ip VARCHAR(64),
+        attempts INTEGER DEFAULT 0,
+        last_attempt_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE UNIQUE INDEX IF NOT EXISTS login_attempts_identifier_ip
+      ON login_attempts (identifier, ip)
+    `);
+
     // Create leads table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS leads (
@@ -79,6 +107,9 @@ export async function initDatabase() {
     await pool.query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS budget VARCHAR(50)`);
     await pool.query(`ALTER TABLE appointments ADD COLUMN IF NOT EXISTS calendar_event_id VARCHAR(255)`);
 
+    await pool.query(`ALTER TABLE analytics ADD COLUMN IF NOT EXISTS session_id VARCHAR(255)`);
+    await pool.query(`ALTER TABLE analytics ADD COLUMN IF NOT EXISTS region VARCHAR(100)`);
+
     // Create conversations table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS conversations (
@@ -98,15 +129,29 @@ export async function initDatabase() {
       CREATE TABLE IF NOT EXISTS analytics (
         id SERIAL PRIMARY KEY,
         visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
         path VARCHAR(255) NOT NULL,
         referrer TEXT,
         ip VARCHAR(50),
         user_agent TEXT,
         country VARCHAR(100),
+        region VARCHAR(100),
         city VARCHAR(100),
         device VARCHAR(50),
         browser VARCHAR(50),
         os VARCHAR(50),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_events (
+        id SERIAL PRIMARY KEY,
+        visitor_id VARCHAR(255),
+        session_id VARCHAR(255),
+        name VARCHAR(100) NOT NULL,
+        path VARCHAR(255),
+        metadata JSONB,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);

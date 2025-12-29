@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Mail, MapPin, Phone, Send } from 'lucide-react';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import { trackEvent } from '@/components/AnalyticsTracker';
 
 const Contact: React.FC = () => {
   const { language } = useThemeLanguage();
@@ -35,6 +36,7 @@ const Contact: React.FC = () => {
         throw new Error('Failed');
       }
 
+      trackEvent('lead_submitted', { projectType: formState.projectType, budget: formState.budget });
       setStatus('success');
       setFormState({
         name: '',

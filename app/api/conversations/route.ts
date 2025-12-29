@@ -1,14 +1,11 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
-import { cookies } from 'next/headers';
+import { ensureAdminSession } from '@/lib/adminAuth';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
     try {
-        const cookieStore = await cookies();
-        const session = cookieStore.get('admin_session');
-        if (!session) {
-            return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+        const session = await ensureAdminSession(request);
+        if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
         const result = await query('SELECT * FROM conversations ORDER BY created_at DESC');
         return NextResponse.json({ conversations: result.rows });

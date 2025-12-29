@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { pool } from '@/lib/db';
 import { createCalendarEvent } from '@/lib/googleCalendar';
+import { ensureAdminSession } from '@/lib/adminAuth';
 
 // GET all appointments
 export async function GET(request: NextRequest) {
     try {
         // Check authentication
-        const sessionCookie = request.cookies.get('admin_session');
-        if (!sessionCookie) {
+        const session = await ensureAdminSession(request);
+        if (!session) {
             return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
         }
 

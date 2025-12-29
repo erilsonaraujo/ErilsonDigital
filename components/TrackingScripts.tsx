@@ -3,7 +3,6 @@ import { query } from '@/lib/db';
 
 const TrackingScripts = async () => {
   const fallback = {
-    umamiId: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
     gtmId: process.env.NEXT_PUBLIC_GTM_ID,
     gaId: process.env.NEXT_PUBLIC_GA_ID,
     metaPixelId: process.env.NEXT_PUBLIC_META_PIXEL_ID,
@@ -20,7 +19,6 @@ const TrackingScripts = async () => {
     }
   }
 
-  const umamiId = stored.umamiId || fallback.umamiId;
   const gtmId = stored.gtmId || fallback.gtmId;
   const gaId = stored.gaId || fallback.gaId;
   const metaPixelId = stored.metaPixelId || fallback.metaPixelId;
@@ -28,14 +26,6 @@ const TrackingScripts = async () => {
 
   return (
     <>
-      {umamiId && (
-        <Script
-          src="https://cloud.umami.is/script.js"
-          data-website-id={umamiId}
-          strategy="afterInteractive"
-        />
-      )}
-
       {gtmId && (
         <Script id="gtm-init" strategy="afterInteractive">
           {`

@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import AnalyticsTracker from '@/components/AnalyticsTracker';
 
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
@@ -10,7 +11,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
 
     if (isAdmin) {
         return (
-            <div className="flex flex-col min-h-screen bg-slate-50 dark:bg-dark-950">
+            <div className="flex flex-col min-h-screen bg-ink-950">
                 {children}
             </div>
         );
@@ -19,6 +20,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
     return (
         <div className="flex flex-col min-h-screen">
             <Navbar />
+            <AnalyticsTracker />
             <main className="flex-grow flex flex-col pt-20">
                 {children}
             </main>

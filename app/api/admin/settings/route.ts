@@ -1,15 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { ensureAdminSession } from '@/lib/adminAuth';
 
 const SETTINGS_KEY = 'pixels';
 
-const ensureAuth = (request: NextRequest) => {
-  const sessionCookie = request.cookies.get('admin_session');
-  return !!sessionCookie;
-};
-
 export async function GET(request: NextRequest) {
-  if (!ensureAuth(request)) {
+  const session = await ensureAdminSession(request);
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -19,7 +16,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  if (!ensureAuth(request)) {
+  const session = await ensureAdminSession(request);
+  if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
