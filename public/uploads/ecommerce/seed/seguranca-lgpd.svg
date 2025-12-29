@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#0b0f1a" />
+  <rect x="110" y="110" width="980" height="580" rx="50" fill="#111827" stroke="#1f2a44" stroke-width="2" />
+  <path d="M600 220 L820 300 L820 480 C820 600 720 660 600 700 C480 660 380 600 380 480 L380 300 Z" fill="#2f55ff" opacity="0.9" />
+  <rect x="520" y="360" width="160" height="190" rx="20" fill="#0b0f1a" />
+  <circle cx="600" cy="370" r="36" fill="#22d3ee" />
+  <text x="260" y="260" font-family="Arial" font-size="34" fill="#e2e8f0">Seguranca & LGPD</text>
+  <text x="260" y="310" font-family="Arial" font-size="22" fill="#94a3b8">Hardening, compliance e governanca de acesso.</text>
+</svg>

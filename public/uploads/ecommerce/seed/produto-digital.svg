@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#0b0f1a" />
+  <rect x="90" y="100" width="1020" height="600" rx="60" fill="#101526" stroke="#1f2a44" stroke-width="2" />
+  <circle cx="260" cy="260" r="90" fill="#22d3ee" opacity="0.85" />
+  <rect x="400" y="220" width="520" height="44" rx="22" fill="#e2e8f0" opacity="0.9" />
+  <rect x="400" y="290" width="380" height="26" rx="13" fill="#94a3b8" opacity="0.8" />
+  <rect x="200" y="420" width="800" height="220" rx="28" fill="#0f172a" />
+  <text x="240" y="500" font-family="Arial" font-size="36" fill="#e2e8f0">Produto Digital Premium</text>
+  <text x="240" y="555" font-family="Arial" font-size="22" fill="#94a3b8">UX refinado, narrativa e conversao high-ticket.</text>
+</svg>

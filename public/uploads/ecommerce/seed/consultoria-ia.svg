@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <rect width="1200" height="800" fill="#0b0f1a" />
+  <rect x="80" y="80" width="1040" height="640" rx="48" fill="#121829" stroke="#1f2a44" stroke-width="2" />
+  <circle cx="210" cy="220" r="70" fill="#2f55ff" opacity="0.9" />
+  <rect x="320" y="170" width="520" height="40" rx="20" fill="#e2e8f0" opacity="0.9" />
+  <rect x="320" y="230" width="360" height="26" rx="13" fill="#94a3b8" opacity="0.8" />
+  <rect x="160" y="360" width="880" height="260" rx="28" fill="#0f172a" stroke="#263152" stroke-width="2" />
+  <text x="200" y="430" font-family="Arial" font-size="36" fill="#e2e8f0">Consultoria em Engenharia & IA</text>
+  <text x="200" y="485" font-family="Arial" font-size="22" fill="#94a3b8">Arquitetura premium, agentes e automacoes inteligentes.</text>
+</svg>
