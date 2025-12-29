@@ -4,14 +4,15 @@ import { query } from '@/src/ecommerce/db/queries';
 import { markOrderPaid } from '@/src/ecommerce/services/orderService';
 import { isEcommerceAdminEnabled } from '@/src/ecommerce/services/flags';
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isEcommerceAdminEnabled()) {
     return NextResponse.json({ error: 'Ecommerce admin disabled' }, { status: 404 });
   }
   const session = await ensureAdminSession(request);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const paymentRes = await query('SELECT * FROM payments WHERE id = $1', [params.id]);
+  const { id } = await params;
+  const paymentRes = await query('SELECT * FROM payments WHERE id = $1', [id]);
   if (paymentRes.rows.length === 0) {
     return NextResponse.json({ error: 'Payment not found' }, { status: 404 });
   }

@@ -4,18 +4,19 @@ import { createVariant, updateVariant, deleteVariant } from '@/src/ecommerce/ser
 import { query } from '@/src/ecommerce/db/queries';
 import { isEcommerceAdminEnabled } from '@/src/ecommerce/services/flags';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isEcommerceAdminEnabled()) {
     return NextResponse.json({ error: 'Ecommerce admin disabled' }, { status: 404 });
   }
   const session = await ensureAdminSession(request);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const res = await query('SELECT * FROM product_variants WHERE product_id = $1 ORDER BY created_at ASC', [params.id]);
+  const { id } = await params;
+  const res = await query('SELECT * FROM product_variants WHERE product_id = $1 ORDER BY created_at ASC', [id]);
   return NextResponse.json({ variants: res.rows });
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isEcommerceAdminEnabled()) {
     return NextResponse.json({ error: 'Ecommerce admin disabled' }, { status: 404 });
   }
@@ -23,8 +24,9 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await request.json();
+  const { id } = await params;
   const created = await createVariant({
-    productId: params.id,
+    productId: id,
     sku: body.sku,
     attrs: body.attrs || {},
     priceCents: Number(body.priceCents || 0),

@@ -4,18 +4,19 @@ import { query } from '@/src/ecommerce/db/queries';
 import { isEcommerceAdminEnabled } from '@/src/ecommerce/services/flags';
 import { jsPDF } from 'jspdf';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!isEcommerceAdminEnabled()) {
     return new Response('Ecommerce admin disabled', { status: 404 });
   }
   const session = await ensureAdminSession(request);
   if (!session) return new Response('Unauthorized', { status: 401 });
 
-  const orderRes = await query('SELECT * FROM orders WHERE id = $1', [params.id]);
+  const { id } = await params;
+  const orderRes = await query('SELECT * FROM orders WHERE id = $1', [id]);
   if (orderRes.rows.length === 0) return new Response('Not found', { status: 404 });
   const order = orderRes.rows[0];
 
-  const itemsRes = await query('SELECT * FROM order_items WHERE order_id = $1', [params.id]);
+  const itemsRes = await query('SELECT * FROM order_items WHERE order_id = $1', [id]);
 
   const doc = new jsPDF();
   doc.setFontSize(16);
