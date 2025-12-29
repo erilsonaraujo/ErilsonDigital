@@ -45,16 +45,18 @@ const METRICS: Record<string, Record<string, string>> = {
   }
 };
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await ensureAdminSession(request);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const { id } = await params;
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '30d';
   const { start, end } = parseRange(range);
 
   try {
-    const reportRes = await query('SELECT * FROM analytics_reports WHERE id = $1', [params.id]);
+    const reportRes = await query('SELECT * FROM analytics_reports WHERE id = $1', [id]);
     const report = reportRes.rows[0];
     if (!report) return NextResponse.json({ error: 'Report not found' }, { status: 404 });
 
@@ -123,12 +125,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await ensureAdminSession(request);
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    await query('DELETE FROM analytics_reports WHERE id = $1', [params.id]);
+    const { id } = await params;
+    await query('DELETE FROM analytics_reports WHERE id = $1', [id]);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Report delete error:', error);
