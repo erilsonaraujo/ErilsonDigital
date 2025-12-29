@@ -83,6 +83,20 @@ const matchValue = (value: string, match: string, matchType?: string) => {
   return value.includes(match);
 };
 
+const applyVariables = (value: string, context: Record<string, string>) => {
+  return Object.entries(context).reduce((acc, [key, val]) => acc.replaceAll(`{{${key}}}`, val), value);
+};
+
+const transformMetadata = (metadata: Record<string, any> | undefined, context: Record<string, string>) => {
+  if (!metadata) return undefined;
+  return Object.fromEntries(
+    Object.entries(metadata).map(([key, value]) => {
+      if (typeof value === 'string') return [key, applyVariables(value, context)];
+      return [key, value];
+    })
+  );
+};
+
 export const trackEvent = async (name: string, metadata?: Record<string, any>) => {
   try {
     if (getConsent() !== 'granted') return;
@@ -99,6 +113,9 @@ export const trackEvent = async (name: string, metadata?: Record<string, any>) =
         metadata,
       }),
     });
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('erilson-analytics-event', { detail: { name, metadata } }));
+    }
   } catch (error) {
     console.debug('Track event failed', error);
   }
@@ -329,14 +346,16 @@ const AnalyticsTracker = () => {
     fetchExperiments();
   }, [pathname]);
 
-  const fireTag = (tag: TagDefinition) => {
+  const fireTag = (tag: TagDefinition, context: Record<string, string> = {}) => {
     const config = tag.tag_config || {};
     if (config.once !== false && firedTags.current.has(tag.id)) return;
     firedTags.current.add(tag.id);
 
     if (tag.tag_type === 'event') {
       const eventName = config.eventName || tag.name;
-      trackEvent(eventName, { ...config.metadata, tagId: tag.id, source: 'tag-manager' });
+      const resolvedName = typeof eventName === 'string' ? applyVariables(eventName, context) : tag.name;
+      const resolvedMetadata = transformMetadata(config.metadata, context);
+      trackEvent(resolvedName, { ...resolvedMetadata, tagId: tag.id, source: 'tag-manager' });
       return;
     }
 
@@ -345,11 +364,11 @@ const AnalyticsTracker = () => {
       const script = document.createElement('script');
       script.setAttribute('data-tag-id', String(tag.id));
       if (config.src) {
-        script.src = config.src;
+        script.src = applyVariables(config.src, context);
         script.async = config.async !== false;
       }
       if (config.inline) {
-        script.textContent = config.inline;
+        script.textContent = applyVariables(config.inline, context);
       }
       document.head.appendChild(script);
     }
@@ -357,13 +376,22 @@ const AnalyticsTracker = () => {
 
   const evaluateTags = (triggerType: string, payload?: Record<string, any>) => {
     if (getConsent() !== 'granted') return;
+    const context = {
+      path: window.location.pathname,
+      title: document.title || '',
+      referrer: document.referrer || '',
+      label: payload?.label || '',
+      event: payload?.name || '',
+      form: payload?.formName || payload?.formId || ''
+    };
+
     tagsRef.current
       .filter((tag) => tag.trigger_type === triggerType)
       .forEach((tag) => {
         if (triggerType === 'pageview') {
           const path = payload?.path || window.location.pathname;
           if (!tag.trigger_match || matchValue(path, tag.trigger_match, tag.match_type)) {
-            fireTag(tag);
+            fireTag(tag, context);
           }
           return;
         }
@@ -371,7 +399,7 @@ const AnalyticsTracker = () => {
         if (triggerType === 'click') {
           const label = payload?.label || '';
           if (!tag.trigger_match || matchValue(label, tag.trigger_match, tag.match_type)) {
-            fireTag(tag);
+            fireTag(tag, context);
           }
           return;
         }
@@ -380,9 +408,24 @@ const AnalyticsTracker = () => {
           const percent = payload?.percent;
           const triggerPercent = Number(tag.trigger_match || 0);
           if (Number.isFinite(triggerPercent) && percent >= triggerPercent) {
-            fireTag(tag);
+            fireTag(tag, context);
           }
           return;
+        }
+
+        if (triggerType === 'event') {
+          const name = payload?.name || '';
+          if (!tag.trigger_match || matchValue(name, tag.trigger_match, tag.match_type)) {
+            fireTag(tag, context);
+          }
+          return;
+        }
+
+        if (triggerType === 'form_submit') {
+          const formName = payload?.formName || '';
+          if (!tag.trigger_match || matchValue(formName, tag.trigger_match, tag.match_type)) {
+            fireTag(tag, context);
+          }
         }
       });
   };
@@ -532,6 +575,7 @@ const AnalyticsTracker = () => {
         valueLength: null,
         timeSinceStart
       });
+      evaluateTags('form_submit', { formId, formName });
       formStartRef.current.delete(key);
     };
 
@@ -615,7 +659,11 @@ const AnalyticsTracker = () => {
         if (timersRef.current[tag.id]) return;
         const delay = Number(tag.trigger_match || 0);
         if (!Number.isFinite(delay) || delay <= 0) return;
-        timersRef.current[tag.id] = window.setTimeout(() => fireTag(tag), delay);
+        timersRef.current[tag.id] = window.setTimeout(() => fireTag(tag, {
+          path: window.location.pathname,
+          title: document.title || '',
+          referrer: document.referrer || ''
+        }), delay);
       });
 
     evaluateTags('pageview', { path: pathname || window.location.pathname });
@@ -624,6 +672,16 @@ const AnalyticsTracker = () => {
       Object.values(timersRef.current).forEach((timerId) => window.clearTimeout(timerId));
       timersRef.current = {};
     };
+  }, [pathname]);
+
+  useEffect(() => {
+    if (getConsent() !== 'granted') return;
+    const handler = (event: Event) => {
+      const detail = (event as CustomEvent).detail || {};
+      evaluateTags('event', { name: detail.name || '', metadata: detail.metadata || {} });
+    };
+    window.addEventListener('erilson-analytics-event', handler);
+    return () => window.removeEventListener('erilson-analytics-event', handler);
   }, [pathname]);
 
   return null;

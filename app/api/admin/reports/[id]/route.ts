@@ -53,6 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
   const { searchParams } = new URL(request.url);
   const range = searchParams.get('range') || '30d';
+  const format = searchParams.get('format');
   const { start, end } = parseRange(range);
 
   try {
@@ -114,13 +115,25 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
 
     const dataRes = await query(sql, values);
 
-    return NextResponse.json({
-      report,
-      data: dataRes.rows.map((row: Record<string, any>) => ({
-        dimensions: dimensionMeta.map((_unused: { field: string }, index: number) => row[`dim${index}`]),
-        metrics: metricExprs.map((_unused: string, index: number) => Number(row[`m${index}`]))
-      }))
-    });
+    const data = dataRes.rows.map((row: Record<string, any>) => ({
+      dimensions: dimensionMeta.map((_unused: { field: string }, index: number) => row[`dim${index}`]),
+      metrics: metricExprs.map((_unused: string, index: number) => Number(row[`m${index}`]))
+    }));
+
+    if (format === 'csv') {
+      const header = [
+        ...dimensionMeta.map((_, index) => `dimension_${index + 1}`),
+        ...metricExprs.map((_, index) => `metric_${index + 1}`)
+      ];
+      const rows = data.map((row) => [...row.dimensions, ...row.metrics].join(','));
+      const csv = [header.join(','), ...rows].join('\n');
+      return new NextResponse(csv, {
+        status: 200,
+        headers: { 'Content-Type': 'text/csv; charset=utf-8' }
+      });
+    }
+
+    return NextResponse.json({ report, data });
   } catch (error) {
     console.error('Report run error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

@@ -386,6 +386,35 @@ export async function initDatabase() {
     `);
 
     await pool.query(`
+      CREATE TABLE IF NOT EXISTS seo_keywords (
+        id SERIAL PRIMARY KEY,
+        date DATE NOT NULL,
+        query TEXT NOT NULL,
+        page TEXT,
+        clicks INTEGER DEFAULT 0,
+        impressions INTEGER DEFAULT 0,
+        ctr NUMERIC DEFAULT 0,
+        position NUMERIC DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS analytics_ga_imports (
+        id SERIAL PRIMARY KEY,
+        date DATE NOT NULL,
+        source VARCHAR(255),
+        medium VARCHAR(255),
+        campaign VARCHAR(255),
+        page VARCHAR(255),
+        sessions INTEGER DEFAULT 0,
+        users INTEGER DEFAULT 0,
+        pageviews INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
+
+    await pool.query(`
       CREATE TABLE IF NOT EXISTS site_settings (
         key VARCHAR(100) PRIMARY KEY,
         value TEXT,

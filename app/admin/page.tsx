@@ -17,6 +17,8 @@ import RecordingsView from '@/components/admin/RecordingsView';
 import FormsView from '@/components/admin/FormsView';
 import MediaView from '@/components/admin/MediaView';
 import ExperimentsView from '@/components/admin/ExperimentsView';
+import SeoView from '@/components/admin/SeoView';
+import IntegrationsView from '@/components/admin/IntegrationsView';
 
 interface Lead {
     id: number;
@@ -272,6 +274,8 @@ export default function AdminPage() {
             case 'forms': return <FormsView />;
             case 'media': return <MediaView />;
             case 'experiments': return <ExperimentsView />;
+            case 'seo': return <SeoView />;
+            case 'integrations': return <IntegrationsView />;
             case 'conversations': return <ConversationsView />;
             case 'settings': return <SettingsView />;
             case 'leads': return (
@@ -403,6 +407,8 @@ export default function AdminPage() {
         forms: { title: 'Form Analytics', subtitle: 'Conversao e friccao em formularios.' },
         media: { title: 'Media Analytics', subtitle: 'Engajamento em audio e video.' },
         experiments: { title: 'A/B Testing', subtitle: 'Experimentos e conversoes por variante.' },
+        seo: { title: 'SEO Keywords', subtitle: 'Palavras-chave e paginas do Search Console.' },
+        integrations: { title: 'Integracoes', subtitle: 'API publica e importadores.' },
         conversations: { title: 'Conversas IA', subtitle: 'Interacoes e transcricoes da Sofia.' },
         settings: { title: 'Configuracoes', subtitle: 'Pixels, integracoes e governanca.' },
     };
