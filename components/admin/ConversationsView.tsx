@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { MessageSquare, ChevronRight, User, Clock } from 'lucide-react';
+import { formatDateTime } from '@/lib/date';
 
 interface Conversation {
   id: number;
@@ -88,7 +89,7 @@ const ConversationsView: React.FC = () => {
               <div className="text-right text-xs text-graphite-500">
                 <div className="flex items-center gap-2 justify-end">
                   <Clock size={14} />
-                  {new Date(selectedConv.created_at).toLocaleString('pt-BR')}
+                  {formatDateTime(selectedConv.created_at)}
                 </div>
                 <div className="flex items-center gap-2 justify-end mt-2">
                   <User size={14} />

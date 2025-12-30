@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Plus, Save, Trash2, FileText, RefreshCcw } from 'lucide-react';
+import { formatDateTime } from '@/lib/date';
 
 type FormSchemaField = {
   id: string;
@@ -249,7 +250,7 @@ const FormBuilderView: React.FC = () => {
             {entries.map((entry) => (
               <div key={entry.id} className="rounded-2xl border border-graphite-800 bg-ink-950/50 px-4 py-3 text-xs text-graphite-300">
                 <p className="text-white font-semibold">#{entry.id}</p>
-                <p className="text-graphite-500">{new Date(entry.created_at).toLocaleString()}</p>
+                <p className="text-graphite-500">{formatDateTime(entry.created_at)}</p>
               </div>
             ))}
             {entries.length === 0 && <p className="text-xs text-graphite-500">Sem entries.</p>}

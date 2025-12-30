@@ -1,9 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Language, Theme } from '@/types';
+import { Language } from '@/types';
 
 interface ThemeLanguageContextType {
-  theme: Theme;
-  toggleTheme: () => void;
   language: Language;
   setLanguage: (lang: Language) => void;
 }
@@ -11,20 +9,9 @@ interface ThemeLanguageContextType {
 const ThemeLanguageContext = createContext<ThemeLanguageContextType | undefined>(undefined);
 
 export const ThemeLanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('light');
-  const [themeOverride, setThemeOverride] = useState(false);
   const [language, setLanguage] = useState<Language>('pt');
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') as Theme | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-      setThemeOverride(true);
-    } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
-
     const savedLang = localStorage.getItem('language') as Language | null;
     if (savedLang) {
       setLanguage(savedLang);
@@ -38,9 +25,9 @@ export const ThemeLanguageProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-  }, [theme]);
+    root.classList.remove('dark');
+    root.classList.add('light');
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('language', language);
@@ -50,27 +37,8 @@ export const ThemeLanguageProvider: React.FC<{ children: React.ReactNode }> = ({
     if (language === 'es') root.lang = 'es-ES';
   }, [language]);
 
-  const toggleTheme = () => {
-    setThemeOverride(true);
-    setTheme(prev => {
-      const next = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('theme', next);
-      return next;
-    });
-  };
-
-  useEffect(() => {
-    if (themeOverride) return;
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (event: MediaQueryListEvent) => {
-      setTheme(event.matches ? 'dark' : 'light');
-    };
-    media.addEventListener('change', handleChange);
-    return () => media.removeEventListener('change', handleChange);
-  }, [themeOverride]);
-
   return (
-    <ThemeLanguageContext.Provider value={{ theme, toggleTheme, language, setLanguage }}>
+    <ThemeLanguageContext.Provider value={{ language, setLanguage }}>
       {children}
     </ThemeLanguageContext.Provider>
   );

@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Menu, X, ArrowUpRight, Sun, Moon, Globe } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Globe } from 'lucide-react';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { TRANSLATIONS } from '@/constants';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const { theme, toggleTheme, language, setLanguage } = useThemeLanguage();
+    const { language, setLanguage } = useThemeLanguage();
     const t = TRANSLATIONS[language];
 
     const navItems = [
@@ -28,26 +28,19 @@ const Navbar = () => {
                         </div>
                         <div className="leading-none">
                             <span className="block text-sm font-semibold tracking-[0.25em] text-graphite-400">ERILSON</span>
-                            <span className="block text-lg font-semibold text-white">Digital</span>
+                            <span className="block text-lg font-semibold text-graphite-900">Digital</span>
                         </div>
                     </a>
 
                     <div className="hidden lg:flex items-center gap-10 text-sm text-graphite-300">
                         {navItems.map((item) => (
-                            <a key={item.href} href={item.href} className="hover:text-white transition-colors">
+                            <a key={item.href} href={item.href} className="hover:text-graphite-900 transition-colors">
                                 {item.label}
                             </a>
                         ))}
                         <a href="/agendar" className="primary-cta" data-analytics-label="nav-agendar">
                             {t.nav.booking} <ArrowUpRight size={16} />
                         </a>
-                        <button
-                            onClick={toggleTheme}
-                            className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-200 flex items-center justify-center hover:border-graphite-500"
-                            aria-label={t.nav.themeToggle}
-                        >
-                            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                        </button>
                         <div className="relative group">
                             <button
                                 className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-200 flex items-center justify-center hover:border-graphite-500"
@@ -60,7 +53,7 @@ const Navbar = () => {
                                     <button
                                         key={lang}
                                         onClick={() => setLanguage(lang)}
-                                        className={`w-full text-left px-4 py-2 text-xs uppercase tracking-[0.2em] ${language === lang ? 'text-white' : 'text-graphite-400 hover:text-white'}`}
+                                        className={`w-full text-left px-4 py-2 text-xs uppercase tracking-[0.2em] ${language === lang ? 'text-graphite-900' : 'text-graphite-400 hover:text-graphite-900'}`}
                                     >
                                         {lang}
                                     </button>
@@ -70,13 +63,6 @@ const Navbar = () => {
                     </div>
 
                     <div className="lg:hidden flex items-center gap-3">
-                        <button
-                            onClick={toggleTheme}
-                            className="h-10 w-10 rounded-full border border-graphite-700 text-graphite-200 flex items-center justify-center"
-                            aria-label={t.nav.themeToggle}
-                        >
-                            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-                        </button>
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
                             className="flex items-center justify-center h-10 w-10 rounded-full border border-graphite-700 text-graphite-200"
@@ -92,7 +78,7 @@ const Navbar = () => {
                 <div className="lg:hidden border-t border-graphite-800 bg-ink-950/95 px-6 pb-8 pt-4">
                     <div className="flex flex-col gap-4 text-base text-graphite-200">
                         {navItems.map((item) => (
-                            <a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="hover:text-white">
+                            <a key={item.href} href={item.href} onClick={() => setIsMenuOpen(false)} className="hover:text-graphite-900">
                                 {item.label}
                             </a>
                         ))}
@@ -104,7 +90,7 @@ const Navbar = () => {
                                 <button
                                     key={lang}
                                     onClick={() => setLanguage(lang)}
-                                    className={`px-3 py-1 rounded-full border text-xs uppercase tracking-[0.2em] ${language === lang ? 'border-graphite-400 text-white' : 'border-graphite-700 text-graphite-400'}`}
+                                    className={`px-3 py-1 rounded-full border text-xs uppercase tracking-[0.2em] ${language === lang ? 'border-graphite-400 text-graphite-900' : 'border-graphite-700 text-graphite-400'}`}
                                 >
                                     {lang}
                                 </button>

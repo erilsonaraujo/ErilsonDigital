@@ -8,6 +8,42 @@ import { ChatMessage } from '@/types';
 import { WHATSAPP_NUMBER, TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 
+type BookingData = {
+    name?: string;
+    email?: string;
+    phone?: string;
+    service?: string;
+    date?: string;
+    time?: string;
+    message?: string;
+    company?: string;
+    budget?: string;
+    timeline?: string;
+};
+
+const parseBookingData = (rawText: string): BookingData | null => {
+    const match = rawText.match(/\[BOOKING_DATA\]([\s\S]*?)\[\/BOOKING_DATA\]/i);
+    if (!match) return null;
+
+    try {
+        const parsed = JSON.parse(match[1].trim());
+        if (parsed && typeof parsed === 'object') {
+            return parsed as BookingData;
+        }
+    } catch {
+        return null;
+    }
+
+    return null;
+};
+
+const stripInternalTags = (rawText: string) => {
+    return rawText
+        .replace(/\[OFFER_WHATSAPP\]|\[OFFER_BOOKING\]/gi, '')
+        .replace(/\[BOOKING_DATA\][\s\S]*?\[\/BOOKING_DATA\]/gi, '')
+        .trim();
+};
+
 const AISection: React.FC = () => {
     const { language } = useThemeLanguage();
     const t = TRANSLATIONS[language];
@@ -49,11 +85,11 @@ const AISection: React.FC = () => {
 
             const responseText = await sendMessageToOpenAI(openAiMessages);
 
-            // Trigger detection and text cleaning
+            // Trigger detection, booking capture, and text cleaning
             const hasOfferWhatsApp = /\[OFFER_WHATSAPP\]/i.test(responseText);
             const hasOfferBooking = /\[OFFER_BOOKING\]/i.test(responseText);
-
-            const cleanText = responseText.replace(/\[OFFER_WHATSAPP\]|\[OFFER_BOOKING\]/gi, '').trim();
+            const bookingData = parseBookingData(responseText);
+            const cleanText = stripInternalTags(responseText);
 
             const aiMessage: ChatMessage = {
                 role: 'assistant',
@@ -66,7 +102,7 @@ const AISection: React.FC = () => {
             setMessages(finalMessages);
 
             // Sync with backend
-            syncConversation(finalMessages);
+            await syncConversation(finalMessages, bookingData);
 
         } catch (error) {
             console.error(error);
@@ -76,7 +112,7 @@ const AISection: React.FC = () => {
         }
     };
 
-    const syncConversation = async (currentMessages: ChatMessage[]) => {
+    const syncConversation = async (currentMessages: ChatMessage[], bookingData?: BookingData | null) => {
         try {
             let visitorId = localStorage.getItem('visitor_id') || 'unknown';
 
@@ -85,31 +121,32 @@ const AISection: React.FC = () => {
             const fullText = currentMessages.map(m => m.text).join(' ');
             const emailMatch = fullText.match(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/);
             const phoneMatch = fullText.match(/(\+?\d{1,3}[-.\s]?)?\(?\d{2,3}\)?[-.\s]?\d{4,5}[-.\s]?\d{4}/);
+            const nameMatch = fullText.match(/(?:me chamo|meu nome e|sou o|sou a)\s+([A-Za-z]+(?:\s+[A-Za-z]+){0,2})/i);
 
-            const isBookingComplete = currentMessages.some(m =>
-                m.role === 'model' && m.text.includes('Já registrei sua solicitação')
-            );
+            const visitorName = bookingData?.name || nameMatch?.[1];
+            const visitorEmail = bookingData?.email || emailMatch?.[0];
+            const visitorPhone = bookingData?.phone || phoneMatch?.[0];
+            const bookingSavedKey = `ai_booking_saved_${visitorId}`;
+            const bookingAlreadySaved = localStorage.getItem(bookingSavedKey) === '1';
+            const shouldSendBooking = Boolean(bookingData) && !bookingAlreadySaved;
 
-            await fetch('/api/conversations', {
+            const response = await fetch('/api/conversations', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     visitorId,
+                    visitorName,
                     transcript: currentMessages,
-                    visitorEmail: emailMatch?.[0],
-                    visitorPhone: phoneMatch?.[0],
-                    isBooking: isBookingComplete,
-                    bookingData: isBookingComplete ? {
-                        name: 'Interessado (IA)', // AI could extract this better
-                        email: emailMatch?.[0],
-                        phone: phoneMatch?.[0],
-                        service: 'Consultoria via IA',
-                        date: new Date().toISOString().split('T')[0],
-                        time: 'A confirmar',
-                        message: 'Agendamento automático via conversa com Sofia.'
-                    } : null
+                    visitorEmail,
+                    visitorPhone,
+                    isBooking: shouldSendBooking,
+                    bookingData: shouldSendBooking ? bookingData : null
                 })
             });
+
+            if (response.ok && shouldSendBooking) {
+                localStorage.setItem(bookingSavedKey, '1');
+            }
         } catch (err) {
             console.debug('Sync failed', err);
         }
@@ -142,7 +179,7 @@ const AISection: React.FC = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <h3 className="font-display font-bold text-lg text-white leading-tight">{t.ai.name}</h3>
+                                    <h3 className="font-display font-bold text-lg text-graphite-900 leading-tight">{t.ai.name}</h3>
                                     <p className="text-xs text-tide-300 font-medium">{t.ai.role}</p>
                                     <div className="flex items-center gap-1.5 mt-1">
                                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
@@ -161,7 +198,7 @@ const AISection: React.FC = () => {
                                     <button
                                         key={idx}
                                         onClick={() => handleSend(sug)}
-                                        className="w-full text-left p-3 rounded-xl bg-ink-950/70 border border-graphite-800 text-xs md:text-sm text-graphite-200 hover:border-cobalt-400 hover:text-white transition-all shadow-sm hover:shadow-md active:scale-95"
+                                        className="w-full text-left p-3 rounded-xl bg-ink-950/70 border border-graphite-800 text-xs md:text-sm text-graphite-200 hover:border-cobalt-400 hover:text-graphite-900 transition-all shadow-sm hover:shadow-md active:scale-95"
                                     >
                                         {sug}
                                     </button>
@@ -181,7 +218,7 @@ const AISection: React.FC = () => {
                             {messages.map((msg, i) => (
                                 <div key={i} className={`flex gap-4 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
                                     <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center shadow-sm ${msg.role === 'user' ? 'bg-graphite-800' : 'bg-gradient-to-br from-cobalt-400 to-tide-400'}`}>
-                                        {msg.role === 'user' ? <User className="w-4 h-4 text-graphite-200" /> : <Sparkles className="w-4 h-4 text-white" />}
+                                        {msg.role === 'user' ? <User className="w-4 h-4 text-graphite-200" /> : <Sparkles className="w-4 h-4 text-graphite-900" />}
                                     </div>
                                     <div className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} max-w-[85%]`}>
                                         <div className={`py-3 px-5 rounded-2xl text-sm shadow-sm leading-relaxed ${msg.role === 'user'
@@ -241,7 +278,7 @@ const AISection: React.FC = () => {
                                                             const waMsg = encodeURIComponent(fullMessage);
                                                             window.open(`https://wa.me/${cleanNumber}?text=${waMsg}`, '_blank');
                                                         }}
-                                                        className="flex items-center gap-2 bg-[#25D366] hover:bg-[#128C7E] text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
+                                                        className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-2.5 px-5 rounded-full transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 animate-bounce"
                                                     >
                                                         <MessageCircle className="w-4 h-4" />
                                                         {t.ai.whatsappCta}

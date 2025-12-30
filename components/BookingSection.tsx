@@ -17,7 +17,7 @@ const BookingSection: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
                         <div className="space-y-6">
                             <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.booking.label}</p>
-                            <h2 className="text-3xl md:text-4xl font-semibold text-white">
+                            <h2 className="text-3xl md:text-4xl font-semibold text-graphite-900">
                                 {t.booking.title}
                             </h2>
                             <p className="text-graphite-300">
@@ -50,7 +50,7 @@ const BookingSection: React.FC = () => {
                                         <item.icon size={18} />
                                     </div>
                                     <div>
-                                        <p className="text-sm font-semibold text-white">#{index + 1}</p>
+                                        <p className="text-sm font-semibold text-graphite-900">#{index + 1}</p>
                                         <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
                                     </div>
                                 </div>

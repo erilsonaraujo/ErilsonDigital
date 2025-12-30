@@ -21,7 +21,7 @@ const ServicePageContent: React.FC<ServicePageContentProps> = ({ detailsByLangua
     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-start">
       <div>
         <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.services.note}</p>
-        <h1 className="text-4xl md:text-5xl font-semibold text-white mt-4">{service.title}</h1>
+        <h1 className="text-4xl md:text-5xl font-semibold text-graphite-900 mt-4">{service.title}</h1>
         <p className="text-lg text-graphite-300 mt-6">{service.description}</p>
         <div className="mt-8 flex flex-wrap gap-4">
           <Link href="/agendar" className="primary-cta">

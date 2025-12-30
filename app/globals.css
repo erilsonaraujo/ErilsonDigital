@@ -71,6 +71,14 @@
     background-color: rgba(255, 255, 255, 0.8);
   }
 
+  .light .bg-ink-900\/90 {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .light .bg-ink-800\/90 {
+    background-color: rgba(245, 247, 249, 0.9);
+  }
+
   .light .bg-ink-950\/60 {
     background-color: rgba(234, 236, 240, 0.6);
   }
@@ -81,6 +89,14 @@
 
   .light .bg-ink-950\/80 {
     background-color: rgba(234, 236, 240, 0.8);
+  }
+
+  .light .bg-ink-950\/50 {
+    background-color: rgba(234, 236, 240, 0.5);
+  }
+
+  .light .bg-ink-950\/40 {
+    background-color: rgba(234, 236, 240, 0.4);
   }
 
   .light .bg-ink-950\/95 {
@@ -101,6 +117,14 @@
 
   .light .border-graphite-700 {
     @apply border-graphite-300;
+  }
+
+  .light .border-graphite-700\/70 {
+    border-color: rgba(214, 218, 225, 0.7);
+  }
+
+  .light .border-white\/10 {
+    border-color: rgba(214, 218, 225, 0.6);
   }
 
   .light .text-graphite-100 {
@@ -125,6 +149,15 @@
 
   html.light [class*="text-white"] {
     color: #151924;
+  }
+
+  html.light .bg-cobalt-500 [class*="text-white"],
+  html.light .bg-primary-500 [class*="text-white"],
+  html.light .bg-emerald-500 [class*="text-white"],
+  html.light .bg-emerald-600 [class*="text-white"],
+  html.light .bg-tide-500 [class*="text-white"],
+  html.light .bg-ember-500 [class*="text-white"] {
+    color: #ffffff;
   }
 
   .light .surface-card {
@@ -174,5 +207,9 @@
 
   .glass-panel {
     @apply bg-ink-900/70 border border-graphite-800 backdrop-blur-xl;
+  }
+
+  .keep-white {
+    color: #ffffff;
   }
 }

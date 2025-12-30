@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Package, ShoppingBag, Layers, TicketPercent, Truck, ShieldCheck, BarChart3, Upload } from 'lucide-react';
+import { formatDateTime } from '@/lib/date';
 
 const tabs = [
   { id: 'products', label: 'Produtos', icon: Package },
@@ -490,7 +491,7 @@ const EcommerceView: React.FC = () => {
                 Codigo PIX: <span className="text-graphite-200">{payment.code}</span>
               </div>
               <div className="mt-1 text-xs text-graphite-400">
-                Expira: {payment.expires_at ? new Date(payment.expires_at).toLocaleString('pt-BR') : '-'}
+                Expira: {formatDateTime(payment.expires_at)}
               </div>
               <button
                 className="mt-4 rounded-lg bg-emerald-500/90 px-4 py-2 text-xs font-semibold text-white hover:bg-emerald-400"

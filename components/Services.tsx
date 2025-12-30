@@ -66,7 +66,7 @@ const Services: React.FC = () => {
                 </div>
               </div>
               <div className="p-6 space-y-3">
-                <h3 className="text-xl font-semibold text-white">{service.title}</h3>
+                <h3 className="text-xl font-semibold text-graphite-900">{service.title}</h3>
                 <p className="text-sm text-graphite-300">{service.description}</p>
                 {service.summary && (
                   <p className="text-xs text-graphite-500 uppercase tracking-[0.25em]">{service.summary}</p>

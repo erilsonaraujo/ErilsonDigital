@@ -36,22 +36,74 @@ export async function POST(req: Request) {
             [visitorId, visitorName, visitorEmail, visitorPhone, JSON.stringify(transcript), summary]
         );
 
-        // 2. If it's a booking, save to appointments table
-        if (isBooking && bookingData) {
-            await query(
-                `INSERT INTO appointments (name, email, phone, service, preferred_date, preferred_time, message, status)
-                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
-                [
-                    bookingData.name,
-                    bookingData.email,
-                    bookingData.phone,
-                    bookingData.service,
-                    bookingData.date,
-                    bookingData.time,
-                    `Agendado via IA: ${bookingData.message || ''}`,
-                    'pending'
-                ]
+        const leadName = bookingData?.name || visitorName || 'Interessado (IA)';
+        const leadEmail = bookingData?.email || visitorEmail;
+        const leadPhone = bookingData?.phone || visitorPhone;
+
+        // 2. Save lead when we have contact info from the AI chat
+        if (leadEmail) {
+            const existingLead = await query(
+                'SELECT id FROM leads WHERE email = $1 LIMIT 1',
+                [leadEmail]
             );
+
+            if (existingLead.rows.length === 0) {
+                await query(
+                    `INSERT INTO leads (name, email, phone, company, project_type, budget, timeline, message, source)
+                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`,
+                    [
+                        leadName,
+                        leadEmail,
+                        leadPhone || null,
+                        bookingData?.company || null,
+                        bookingData?.service || null,
+                        bookingData?.budget || null,
+                        bookingData?.timeline || null,
+                        bookingData?.message || summary || null,
+                        'ai_chat'
+                    ]
+                );
+            }
+        }
+
+        // 3. If it's a booking, save to appointments table
+        if (isBooking && bookingData && (bookingData.email || leadEmail)) {
+            const appointmentName = bookingData.name || leadName;
+            const appointmentEmail = bookingData.email || leadEmail;
+            const preferredDate = bookingData.date || null;
+            const preferredTime = bookingData.time || null;
+            const service = bookingData.service || null;
+
+            if (appointmentName && appointmentEmail) {
+                const existingAppointment = await query(
+                    `SELECT id FROM appointments
+                     WHERE email = $1
+                       AND preferred_date IS NOT DISTINCT FROM $2
+                       AND preferred_time IS NOT DISTINCT FROM $3
+                       AND service IS NOT DISTINCT FROM $4
+                     LIMIT 1`,
+                    [appointmentEmail, preferredDate, preferredTime, service]
+                );
+
+                if (existingAppointment.rows.length === 0) {
+                    await query(
+                        `INSERT INTO appointments (name, email, phone, company, budget, service, preferred_date, preferred_time, message, status)
+                         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,
+                        [
+                            appointmentName,
+                            appointmentEmail,
+                            bookingData.phone || leadPhone || null,
+                            bookingData.company || null,
+                            bookingData.budget || null,
+                            service,
+                            preferredDate,
+                            preferredTime,
+                            `Agendado via IA: ${bookingData.message || ''}`.trim(),
+                            'pending'
+                        ]
+                    );
+                }
+            }
         }
 
         return NextResponse.json({ success: true });

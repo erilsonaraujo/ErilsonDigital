@@ -75,7 +75,7 @@ export async function initDatabase() {
         timeline VARCHAR(50),
         message TEXT,
         source VARCHAR(100),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
 
@@ -99,7 +99,7 @@ export async function initDatabase() {
         message TEXT,
         status VARCHAR(50) DEFAULT 'pending',
         calendar_event_id VARCHAR(255),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
 
@@ -126,7 +126,7 @@ export async function initDatabase() {
         visitor_phone VARCHAR(50),
         transcript JSONB NOT NULL,
         summary TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMPTZ DEFAULT NOW()
       )
     `);
 

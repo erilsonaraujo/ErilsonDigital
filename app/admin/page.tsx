@@ -23,6 +23,7 @@ import FormBuilderView from '@/components/admin/FormBuilderView';
 import BookingV2View from '@/components/admin/BookingV2View';
 import EcommerceView from '@/components/admin/EcommerceView';
 import { getRecaptchaToken } from '@/lib/recaptchaClient';
+import { formatDate, formatDateTime } from '@/lib/date';
 
 interface Lead {
     id: number;
@@ -234,7 +235,7 @@ export default function AdminPage() {
                             </div>
                             <div>
                                 <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">Acesso seguro</p>
-                                <h1 className="text-3xl font-semibold text-white">Central Administrativa</h1>
+                                <h1 className="text-3xl font-semibold text-graphite-900">Central Administrativa</h1>
                             </div>
                         </div>
 
@@ -259,7 +260,7 @@ export default function AdminPage() {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full rounded-2xl border border-graphite-800 bg-ink-950/80 px-5 py-4 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                    className="w-full rounded-2xl border border-graphite-800 bg-ink-950/80 px-5 py-4 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
                                     placeholder="nome@empresa.com"
                                     required
                                 />
@@ -270,7 +271,7 @@ export default function AdminPage() {
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full rounded-2xl border border-graphite-800 bg-ink-950/80 px-5 py-4 text-sm text-white focus:border-cobalt-400 focus:outline-none"
+                                    className="w-full rounded-2xl border border-graphite-800 bg-ink-950/80 px-5 py-4 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -307,6 +308,7 @@ export default function AdminPage() {
             case 'experiments': return <ExperimentsView />;
             case 'seo': return <SeoView />;
             case 'integrations': return <IntegrationsView />;
+            case 'form-builder': return <FormBuilderView />;
             case 'conversations': return <ConversationsView />;
             case 'ecommerce': return <EcommerceView />;
             case 'settings': return <SettingsView />;
@@ -314,7 +316,7 @@ export default function AdminPage() {
                 <div className="rounded-[28px] border border-graphite-800 bg-ink-900/70 shadow-2xl overflow-hidden overflow-x-auto">
                     <div className="px-6 py-5 border-b border-graphite-800 flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-semibold text-white">Leads qualificados</h2>
+                            <h2 className="text-xl font-semibold text-graphite-900">Leads qualificados</h2>
                             <p className="text-xs text-graphite-400 mt-1">Registros enviados pelos formulários do site.</p>
                         </div>
                     </div>
@@ -332,7 +334,7 @@ export default function AdminPage() {
                                     <tr key={lead.id} className="hover:bg-ink-950/50 transition-colors">
                                         <td className="py-5 px-6">
                                             <div className="flex flex-col">
-                                                <span className="font-semibold text-white text-sm mb-1">{lead.name}</span>
+                                                <span className="font-semibold text-graphite-900 text-sm mb-1">{lead.name}</span>
                                                 <span className="text-xs text-graphite-400">{lead.email}</span>
                                                 {lead.phone && <span className="text-[10px] text-tide-300 font-semibold mt-2 bg-tide-500/10 px-2 py-0.5 rounded-full w-fit tracking-tight">{lead.phone}</span>}
                                             </div>
@@ -349,8 +351,8 @@ export default function AdminPage() {
                                             <p className="text-sm text-graphite-300 line-clamp-2 max-w-sm leading-relaxed">{lead.message || '-'}</p>
                                         </td>
                                         <td className="py-5 px-6 text-right">
-                                            <span className="text-sm font-semibold text-white">
-                                                {new Date(lead.created_at).toLocaleDateString('pt-BR')}
+                                            <span className="text-sm font-semibold text-graphite-900">
+                                                {formatDateTime(lead.created_at)}
                                             </span>
                                         </td>
                                     </tr>
@@ -364,7 +366,7 @@ export default function AdminPage() {
                 <div className="rounded-[28px] border border-graphite-800 bg-ink-900/70 shadow-2xl overflow-hidden overflow-x-auto">
                     <div className="px-6 py-5 border-b border-graphite-800 flex items-center justify-between">
                         <div>
-                            <h2 className="text-xl font-semibold text-white">Agenda em andamento</h2>
+                            <h2 className="text-xl font-semibold text-graphite-900">Agenda em andamento</h2>
                             <p className="text-xs text-graphite-400 mt-1">Atualize status conforme o agendamento avanca.</p>
                         </div>
                     </div>
@@ -381,7 +383,7 @@ export default function AdminPage() {
                                     <tr key={apt.id} className="hover:bg-ink-950/50 transition-colors">
                                         <td className="py-5 px-6">
                                             <div className="flex flex-col">
-                                                <span className="font-semibold text-white text-sm mb-1">{apt.name}</span>
+                                                <span className="font-semibold text-graphite-900 text-sm mb-1">{apt.name}</span>
                                                 <span className="text-xs text-graphite-400">{apt.email}</span>
                                             </div>
                                         </td>
@@ -390,9 +392,10 @@ export default function AdminPage() {
                                                 <span className="text-sm font-semibold text-graphite-200">{apt.service || 'Consultoria'}</span>
                                                 <span className="text-xs text-graphite-400 mt-2">Empresa: {apt.company || '-'}</span>
                                                 <span className="text-xs text-graphite-400">Budget: {apt.budget || '-'}</span>
+                                                <span className="text-xs text-graphite-400 mt-2">Criado em: {formatDateTime(apt.created_at)}</span>
                                                 <div className="flex items-center gap-2 text-[10px] text-tide-300 font-semibold mt-2 uppercase tracking-widest bg-tide-500/10 px-2 py-0.5 rounded-full w-fit">
                                                     <Clock className="w-3 h-3" />
-                                                    {apt.preferred_date ? new Date(apt.preferred_date).toLocaleDateString('pt-BR') : '-'} às {apt.preferred_time || '-'}
+                                                    {formatDate(apt.preferred_date)} às {apt.preferred_time || '-'}
                                                 </div>
                                             </div>
                                         </td>

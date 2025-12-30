@@ -23,7 +23,7 @@ const Hero: React.FC = () => {
               {t.hero.badge}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-graphite-900 leading-tight">
               {t.hero.title}
             </h1>
 
@@ -48,7 +48,7 @@ const Hero: React.FC = () => {
               ].map((item) => (
                 <div key={item.title} className="glass-panel rounded-2xl p-4">
                   <item.icon className="text-tide-300 mb-3" size={20} />
-                  <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                  <h3 className="text-sm font-semibold text-graphite-900">{item.title}</h3>
                   <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
                 </div>
               ))}

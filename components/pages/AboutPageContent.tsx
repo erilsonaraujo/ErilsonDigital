@@ -17,7 +17,7 @@ const AboutPageContent: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-14 items-center">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.about.label}</p>
-            <h1 className="text-4xl md:text-5xl font-semibold text-white mt-4">{t.about.headline}</h1>
+            <h1 className="text-4xl md:text-5xl font-semibold text-graphite-900 mt-4">{t.about.headline}</h1>
             <p className="text-lg text-graphite-300 mt-6">{t.about.description}</p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/contato" className="primary-cta">
@@ -56,7 +56,7 @@ const AboutPageContent: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {t.about.highlights.map((item) => (
             <div key={item.title} className="rounded-[24px] border border-graphite-800 bg-ink-900/70 p-6">
-              <h3 className="text-lg font-semibold text-white">{item.title}</h3>
+              <h3 className="text-lg font-semibold text-graphite-900">{item.title}</h3>
               <p className="text-sm text-graphite-300 mt-2">{item.text}</p>
             </div>
           ))}
@@ -68,7 +68,7 @@ const AboutPageContent: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10 items-center">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.about.label}</p>
-              <h2 className="text-3xl md:text-4xl font-semibold text-white mt-4">{t.about.headline}</h2>
+              <h2 className="text-3xl md:text-4xl font-semibold text-graphite-900 mt-4">{t.about.headline}</h2>
             </div>
             <div className="flex flex-wrap gap-4">
               <Link href="/contato" className="primary-cta">

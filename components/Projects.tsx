@@ -37,7 +37,7 @@ const Projects: React.FC = () => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent" />
                                 <div className="absolute bottom-4 left-5">
                                     <p className="text-xs uppercase tracking-[0.3em] text-graphite-300">{project.category}</p>
-                                    <h3 className="text-xl text-white font-semibold">{project.title}</h3>
+                                    <h3 className="text-xl text-graphite-900 font-semibold">{project.title}</h3>
                                 </div>
                             </div>
                             <div className="p-6 space-y-4">

@@ -11,7 +11,7 @@ const ContactHero: React.FC = () => {
   return (
     <div className="mt-6 mb-10">
       <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.contact.title}</p>
-      <h1 className="text-4xl md:text-5xl font-semibold text-white mt-4">{t.contact.subtitle}</h1>
+      <h1 className="text-4xl md:text-5xl font-semibold text-graphite-900 mt-4">{t.contact.subtitle}</h1>
       <p className="text-lg text-graphite-300 mt-4 max-w-2xl">{t.contact.description}</p>
     </div>
   );

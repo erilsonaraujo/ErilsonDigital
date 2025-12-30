@@ -25,7 +25,7 @@ const ConsentBanner: React.FC = () => {
     <div className="fixed bottom-6 left-1/2 z-50 w-[min(96%,720px)] -translate-x-1/2 rounded-[28px] border border-graphite-800 bg-ink-900/90 p-6 shadow-2xl backdrop-blur-xl">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <p className="text-sm font-semibold text-white">Consentimento de analytics</p>
+          <p className="text-sm font-semibold text-graphite-900">Consentimento de analytics</p>
           <p className="text-xs text-graphite-400 mt-1">
             Usamos analytics para melhorar sua experiencia. Voce pode aceitar ou recusar.
           </p>
@@ -33,7 +33,7 @@ const ConsentBanner: React.FC = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => handleChoice('denied')}
-            className="rounded-full border border-graphite-700 px-4 py-2 text-xs text-graphite-300 hover:border-graphite-500 hover:text-white"
+            className="rounded-full border border-graphite-700 px-4 py-2 text-xs text-graphite-300 hover:border-graphite-500 hover:text-graphite-900"
           >
             Recusar
           </button>

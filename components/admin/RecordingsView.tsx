@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { PlayCircle, RefreshCcw, Video } from 'lucide-react';
+import { formatDateTime, formatTime } from '@/lib/date';
 
 interface RecordingItem {
   id: number;
@@ -76,7 +77,7 @@ const RecordingsView: React.FC = () => {
                 <PlayCircle size={16} className="text-graphite-400" />
               </div>
               <div className="mt-1 text-xs text-graphite-500">
-                {new Date(recording.started_at).toLocaleString()} • {recording.duration_seconds || 0}s
+                {formatDateTime(recording.started_at)} • {recording.duration_seconds || 0}s
               </div>
             </button>
           ))}
@@ -99,7 +100,7 @@ const RecordingsView: React.FC = () => {
               <div key={index} className="rounded-2xl border border-graphite-800 bg-ink-950/50 px-4 py-3 text-sm text-graphite-300">
                 <div className="flex items-center justify-between">
                   <span className="text-white font-semibold">{event.type}</span>
-                  <span className="text-xs text-graphite-500">{new Date(event.ts).toLocaleTimeString()}</span>
+                  <span className="text-xs text-graphite-500">{formatTime(event.ts)}</span>
                 </div>
                 {event.label && <p className="text-xs text-graphite-400 mt-1">Label: {event.label}</p>}
                 {event.percent !== undefined && <p className="text-xs text-graphite-400 mt-1">Scroll: {event.percent}%</p>}

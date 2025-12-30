@@ -28,7 +28,7 @@ const Testimonials: React.FC = () => {
               <Quote className="text-tide-300 mb-4" size={28} />
               <p className="text-sm text-graphite-200 italic leading-relaxed">"{item.content}"</p>
               <div className="mt-6 border-t border-graphite-800 pt-4">
-                <p className="text-sm font-semibold text-white">{item.name}</p>
+                <p className="text-sm font-semibold text-graphite-900">{item.name}</p>
                 <p className="text-xs text-graphite-400">{item.role} | {item.company}</p>
               </div>
             </div>

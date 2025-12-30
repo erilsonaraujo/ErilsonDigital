@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { CalendarRange, Plus, RefreshCcw, Trash2 } from 'lucide-react';
+import { formatDateTime } from '@/lib/date';
 
 type Resource = {
   id: number;
@@ -305,7 +306,7 @@ const BookingV2View: React.FC = () => {
             <div key={booking.id} className="rounded-2xl border border-graphite-800 bg-ink-950/50 px-4 py-3 text-sm text-graphite-300">
               <p className="text-white font-semibold">{booking.resource_name || 'Recurso'}</p>
               <p className="text-xs text-graphite-500">
-                {new Date(booking.start_at).toLocaleString()} - {new Date(booking.end_at).toLocaleString()}
+                {formatDateTime(booking.start_at)} - {formatDateTime(booking.end_at)}
               </p>
               <p className="text-xs text-graphite-500">{booking.customer_name || 'Cliente'}</p>
             </div>
