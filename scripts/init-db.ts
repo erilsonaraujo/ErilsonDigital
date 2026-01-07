@@ -12,6 +12,11 @@ const pool = new Pool({
 });
 
 async function initializeDatabase() {
+  if (!process.env.POSTGRES_URL) {
+    console.log('⚠️  POSTGRES_URL not found. Skipping database initialization.');
+    return;
+  }
+
   try {
     console.log('Initializing database...');
 
