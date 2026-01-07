@@ -17,7 +17,7 @@ const BookingSection: React.FC = () => {
                     <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 items-center">
                         <div className="space-y-6">
                             <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.booking.label}</p>
-                            <h2 className="text-3xl md:text-4xl font-semibold text-graphite-900">
+                            <h2 className="text-3xl md:text-4xl font-semibold text-white">
                                 {t.booking.title}
                             </h2>
                             <p className="text-graphite-300">

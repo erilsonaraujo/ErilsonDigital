@@ -36,7 +36,7 @@ const Process: React.FC = () => {
                 <step.icon size={20} />
               </div>
               <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.process.stepLabel} {index + 1}</p>
-              <h3 className="text-lg font-semibold text-graphite-900 mt-2">{step.title}</h3>
+              <h3 className="text-lg font-semibold text-white mt-2">{step.title}</h3>
               <p className="text-sm text-graphite-300 mt-2">{step.text}</p>
             </div>
           ))}

@@ -1,4 +1,5 @@
 import Hero from '../components/Hero';
+import Authority from '../components/Authority';
 import AISection from '../components/AISection';
 import Services from '../components/Services';
 import Projects from '../components/Projects';
@@ -13,7 +14,7 @@ export default function Home() {
     return (
         <div className="flex flex-col min-h-screen">
             <Hero />
-            <AISection />
+            <Authority />
             <Services />
             <Process />
             <Projects />

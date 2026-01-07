@@ -2,13 +2,52 @@
 
 import React from 'react';
 import Image from 'next/image';
-import { ArrowUpRight, ShieldCheck, Sparkles, Workflow } from 'lucide-react';
+import { ArrowUpRight, ShieldCheck, Sparkles, Workflow, LucideIcon } from 'lucide-react';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
 import { TRANSLATIONS } from '@/constants';
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  badge?: string;
+  title?: string;
+  subtitle?: string;
+  ctaPrimary?: string;
+  ctaSecondary?: string;
+  highlights?: { title: string; text: string; icon?: any }[];
+  industries?: string[];
+  industriesLabel?: string;
+  profileCards?: { label: string; value: string }[];
+}
+
+const Hero: React.FC<HeroProps> = ({
+  badge,
+  title,
+  subtitle,
+  ctaPrimary,
+  ctaSecondary,
+  highlights,
+  industries,
+  industriesLabel,
+  profileCards
+}) => {
   const { language } = useThemeLanguage();
   const t = TRANSLATIONS[language];
+
+  // Fallbacks to generic translations if props are not provided
+  const content = {
+    badge: badge || t.hero.badge,
+    title: title || t.hero.title,
+    subtitle: subtitle || t.hero.subtitle,
+    ctaPrimary: ctaPrimary || t.hero.ctaPrimary,
+    ctaSecondary: ctaSecondary || t.hero.ctaSecondary,
+    highlights: highlights || [
+      { icon: ShieldCheck, ...t.hero.highlights[0] },
+      { icon: Workflow, ...t.hero.highlights[1] },
+      { icon: Sparkles, ...t.hero.highlights[2] },
+    ],
+    industries: industries || t.hero.industries,
+    industriesLabel: industriesLabel || t.hero.industriesLabel,
+    profileCards: profileCards || t.hero.profileCards,
+  };
 
   return (
     <section className="relative overflow-hidden pt-32 pb-20 lg:pt-40">
@@ -20,44 +59,43 @@ const Hero: React.FC = () => {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-graphite-800 bg-ink-900/70 px-4 py-2 text-xs text-graphite-300">
               <span className="h-2 w-2 rounded-full bg-tide-400 animate-pulse" />
-              {t.hero.badge}
+              {content.badge}
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-graphite-900 leading-tight">
-              {t.hero.title}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white leading-tight">
+              {content.title}
             </h1>
 
             <p className="text-lg text-graphite-300 leading-relaxed max-w-xl">
-              {t.hero.subtitle}
+              {content.subtitle}
             </p>
 
             <div className="flex flex-wrap gap-4">
               <a href="/agendar" className="primary-cta" data-analytics-label="hero-agendar">
-                {t.hero.ctaPrimary} <ArrowUpRight size={16} />
+                {content.ctaPrimary} <ArrowUpRight size={16} />
               </a>
               <a href="/portfolio" className="secondary-cta" data-analytics-label="hero-portfolio">
-                {t.hero.ctaSecondary}
+                {content.ctaSecondary}
               </a>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-6">
-              {[
-                { icon: ShieldCheck, ...t.hero.highlights[0] },
-                { icon: Workflow, ...t.hero.highlights[1] },
-                { icon: Sparkles, ...t.hero.highlights[2] },
-              ].map((item) => (
-                <div key={item.title} className="glass-panel rounded-2xl p-4">
-                  <item.icon className="text-tide-300 mb-3" size={20} />
-                  <h3 className="text-sm font-semibold text-graphite-900">{item.title}</h3>
-                  <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
-                </div>
-              ))}
+              {content.highlights.map((item, idx) => {
+                const Icon = item.icon || ShieldCheck;
+                return (
+                  <div key={idx} className="glass-panel rounded-2xl p-4">
+                    <Icon className="text-tide-300 mb-3" size={20} />
+                    <h3 className="text-sm font-semibold text-white">{item.title}</h3>
+                    <p className="text-xs text-graphite-400 mt-1">{item.text}</p>
+                  </div>
+                );
+              })}
             </div>
 
             <div className="pt-6 border-t border-graphite-800/70">
-              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.hero.industriesLabel}</p>
+              <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{content.industriesLabel}</p>
               <div className="mt-4 flex flex-wrap gap-6 text-sm text-graphite-400">
-                {t.hero.industries.map((item) => (
+                {content.industries.map((item) => (
                   <span key={item}>{item}</span>
                 ))}
               </div>
@@ -80,7 +118,7 @@ const Hero: React.FC = () => {
                 />
               </div>
               <div className="mt-6 grid grid-cols-2 gap-4">
-                {t.hero.profileCards.map((item) => (
+                {content.profileCards.map((item) => (
                   <div key={item.label} className="rounded-2xl border border-graphite-800 bg-ink-950/70 p-4">
                     <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{item.label}</p>
                     <p className="text-sm text-graphite-200 mt-2">{item.value}</p>

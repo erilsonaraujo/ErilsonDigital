@@ -62,7 +62,7 @@ const Contact: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-10">
           <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-8 md:p-10">
             <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.contact.title}</p>
-            <h2 className="text-3xl font-semibold text-graphite-900 mt-4">{t.contact.subtitle}</h2>
+            <h2 className="text-3xl font-semibold text-white mt-4">{t.contact.subtitle}</h2>
             <p className="text-graphite-300 mt-4">{t.contact.description}</p>
 
             <div className="mt-8 space-y-4 text-sm text-graphite-200">
@@ -80,14 +80,14 @@ const Contact: React.FC = () => {
               </div>
             </div>
 
-              <a
-                href={`https://wa.me/${WHATSAPP_NUMBER}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border border-graphite-700 px-5 py-2 text-sm text-graphite-200 hover:border-graphite-500"
-              >
-                {t.contact.whatsapp}
-              </a>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full border border-graphite-700 px-5 py-2 text-sm text-graphite-200 hover:border-graphite-500"
+            >
+              {t.contact.whatsapp}
+            </a>
           </div>
 
           <div className="rounded-[32px] border border-graphite-800 bg-ink-900/80 p-8 md:p-10">
@@ -100,7 +100,7 @@ const Contact: React.FC = () => {
                     required
                     value={formState.name}
                     onChange={(e) => setFormState({ ...formState, name: e.target.value })}
-                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
+                    className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                   />
                 </div>
                 <div>
@@ -146,11 +146,10 @@ const Contact: React.FC = () => {
                     className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
                   >
                     <option value="">{t.contact.projectOptions[0]}</option>
-                    <option value="produto-digital">{t.contact.projectOptions[1]}</option>
-                    <option value="ia-automacao">{t.contact.projectOptions[2]}</option>
-                    <option value="backend">{t.contact.projectOptions[3]}</option>
-                    <option value="dados">{t.contact.projectOptions[4]}</option>
-                    <option value="outro">{t.contact.projectOptions[5]}</option>
+                    <option value="Estetica">{t.contact.projectOptions[1]}</option>
+                    <option value="Cirurgia/Dermato">{t.contact.projectOptions[2]}</option>
+                    <option value="Odonto">{t.contact.projectOptions[3]}</option>
+                    <option value="Outro">{t.contact.projectOptions[4]}</option>
                   </select>
                 </div>
                 <div>
@@ -162,10 +161,10 @@ const Contact: React.FC = () => {
                     className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
                   >
                     <option value="">{t.contact.budgetOptions[0]}</option>
-                    <option value="50-100">{t.contact.budgetOptions[1]}</option>
-                    <option value="100-200">{t.contact.budgetOptions[2]}</option>
-                    <option value="200-500">{t.contact.budgetOptions[3]}</option>
-                    <option value="500+">{t.contact.budgetOptions[4]}</option>
+                    <option value="10k-30k">{t.contact.budgetOptions[1]}</option>
+                    <option value="30k-50k">{t.contact.budgetOptions[2]}</option>
+                    <option value="50k-100k">{t.contact.budgetOptions[3]}</option>
+                    <option value="100k+">{t.contact.budgetOptions[4]}</option>
                   </select>
                 </div>
                 <div>
@@ -191,7 +190,7 @@ const Contact: React.FC = () => {
                   rows={4}
                   value={formState.message}
                   onChange={(e) => setFormState({ ...formState, message: e.target.value })}
-                  className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-graphite-900 focus:border-cobalt-400 focus:outline-none"
+                  className="mt-2 w-full rounded-xl border border-graphite-800 bg-ink-950/80 px-4 py-3 text-sm text-white focus:border-cobalt-400 focus:outline-none"
                 />
               </div>
 
