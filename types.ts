@@ -74,6 +74,8 @@ export interface Translations {
     menuToggle: string;
     forClinics: string;
     esthetics: string;
+    surgery: string;
+    dentistry: string;
   };
   hero: {
     badge: string;

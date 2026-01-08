@@ -4,7 +4,8 @@ import { ensureAdminSession } from '@/lib/adminAuth';
 
 const VALID_STATUS = ['pending', 'confirmed', 'completed', 'cancelled'];
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, props: { params: Promise<{ id: string }> }) {
+  const params = await props.params;
   const session = await ensureAdminSession(request);
   if (!session) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
