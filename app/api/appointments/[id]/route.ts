@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import { ensureAdminSession } from '@/lib/adminAuth';
 
 const VALID_STATUS = ['pending', 'confirmed', 'completed', 'cancelled'];
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await ensureAdminSession(request);
   if (!session) {
     return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
   }
 
-  const { id } = await params;
+  const { id } = params;
   const body = await request.json();
   const status = body?.status;
 
@@ -18,7 +18,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     return NextResponse.json({ error: 'Status inválido' }, { status: 400 });
   }
 
-  const result = await pool.query(
+  const result = await query(
     'UPDATE appointments SET status = $1 WHERE id = $2 RETURNING *',
     [status, id]
   );

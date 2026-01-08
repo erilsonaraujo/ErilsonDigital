@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 import { createAdminSession, getClientIp, getSessionCookieOptions, isLoginLocked, registerLoginAttempt } from '@/lib/adminAuth';
 import { verifyRecaptcha } from '@/lib/recaptcha';
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
         }
 
         // Find admin by email
-        const result = await pool.query(
+        const result = await query(
             'SELECT * FROM admins WHERE email = $1 LIMIT 1',
             [identifier]
         );

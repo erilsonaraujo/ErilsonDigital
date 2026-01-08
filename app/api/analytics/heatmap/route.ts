@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Path and eventType required' }, { status: 400 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_heatmap_points
         (visitor_id, session_id, path, event_type, x_percent, y_percent, viewport_w, viewport_h, element_tag, element_label)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,

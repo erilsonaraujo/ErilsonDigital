@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 const parseUserAgent = (ua: string) => {
   const uaLower = ua.toLowerCase();
@@ -69,7 +69,7 @@ export async function POST(request: NextRequest) {
     const region = request.headers.get('x-vercel-ip-country-region') || null;
     const city = request.headers.get('x-vercel-ip-city') || null;
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics (visitor_id, session_id, path, title, referrer, utm_source, utm_medium, utm_campaign, utm_term, utm_content, ip, user_agent, country, region, city, device, browser, os)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
       [
@@ -95,7 +95,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (sessionId) {
-      await pool.query(
+      await query(
         `INSERT INTO analytics_sessions
           (session_id, visitor_id, first_seen, last_seen, pageviews, landing_path, exit_path, referrer, utm_source, utm_medium, utm_campaign, utm_term, utm_content, country, region, city, device, browser, os, user_agent)
          VALUES ($1, $2, NOW(), NOW(), 1, $3, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
@@ -126,13 +126,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (sessionId && path) {
-      const goals = await pool.query(
+      const goals = await query(
         'SELECT id, value FROM analytics_goals WHERE type = $1 AND match_value = $2',
         ['url', path]
       );
 
       for (const goal of goals.rows) {
-        await pool.query(
+        await query(
           `INSERT INTO analytics_goal_conversions (goal_id, visitor_id, session_id, path, value)
            VALUES ($1, $2, $3, $4, $5)
            ON CONFLICT (goal_id, session_id) DO NOTHING`,

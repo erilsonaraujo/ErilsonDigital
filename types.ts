@@ -72,6 +72,8 @@ export interface Translations {
     themeToggle: string;
     languageToggle: string;
     menuToggle: string;
+    forClinics: string;
+    esthetics: string;
   };
   hero: {
     badge: string;

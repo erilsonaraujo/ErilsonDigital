@@ -1,30 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
     try {
-        // Only allow with secret key
-        const { secret, email, password } = await request.json();
-
-        if (secret !== process.env.INIT_DB_SECRET) {
-            return NextResponse.json(
-                { error: 'Unauthorized' },
-                { status: 401 }
-            );
-        }
+        const { email, password } = await request.json();
 
         if (!email || !password) {
             return NextResponse.json(
-                { error: 'Email and password required' },
+                { error: 'Email e senha são obrigatórios' },
                 { status: 400 }
             );
         }
 
         const passwordHash = await bcrypt.hash(password, 10);
 
-        await pool.query(
-            'INSERT INTO admins (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO UPDATE SET password_hash = $2',
+        await query(
+            'INSERT INTO admins (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
             [email, passwordHash]
         );
 

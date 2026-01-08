@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import crypto from 'crypto';
 
 const SESSION_MAX_AGE_MINUTES = 8 * 60;
@@ -20,7 +20,7 @@ export const ensureAdminSession = async (request: Pick<NextRequest, 'cookies' | 
   if (!sessionCookie) return null;
 
   const token = sessionCookie.value;
-  const result = await pool.query(
+  const result = await query(
     `SELECT s.id, s.admin_id, s.last_active_at, s.expires_at
      FROM admin_sessions s
      WHERE s.session_token = $1
@@ -39,7 +39,7 @@ export const ensureAdminSession = async (request: Pick<NextRequest, 'cookies' | 
   if (expiresAt.getTime() < now.getTime()) return null;
   if (now.getTime() - lastActive.getTime() > idleMs) return null;
 
-  await pool.query(
+  await query(
     'UPDATE admin_sessions SET last_active_at = NOW() WHERE id = $1',
     [session.id]
   );
@@ -53,7 +53,7 @@ export const createAdminSession = async (adminId: number, request: NextRequest) 
   const userAgent = request.headers.get('user-agent');
   const expiresAt = new Date(Date.now() + SESSION_MAX_AGE_MINUTES * 60 * 1000);
 
-  await pool.query(
+  await query(
     `INSERT INTO admin_sessions (admin_id, session_token, ip, user_agent, expires_at)
      VALUES ($1, $2, $3, $4, $5)`,
     [adminId, token, ip, userAgent || null, expiresAt.toISOString()]
@@ -63,11 +63,11 @@ export const createAdminSession = async (adminId: number, request: NextRequest) 
 };
 
 export const clearAdminSession = async (token: string) => {
-  await pool.query('DELETE FROM admin_sessions WHERE session_token = $1', [token]);
+  await query('DELETE FROM admin_sessions WHERE session_token = $1', [token]);
 };
 
 export const isLoginLocked = async (identifier: string, ip: string) => {
-  const result = await pool.query(
+  const result = await query(
     `SELECT attempts, last_attempt_at
      FROM login_attempts
      WHERE identifier = $1 AND ip = $2
@@ -82,7 +82,7 @@ export const isLoginLocked = async (identifier: string, ip: string) => {
   const windowMs = 10 * 60 * 1000;
 
   if (now - lastAttempt.getTime() > windowMs) {
-    await pool.query(
+    await query(
       'DELETE FROM login_attempts WHERE identifier = $1 AND ip = $2',
       [identifier, ip]
     );
@@ -94,14 +94,14 @@ export const isLoginLocked = async (identifier: string, ip: string) => {
 
 export const registerLoginAttempt = async (identifier: string, ip: string, success: boolean) => {
   if (success) {
-    await pool.query(
+    await query(
       'DELETE FROM login_attempts WHERE identifier = $1 AND ip = $2',
       [identifier, ip]
     );
     return;
   }
 
-  await pool.query(
+  await query(
     `INSERT INTO login_attempts (identifier, ip, attempts, last_attempt_at)
      VALUES ($1, $2, 1, NOW())
      ON CONFLICT (identifier, ip)

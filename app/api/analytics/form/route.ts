@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Action required' }, { status: 400 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_form_events
         (visitor_id, session_id, path, form_id, form_name, field_name, field_type, action, value_length, time_since_start)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`,

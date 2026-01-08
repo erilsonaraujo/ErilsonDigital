@@ -4,6 +4,9 @@ import type { PoolClient } from 'pg';
 export { query };
 
 export async function withTransaction<T>(fn: (client: PoolClient) => Promise<T>) {
+  if (!pool) {
+    throw new Error('Database is not configured');
+  }
   const client = await pool.connect();
   try {
     await client.query('BEGIN');

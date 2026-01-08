@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Event name required' }, { status: 400 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_events (visitor_id, session_id, name, path, metadata)
        VALUES ($1, $2, $3, $4, $5)`,
       [
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     );
 
     if (sessionId) {
-      await pool.query(
+      await query(
         `UPDATE analytics_sessions
          SET last_seen = NOW(), events = events + 1
          WHERE session_id = $1`,
@@ -32,13 +32,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (sessionId) {
-      const goals = await pool.query(
+      const goals = await query(
         'SELECT id, value FROM analytics_goals WHERE type = $1 AND match_value = $2',
         ['event', name]
       );
 
       for (const goal of goals.rows) {
-        await pool.query(
+        await query(
           `INSERT INTO analytics_goal_conversions (goal_id, visitor_id, session_id, event_name, value)
            VALUES ($1, $2, $3, $4, $5)
            ON CONFLICT (goal_id, session_id) DO NOTHING`,

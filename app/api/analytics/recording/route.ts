@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
     }
 
-    const recordingRes = await pool.query(
+    const recordingRes = await query(
       `INSERT INTO analytics_recordings (session_id, visitor_id, start_path, started_at)
        VALUES ($1, $2, $3, NOW())
        ON CONFLICT (session_id) DO UPDATE SET session_id = EXCLUDED.session_id
@@ -23,14 +23,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Failed to create recording' }, { status: 500 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_recording_chunks (recording_id, sequence, events)
        VALUES ($1, $2, $3)`,
       [recordingId, sequence || 0, JSON.stringify(events)]
     );
 
     if (endedAt || durationSeconds) {
-      await pool.query(
+      await query(
         `UPDATE analytics_recordings
          SET ended_at = COALESCE($1, ended_at),
              duration_seconds = COALESCE($2, duration_seconds)

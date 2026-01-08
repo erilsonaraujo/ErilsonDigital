@@ -36,6 +36,10 @@ export async function query(text: string, params?: any[]) {
 
 // Initialize database tables
 export async function initDatabase() {
+  if (!pool) {
+    console.warn('[DB] Skipping database initialization (no connection)');
+    return false;
+  }
   try {
     // Create admins table
     await pool.query(`

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'experimentId and variantId required' }, { status: 400 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_experiment_assignments (experiment_id, variant_id, visitor_id, session_id)
        VALUES ($1, $2, $3, $4)`,
       [experimentId, variantId, visitorId || null, sessionId || null]

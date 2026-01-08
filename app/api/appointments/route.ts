@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import { createCalendarEvent } from '@/lib/googleCalendar';
 import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
 import { createBooking, ensureDefaultResource } from '@/lib/bookingV2';
@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
         }
 
-        const result = await pool.query(
+        const result = await query(
             'SELECT * FROM appointments ORDER BY created_at DESC'
         );
 
@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
             });
         }
 
-        const result = await pool.query(
+        const result = await query(
             `INSERT INTO appointments (name, email, phone, company, budget, service, preferred_date, preferred_time, message, calendar_event_id)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`,
             [

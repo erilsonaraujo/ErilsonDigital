@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 
 export async function POST(request: NextRequest) {
   try {
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'mediaType and action required' }, { status: 400 });
     }
 
-    await pool.query(
+    await query(
       `INSERT INTO analytics_media_events
         (visitor_id, session_id, path, media_type, media_label, action, media_time, duration)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,

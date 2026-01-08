@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { pool } from '@/lib/db';
+import { query } from '@/lib/db';
 import { createFormEntry, ensureDefaultContactForm } from '@/lib/formsV2';
 import { ensureAdminSession } from '@/lib/adminAuth';
 import { verifyRecaptcha } from '@/lib/recaptcha';
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
             return NextResponse.json({ error: 'Não autenticado' }, { status: 401 });
         }
 
-        const result = await pool.query(
+        const result = await query(
             'SELECT * FROM leads ORDER BY created_at DESC'
         );
 
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: 'Recaptcha inválido' }, { status: 403 });
         }
 
-        const result = await pool.query(
+        const result = await query(
             `INSERT INTO leads (name, email, phone, company, project_type, budget, timeline, message, source)
              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
             [
