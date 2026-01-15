@@ -27,9 +27,9 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       dentistry: 'Odontologia',
     },
     hero: {
-      badge: 'Engenharia Premium & Growth',
-      title: 'Engenharia Premium para transformar leads em agenda',
-      subtitle: 'Eu desenho e construo sistemas, automações e páginas de alta conversão para negócios de alto ticket. Menos perda no WhatsApp, menos no-show, mais previsibilidade e controle.',
+      badge: 'Produto Digital & Growth',
+      title: 'Sistemas e páginas que transformam leads em agenda',
+      subtitle: 'Eu desenho e implemento funis, automações e experiências digitais para negócios de alto ticket. Menos perda no WhatsApp, menos no-show, mais previsibilidade e controle do atendimento.',
       ctaPrimary: 'Agendar Diagnóstico',
       ctaSecondary: 'Ver como funciona',
       industriesLabel: 'Foco em',
@@ -37,10 +37,10 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       highlights: [
         { title: 'Aquisição e Conversão', text: 'Landing + rastreio + qualificação de lead' },
         { title: 'Automação e IA', text: 'Follow-up, triagem e recuperação de oportunidades' },
-        { title: 'Operação e Governança', text: 'Dados, LGPD, segurança e performance' },
+        { title: 'Operação e Compliance', text: 'Dados, LGPD, segurança e performance' },
       ],
       profileCards: [
-        { label: 'Especialidades', value: 'Engenharia de Software, Produto e Automação' },
+        { label: 'Especialidades', value: 'Produto digital, automação e performance' },
         { label: 'Foco', value: 'Sistemas de crescimento e operações digitais' },
       ],
     },
@@ -70,7 +70,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     testimonials: {
       title: 'Depoimentos',
-      subtitle: 'Lideres que confiam na engenharia',
+      subtitle: 'Lideres que confiam na entrega',
       lead: 'Resultados consistentes com parceria estrategica e execucao de alto nivel.',
     },
     booking: {
@@ -94,7 +94,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     about: {
       label: 'Sobre',
-      headline: 'Engenharia com visao de negocio e padrao global',
+      headline: 'Tecnologia com visao de negocio e padrao global',
       description: 'Trabalho com empresas que precisam de tecnologia segura, escalavel e com alto valor percebido. Entrego estrutura, execucao e estrategia para projetos de alto ticket.',
       highlights: [
         { title: 'Visao executiva', text: 'Decisoes guiadas por impacto, risco e ROI.' },
@@ -173,7 +173,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
       dentistry: 'Dentistry',
     },
     hero: {
-      badge: 'Engineering & AI Consulting',
+      badge: 'Digital Product & AI Consulting',
       title: 'Digital products built to scale with authority',
       subtitle: 'High-end architecture, intelligent automation, and premium design for companies that need reliable tech and real ROI.',
       ctaPrimary: 'Book a diagnostic call',
@@ -192,7 +192,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     services: {
       title: 'Strategic solutions for ambitious companies',
-      subtitle: 'Engineering and product programs built for speed, trust, and competitive differentiation.',
+      subtitle: 'Product and automation programs built for speed, trust, and competitive differentiation.',
       note: 'Premium services',
       cta: 'Explore service',
     },
@@ -216,7 +216,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     testimonials: {
       title: 'Testimonials',
-      subtitle: 'Leaders who trust the engineering',
+      subtitle: 'Leaders who trust the delivery',
       lead: 'Consistent results through strategic partnership and top-tier execution.',
     },
     booking: {
@@ -240,7 +240,7 @@ export const TRANSLATIONS: Record<Language, Translations> = {
     },
     about: {
       label: 'About',
-      headline: 'Engineering with business vision and global standards',
+      headline: 'Technology with business vision and global standards',
       description: 'I work with companies that need secure, scalable technology with high perceived value. Strategy, execution, and structure for high-ticket projects.',
       highlights: [
         { title: 'Executive vision', text: 'Decisions guided by impact, risk, and ROI.' },
@@ -482,7 +482,7 @@ export const SERVICES: Service[] = [
   },
   {
     id: 'engineering-security',
-    title: 'Engenharia & segurança',
+    title: 'Segurança & compliance',
     description: 'Arquitetura robusta, adequação à LGPD, práticas OWASP e observabilidade da operação.',
     icon: ShieldCheck,
   },
@@ -495,7 +495,7 @@ export const SERVICES_I18N: Record<Language, Array<Pick<Service, 'id' | 'title' 
     { id: 'anti-noshow', title: 'Automação anti no-show', description: 'Sistemas de confirmação, lembretes e facilitadores de reagendamento para proteger sua agenda.' },
     { id: 'crm-pipeline', title: 'CRM / Pipeline de atendimento', description: 'Esteira clara do lead ao agendamento e fechamento, sem perder oportunidades de vista.' },
     { id: 'metrics-dashboard', title: 'Painel de métricas', description: 'Visibilidade de origem do lead, taxa de resposta, agendamentos e comparecimento para decisão.' },
-    { id: 'engineering-security', title: 'Engenharia & segurança', description: 'Arquitetura robusta, adequação à LGPD, práticas OWASP e observabilidade da operação.' },
+    { id: 'engineering-security', title: 'Segurança & compliance', description: 'Arquitetura robusta, adequação à LGPD, práticas OWASP e observabilidade da operação.' },
   ],
   en: [
     { id: 'ai-automation', title: 'Applied AI & Automation', description: 'Automate critical operations with intelligent agents and actionable data.' },
@@ -525,7 +525,7 @@ export const SERVICE_DETAILS_BY_LANG: Record<Language, ServiceDetail[]> = {
       id: 'landing-conversion',
       title: 'Landing de alta conversão',
       summary: 'Páginas que vendem e posicionam autoridade.',
-      description: 'Design, copy e engenharia focados em uma única coisa: transformar visitantes em agendamentos qualificados. Velocidade extrema e UX impecável.',
+      description: 'Design, copy e implementação focados em uma única coisa: transformar visitantes em agendamentos qualificados. Velocidade extrema e UX impecável.',
       outcomes: [
         'Aumento na taxa de conversão (visitante -> lead)',
         'Percepção imediata de autoridade e valor premium',
@@ -625,7 +625,7 @@ export const SERVICE_DETAILS_BY_LANG: Record<Language, ServiceDetail[]> = {
     },
     {
       id: 'engineering-security',
-      title: 'Engenharia & segurança',
+      title: 'Segurança & compliance',
       summary: 'Sua operação blindada e profissional.',
       description: 'Proteção de dados, contratos seguros e infraestrutura que não cai. O básico bem feito para escalar sem sustos.',
       outcomes: [
@@ -691,7 +691,7 @@ export const SERVICE_DETAILS_BY_LANG: Record<Language, ServiceDetail[]> = {
       id: 'product-engineering',
       title: 'Premium Digital Products',
       summary: 'Premium digital experiences focused on conversion.',
-      description: 'Products and platforms that communicate high value and sell with authority. Design, UX, and engineering in one flow.',
+      description: 'Products and platforms that communicate high value and sell with authority. Design, UX, and implementation in one flow.',
       outcomes: [
         'Immediate premium value perception',
         'Conversion with sophisticated, fluid UX',
@@ -788,7 +788,7 @@ export const SERVICE_DETAILS_BY_LANG: Record<Language, ServiceDetail[]> = {
         'Documentation and handover',
       ],
       timeline: '4 to 6 weeks',
-      suitableFor: ['Growing SaaS', 'Engineering teams', 'Mission-critical products'],
+      suitableFor: ['Growing SaaS', 'Tech teams', 'Mission-critical products'],
       stack: ['AWS', 'Docker', 'GitHub Actions', 'Terraform'],
       image: 'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=1600',
     },
@@ -1143,14 +1143,14 @@ export const TESTIMONIALS_BY_LANG: Record<Language, Array<{ id: string; name: st
       name: 'Eriberto Rocha',
       role: 'Socio fundador',
       company: 'CRS Advogados',
-      content: 'A engenharia entregue trouxe governanca e velocidade. Hoje operamos com previsibilidade e seguranca juridica.',
+      content: 'A entrega trouxe governanca e velocidade. Hoje operamos com previsibilidade e seguranca juridica.',
     },
     {
       id: '2',
       name: 'Carla Mendes',
       role: 'Diretora de operacoes',
       company: 'E-Administracao',
-      content: 'O nivel de controle e confianca elevou nosso posicionamento. Engenharia premium de verdade.',
+      content: 'O nivel de controle e confianca elevou nosso posicionamento. Entrega premium de verdade.',
     },
     {
       id: '3',
@@ -1187,14 +1187,14 @@ export const TESTIMONIALS_BY_LANG: Record<Language, Array<{ id: string; name: st
       name: 'Eriberto Rocha',
       role: 'Founding Partner',
       company: 'CRS Advogados',
-      content: 'The engineering delivery brought governance and speed. We now operate with predictability and legal security.',
+      content: 'The delivery brought governance and speed. We now operate with predictability and legal security.',
     },
     {
       id: '2',
       name: 'Carla Mendes',
       role: 'Director of Operations',
       company: 'E-Administracao',
-      content: 'The level of control and trust elevated our positioning. Truly premium engineering.',
+      content: 'The level of control and trust elevated our positioning. Truly premium delivery.',
     },
     {
       id: '3',

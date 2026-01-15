@@ -62,7 +62,7 @@ export default function BookingPage() {
 
     if (status === 'success') {
         return (
-            <div className="min-h-screen bg-ink-950 pt-32 pb-20">
+            <div className="min-h-screen bg-ink-950 pt-10 pb-20">
                 <div className="max-w-2xl mx-auto px-4 text-center">
                     <div className="inline-flex p-6 bg-tide-500/10 rounded-full mb-8">
                         <CheckCircle2 className="w-16 h-16 text-tide-300" />
@@ -86,7 +86,7 @@ export default function BookingPage() {
     }
 
     return (
-        <div className="min-h-screen bg-ink-950 pt-28 pb-20">
+        <div className="min-h-screen bg-ink-950 pt-10 pb-20">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Breadcrumbs />
                 <div className="text-center mb-12">

@@ -44,7 +44,7 @@ export default async function ServicePage({ params }: ServicePageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-ink-950 pt-28 pb-20">
+    <div className="min-h-screen bg-ink-950 pt-10 pb-20">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">

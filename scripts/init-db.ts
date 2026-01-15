@@ -585,17 +585,22 @@ async function initializeDatabase() {
     `);
     console.log('✓ Table site_settings created');
 
-    const adminEmail = process.env.ADMIN_EMAIL || 'joseerilsonaraujo@gmail.com';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+    const adminEmail = (process.env.ADMIN_EMAIL || 'joseerilsonaraujo@gmail.com').toLowerCase().trim();
+    const adminPassword = process.env.ADMIN_PASSWORD;
 
-    const passwordHash = await bcrypt.hash(adminPassword, 10);
-
-    await pool.query(
-      'INSERT INTO admins (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
-      [adminEmail, passwordHash]
-    );
-    console.log(`✓ Admin user created: ${adminEmail}`);
-    console.log('⚠️  IMPORTANT: Change the default password!');
+    if (!adminPassword) {
+      console.log('ℹ️  Admin user not created. Set ADMIN_EMAIL and ADMIN_PASSWORD to create/update an admin.');
+    } else {
+      const passwordHash = await bcrypt.hash(adminPassword, 12);
+      await pool.query(
+        `INSERT INTO admins (email, password_hash)
+         VALUES ($1, $2)
+         ON CONFLICT (email)
+         DO UPDATE SET password_hash = EXCLUDED.password_hash`,
+        [adminEmail, passwordHash]
+      );
+      console.log(`✓ Admin user created/updated: ${adminEmail}`);
+    }
 
     console.log('\n✅ Database initialized successfully!');
 

@@ -14,7 +14,7 @@ const Footer = () => {
                             </div>
                             <div>
                                 <p className="text-sm uppercase tracking-[0.3em] text-graphite-500">Erilson Digital</p>
-                                <p className="text-lg text-white font-semibold">Engenharia Premium</p>
+                                <p className="text-lg text-white font-semibold">Entrega Premium</p>
                             </div>
                         </div>
                         <p className="text-sm text-graphite-300 leading-relaxed">

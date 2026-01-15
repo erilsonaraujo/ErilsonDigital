@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function PortfolioPage() {
     return (
-        <div className="pt-24">
+        <div className="pt-10">
             <Projects />
         </div>
     );

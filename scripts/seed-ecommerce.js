@@ -7,8 +7,8 @@ const pool = new Pool({
 
 const products = [
   {
-    title: 'Consultoria em Engenharia & IA',
-    slug: 'consultoria-engenharia-ia',
+    title: 'Consultoria em Produto Digital & IA',
+    slug: 'consultoria-produto-ia',
     description: 'Diagnostico executivo, arquitetura de alto nivel e automacoes com IA para reduzir risco e acelerar resultados. Entrega consultiva com governanca e foco em ROI.',
     sku: 'SERV-ENG-IA-001',
     priceCents: 2500000,
@@ -25,7 +25,7 @@ const products = [
   {
     title: 'Produto Digital Premium',
     slug: 'produto-digital-premium',
-    description: 'UX premium, narrativa de alto valor e engenharia integrada para produtos digitais e SaaS high-ticket. Conversao sem parecer agressivo.',
+    description: 'UX premium, narrativa de alto valor e implementacao integrada para produtos digitais e SaaS high-ticket. Conversao sem parecer agressivo.',
     sku: 'SERV-PROD-003',
     priceCents: 2800000,
     media: '/uploads/ecommerce/seed/produto-digital.svg',

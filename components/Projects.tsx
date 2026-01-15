@@ -5,29 +5,32 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { FEATURED_PROJECTS_BY_LANG, TRANSLATIONS } from '@/constants';
 import { useThemeLanguage } from '@/contexts/ThemeLanguageContext';
+import Reveal from '@/components/ui/Reveal';
+import Parallax from '@/components/ui/Parallax';
+import TiltCard from '@/components/ui/TiltCard';
 
 const Projects: React.FC = () => {
     const { language } = useThemeLanguage();
     const t = TRANSLATIONS[language];
     const projects = FEATURED_PROJECTS_BY_LANG[language];
     return (
-        <section id="portfolio" className="py-24 bg-ink-950">
+        <section id="portfolio" className="py-24 relative overflow-hidden">
+            <div className="absolute inset-0 noise-bg opacity-50" />
+            <Parallax className="absolute -top-28 right-1/4 h-96 w-96 rounded-full bg-cobalt-500/12 blur-[120px]" speed={0.2} />
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col lg:flex-row justify-between gap-10 mb-16">
                     <div>
                         <p className="text-xs uppercase tracking-[0.3em] text-graphite-500">{t.nav.cases}</p>
-                        <h2 className="section-title mt-4">{t.projects.title}</h2>
+                        <Reveal as="h2" className="section-title mt-4">{t.projects.title}</Reveal>
                     </div>
-                    <p className="section-lead max-w-xl">
-                        {t.projects.subtitle}
-                    </p>
+                    <Reveal as="p" delayMs={80} className="section-lead max-w-xl">{t.projects.subtitle}</Reveal>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                     <div className="lg:col-span-2 mb-8">
-                        <h3 className="text-xl font-semibold text-white border-b border-graphite-800 pb-4 mb-8">
+                        <Reveal as="h3" className="text-xl font-semibold text-white border-b border-graphite-800 pb-4 mb-8">
                             Para clínicas: exemplos de entregáveis (demo)
-                        </h3>
+                        </Reveal>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {[
                                 {
@@ -48,64 +51,76 @@ const Projects: React.FC = () => {
                                     desc: "Régua de lembretes e confirmação automática de presença.",
                                     metric: "-30% faltas"
                                 }
-                            ].map((demo) => (
-                                <div key={demo.title} className="rounded-2xl border border-graphite-800 bg-ink-950/50 p-6 hover:border-graphite-600 transition-colors">
-                                    <span className="text-[10px] uppercase tracking-widest text-cobalt-400 font-semibold">{demo.label}</span>
-                                    <h4 className="text-lg font-semibold text-white mt-2">{demo.title}</h4>
-                                    <p className="text-sm text-graphite-300 mt-2">{demo.desc}</p>
-                                    <div className="mt-4 pt-4 border-t border-graphite-800/50 flex items-center gap-2">
-                                        <ArrowUpRight size={14} className="text-tide-400" />
-                                        <span className="text-xs font-semibold text-tide-300">{demo.metric}</span>
-                                    </div>
-                                </div>
+                            ].map((demo, index) => (
+                                <Reveal key={demo.title} as="div" delayMs={80 + index * 80}>
+                                    <TiltCard className="rounded-2xl">
+                                        <div className="rounded-2xl border border-graphite-800 bg-ink-950/50 p-6 hover:border-graphite-600 transition-colors relative overflow-hidden">
+                                            <div className="absolute inset-0 bg-[radial-gradient(650px_240px_at_20%_20%,rgba(47,85,255,0.18),transparent_60%)] opacity-0 hover:opacity-100 transition-opacity duration-700" />
+                                            <div className="relative">
+                                                <span className="text-[10px] uppercase tracking-widest text-cobalt-400 font-semibold">{demo.label}</span>
+                                                <h4 className="text-lg font-semibold text-white mt-2">{demo.title}</h4>
+                                                <p className="text-sm text-graphite-300 mt-2">{demo.desc}</p>
+                                                <div className="mt-4 pt-4 border-t border-graphite-800/50 flex items-center gap-2">
+                                                    <ArrowUpRight size={14} className="text-tide-400" />
+                                                    <span className="text-xs font-semibold text-tide-300">{demo.metric}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </TiltCard>
+                                </Reveal>
                             ))}
                         </div>
                     </div>
 
-                    {projects.map((project) => (
-                        <div key={project.id} className="group rounded-[28px] border border-graphite-800 bg-ink-900/70 overflow-hidden shadow-xl">
-                            <div className="relative h-52">
-                                <Image
-                                    src={project.image}
-                                    alt={project.title}
-                                    fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                    sizes="(min-width: 1024px) 50vw, 100vw"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent" />
-                                <div className="absolute bottom-4 left-5">
-                                    <p className="text-xs uppercase tracking-[0.3em] text-graphite-300">{project.category}</p>
-                                    <h3 className="text-xl text-white font-semibold">{project.title}</h3>
-                                </div>
-                            </div>
-                            <div className="p-6 space-y-4">
-                                <p className="text-sm text-graphite-300">{project.summary}</p>
-                                <div className="space-y-3">
-                                    <div>
-                                        <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{t.projects.challenge}</p>
-                                        <p className="text-sm text-graphite-200">{project.problem}</p>
+                    {projects.map((project, index) => (
+                        <Reveal key={project.id} as="div" delayMs={120 + index * 80}>
+                            <TiltCard className="rounded-[28px]">
+                                <div className="group rounded-[28px] border border-graphite-800 bg-ink-900/70 overflow-hidden shadow-xl hover:shadow-2xl transition-transform duration-500 hover:-translate-y-1">
+                                    <div className="relative h-52">
+                                        <Image
+                                            src={project.image}
+                                            alt={project.title}
+                                            fill
+                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                            sizes="(min-width: 1024px) 50vw, 100vw"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-ink-950/90 via-ink-950/40 to-transparent" />
+                                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 bg-[radial-gradient(700px_260px_at_20%_20%,rgba(28,201,167,0.22),transparent_60%)]" />
+                                        <div className="absolute bottom-4 left-5">
+                                            <p className="text-xs uppercase tracking-[0.3em] text-graphite-300">{project.category}</p>
+                                            <h3 className="text-xl text-white font-semibold">{project.title}</h3>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{t.projects.solution}</p>
-                                        <p className="text-sm text-graphite-200">{project.solution}</p>
+                                    <div className="p-6 space-y-4">
+                                        <p className="text-sm text-graphite-300">{project.summary}</p>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{t.projects.challenge}</p>
+                                                <p className="text-sm text-graphite-200">{project.problem}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] uppercase tracking-[0.3em] text-graphite-500">{t.projects.solution}</p>
+                                                <p className="text-sm text-graphite-200">{project.solution}</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {project.technologies.map((tech) => (
+                                                <span key={tech} className="rounded-full border border-graphite-700 px-3 py-1 text-[11px] text-graphite-300">
+                                                    {tech}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="flex items-center gap-4 text-sm text-tide-300">
+                                            {project.liveLink && (
+                                                <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                                                    {t.projects.viewProject} <ArrowUpRight size={16} />
+                                                </a>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                    {project.technologies.map((tech) => (
-                                        <span key={tech} className="rounded-full border border-graphite-700 px-3 py-1 text-[11px] text-graphite-300">
-                                            {tech}
-                                        </span>
-                                    ))}
-                                </div>
-                                <div className="flex items-center gap-4 text-sm text-tide-300">
-                                    {project.liveLink && (
-                                        <a href={project.liveLink} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
-                                            {t.projects.viewProject} <ArrowUpRight size={16} />
-                                        </a>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
+                            </TiltCard>
+                        </Reveal>
                     ))}
                 </div>
             </div>

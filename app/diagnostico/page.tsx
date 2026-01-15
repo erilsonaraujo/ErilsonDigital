@@ -21,7 +21,7 @@ export default function DiagnosticoPage() {
                 ctaSecondary="Voltar ao início"
                 highlights={[
                     { title: 'Sem Venda Forçada', text: 'Se não for para você, eu aviso.', icon: XCircle },
-                    { title: 'Análise Técnica', text: 'Olhar de engenharia sobre seu negócio', icon: MagnifyingGlassIcon },
+                    { title: 'Análise Técnica', text: 'Olhar técnico sobre seu negócio', icon: MagnifyingGlassIcon },
                     { title: 'Plano Prático', text: 'Saia com próximos passos claros', icon: Map },
                 ]}
                 industries={[]}

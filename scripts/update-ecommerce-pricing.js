@@ -7,7 +7,7 @@ const pool = new Pool({
 
 const updates = [
   {
-    slug: 'consultoria-engenharia-ia',
+    slug: 'consultoria-produto-ia',
     description:
       'Diagnostico executivo, arquitetura de alto nivel e automacoes com IA para reduzir risco e acelerar resultados. Entrega consultiva com governanca e foco em ROI.',
     priceCents: 2500000,
@@ -21,7 +21,7 @@ const updates = [
   {
     slug: 'produto-digital-premium',
     description:
-      'UX premium, narrativa de alto valor e engenharia integrada para produtos digitais e SaaS high-ticket. Conversao sem parecer agressivo.',
+      'UX premium, narrativa de alto valor e implementacao integrada para produtos digitais e SaaS high-ticket. Conversao sem parecer agressivo.',
     priceCents: 2800000,
   },
   {

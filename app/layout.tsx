@@ -11,12 +11,12 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space
 
 export const metadata: Metadata = {
     metadataBase: new URL('https://erilsondigital.com'),
-    title: 'Erilson Digital | Engenharia de Software, IA e Produto',
-    description: 'Consultoria premium em engenharia de software, automacao e IA aplicada para negocios de alto crescimento.',
+    title: 'Erilson Digital | Produto Digital, IA e Growth',
+    description: 'Consultoria premium em produto digital, automacao e IA aplicada para negocios de alto crescimento.',
     applicationName: 'Erilson Digital',
     openGraph: {
-        title: 'Erilson Digital | Consultoria Premium em Engenharia, IA e Produto',
-        description: 'Solucoes digitais de alto impacto com engenharia robusta, seguranca e performance de nivel global.',
+        title: 'Erilson Digital | Consultoria Premium em Produto, IA e Growth',
+        description: 'Solucoes digitais de alto impacto com qualidade, seguranca e performance de nivel global.',
         url: 'https://erilsondigital.com',
         siteName: 'Erilson Digital',
         images: [
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        title: 'Erilson Digital | Consultoria Premium em Engenharia',
-        description: 'Engenharia de software, IA aplicada e entregas de alto padrao para empresas ambiciosas.',
+        title: 'Erilson Digital | Consultoria Premium em Produto',
+        description: 'Produto digital, IA aplicada e entregas de alto padrao para empresas ambiciosas.',
         images: ['/erilson.jpg'],
     },
     robots: {
@@ -64,8 +64,8 @@ export default function RootLayout({
     };
 
     return (
-        <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable} scroll-smooth`} suppressHydrationWarning>
-            <body className="bg-ink-950 text-graphite-100 font-sans selection:bg-cobalt-500 selection:text-white">
+        <html lang="pt-BR" className={`${manrope.variable} ${spaceGrotesk.variable} scroll-smooth light`} suppressHydrationWarning>
+            <body className="bg-graphite-50 text-graphite-700 font-sans selection:bg-cobalt-500 selection:text-white">
                 <TrackingScripts />
                 {recaptchaKey && (
                     <Script

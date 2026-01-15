@@ -4,7 +4,7 @@ import Breadcrumbs from '@/components/Breadcrumbs';
 
 export const metadata: Metadata = {
     title: 'Sobre | Erilson Digital',
-    description: 'Consultoria premium em engenharia, IA e produto digital com foco em ROI, seguranca e escalabilidade.',
+    description: 'Consultoria premium em produto digital, IA e automacao com foco em ROI, seguranca e escalabilidade.',
 };
 
 export default function AboutPage() {

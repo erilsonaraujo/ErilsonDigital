@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { canonicalProductSlug } from '@/src/ecommerce/slugAliases';
 
 interface ProductCardProps {
   product: any;
@@ -11,7 +12,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const variant = product.variants?.[0];
   return (
     <Link
-      href={`/store/products/${product.slug}`}
+      href={`/store/products/${canonicalProductSlug(product.slug)}`}
       className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:-translate-y-1 hover:border-cobalt-400"
     >
       <div className="text-xs uppercase tracking-[0.3em] text-graphite-400">{product.status}</div>

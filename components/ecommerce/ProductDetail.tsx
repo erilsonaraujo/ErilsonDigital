@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { canonicalProductSlug } from '@/src/ecommerce/slugAliases';
 
 interface ProductDetailProps {
   slug: string;
@@ -13,8 +14,9 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ slug }) => {
   const [adding, setAdding] = useState(false);
 
   useEffect(() => {
+    const resolvedSlug = canonicalProductSlug(slug);
     const load = async () => {
-      const res = await fetch(`/api/ecommerce/products/${slug}`);
+      const res = await fetch(`/api/ecommerce/products/${resolvedSlug}`);
       const data = await res.json();
       if (res.ok) {
         setProduct(data.product);

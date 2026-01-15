@@ -18,7 +18,7 @@ const pool = new Pool({
 const makeId = () => crypto.randomUUID();
 
 async function run() {
-  const slug = 'consultoria-engenharia-ia';
+  const slug = 'consultoria-produto-ia';
   const productRes = await fetch(`${SITE_URL}/api/ecommerce/products/${slug}`);
   const productData = await productRes.json();
   if (!productRes.ok) throw new Error('Failed to fetch product');

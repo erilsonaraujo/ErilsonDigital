@@ -12,12 +12,15 @@ const Navbar = () => {
     const { language, setLanguage } = useThemeLanguage();
     const t = TRANSLATIONS[language];
 
+    const clinicsOverviewLabel = language === 'en' ? 'Overview' : language === 'es' ? 'Resumen' : 'Visao geral';
+
     const navItems = [
         { label: t.nav.services, href: '/servicos' },
         {
             label: t.nav.forClinics,
             href: '#',
             children: [
+                { label: clinicsOverviewLabel, href: '/para-clinicas' },
                 { label: t.nav.esthetics, href: '/clinicas-estetica' },
                 { label: t.nav.surgery, href: '/cirurgia-dermato-premium' },
                 { label: t.nav.dentistry, href: '/odontologia-premium' },

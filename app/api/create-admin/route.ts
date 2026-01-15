@@ -4,6 +4,25 @@ import bcrypt from 'bcryptjs';
 
 export async function POST(request: NextRequest) {
     try {
+        const setupToken = process.env.ADMIN_SETUP_TOKEN;
+        if (!setupToken) {
+            return NextResponse.json(
+                { error: 'Admin setup disabled' },
+                { status: 403 }
+            );
+        }
+
+        const providedToken =
+            request.headers.get('x-admin-setup-token') ||
+            request.headers.get('authorization')?.replace(/^Bearer\s+/i, '');
+
+        if (!providedToken || providedToken !== setupToken) {
+            return NextResponse.json(
+                { error: 'Not authorized' },
+                { status: 401 }
+            );
+        }
+
         const { email, password } = await request.json();
 
         if (!email || !password) {
@@ -13,11 +32,15 @@ export async function POST(request: NextRequest) {
             );
         }
 
-        const passwordHash = await bcrypt.hash(password, 10);
+        const identifier = String(email).toLowerCase().trim();
+        const passwordHash = await bcrypt.hash(String(password), 12);
 
         await query(
-            'INSERT INTO admins (email, password_hash) VALUES ($1, $2) ON CONFLICT (email) DO NOTHING',
-            [email, passwordHash]
+            `INSERT INTO admins (email, password_hash)
+             VALUES ($1, $2)
+             ON CONFLICT (email)
+             DO UPDATE SET password_hash = EXCLUDED.password_hash`,
+            [identifier, passwordHash]
         );
 
         return NextResponse.json(
