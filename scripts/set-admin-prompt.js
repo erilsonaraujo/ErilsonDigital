@@ -22,7 +22,7 @@ function ask(question) {
 
 function askHidden(question) {
   return new Promise((resolve, reject) => {
-    if (!input.isTTY) {
+    if (!input.isTTY || !output.isTTY) {
       reject(new Error('TTY is required for hidden input'));
       return;
     }
@@ -81,8 +81,12 @@ async function run() {
     process.exit(1);
   }
 
-  const password = await askHidden('Admin password (hidden): ');
-  const confirm = await askHidden('Confirm password (hidden): ');
+  const canHide = Boolean(input.isTTY && output.isTTY);
+  const askPassword = canHide ? askHidden : ask;
+  const label = canHide ? ' (hidden)' : ' (will be visible)';
+
+  const password = await askPassword(`Admin password${label}: `);
+  const confirm = await askPassword(`Confirm password${label}: `);
   if (!password || password.length < 8) {
     console.error('Password must be at least 8 characters');
     process.exit(1);
